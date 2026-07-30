@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MyDevKits · Dev kits for non-coders. Build it. Keep it. No subscriptions.</title>
+<meta name="description" content="Step-by-step build kits for people who don't code (yet). AI does the typing. You keep the machine. Build No. 1: The Kalshi Trading Bot.">
+<style>
+:root{
+  --navy:#0a1f3c; --navy-deep:#081831; --navy-panel:#0d1726; --line:#1f3a5c;
+  --ink:#dbe4f3; --muted:#8fa2bd; --dim:#5d738f;
+  --green:#35d399; --green-dark:#0e9f6e; --amber:#fbbf24;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear-gradient(165deg,var(--navy-deep) 0%,var(--navy) 55%,#0d2b52 100%);color:var(--ink);min-height:100vh;position:relative}
+.grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:44px 44px;pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:0 24px}
+
+/* header */
+header{display:flex;justify-content:space-between;align-items:center;padding:28px 0}
+.logo{display:flex;align-items:center;gap:12px;font-size:22px;font-weight:800;color:#fff;text-decoration:none}
+.logo .my{color:var(--green)}
+.logo img{width:38px;height:38px;border-radius:9px}
+nav a{color:var(--muted);text-decoration:none;font-size:14px;margin-left:22px}
+nav a:hover{color:var(--green)}
+
+/* hero */
+.hero{padding:72px 0 48px;text-align:center}
+.badge{display:inline-block;border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:6px 18px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#9fd7bd;margin-bottom:28px}
+h1{font-size:clamp(34px,6vw,58px);font-weight:800;line-height:1.12;letter-spacing:-.015em;color:#fff}
+h1 .accent{color:var(--green)}
+.sub{margin:22px auto 0;font-size:clamp(16px,2.4vw,20px);color:#c3cfe2;max-width:640px;line-height:1.55}
+.manifesto{margin:34px auto 0;max-width:560px;border:1.5px solid var(--line);border-radius:14px;background:rgba(13,23,38,.75);padding:22px 26px;text-align:left}
+.manifesto p{font-size:16px;line-height:1.65;color:var(--ink)}
+.manifesto b{color:var(--green)}
+.cta-row{margin-top:36px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-block;padding:14px 30px;border-radius:12px;font-weight:700;font-size:16px;text-decoration:none;transition:transform .12s}
+.btn:hover{transform:translateY(-2px)}
+.btn-green{background:var(--green);color:#06281c}
+.btn-ghost{border:1.5px solid var(--line);color:var(--ink)}
+
+/* story */
+section{padding:56px 0}
+h2{font-size:26px;font-weight:800;color:#fff;margin-bottom:8px}
+.rule{height:3px;width:52px;background:var(--green);border-radius:2px;margin:12px 0 22px}
+.story p{font-size:16.5px;line-height:1.75;color:#c3cfe2;max-width:720px;margin-bottom:14px}
+.story .kicker{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--green);font-weight:700}
+
+/* builds shelf */
+.shelf{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:8px}
+.build{background:var(--navy-panel);border:1px solid var(--line);border-radius:14px;padding:22px;position:relative}
+.build .no{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--green);font-weight:700}
+.build h3{color:#fff;font-size:19px;margin:8px 0 8px}
+.build p{font-size:14px;color:var(--muted);line-height:1.6}
+.build .bricks{margin-top:14px;font-size:13px;color:var(--amber)}
+.tag{position:absolute;top:18px;right:18px;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:99px;font-weight:700}
+.tag-soon{background:#1a2c46;color:#7cd4fc}
+.tag-first{background:#123a2c;color:var(--green);border:1px solid var(--green)}
+
+/* promise strip */
+.promises{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.promise{border-left:3px solid var(--green);padding:4px 0 4px 16px}
+.promise b{display:block;color:#fff;font-size:15px;margin-bottom:4px}
+.promise span{font-size:13.5px;color:var(--muted);line-height:1.5}
+
+/* footer */
+footer{border-top:1px solid var(--line);margin-top:40px;padding:34px 0 44px;text-align:center}
+.socials{display:flex;gap:18px;justify-content:center;margin-bottom:18px;flex-wrap:wrap}
+.socials a{color:var(--muted);text-decoration:none;font-size:14px}
+.socials a:hover{color:var(--green)}
+.fine{font-size:12px;color:var(--dim);max-width:640px;margin:0 auto;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="wrap">
+
+<header>
+  <a class="logo" href="/"><span><span class="my">My</span>DevKits</span></a>
+  <nav>
+    <a href="#story">The Story</a>
+    <a href="#builds">The Builds</a>
+    <a href="#promise">The Promise</a>
+  </nav>
+</header>
+
+<div class="hero">
+  <div class="badge">Dev kits for non-coders</div>
+  <h1>You want it.<br>You build it.<br><span class="accent">You keep it.</span></h1>
+  <p class="sub">Step-by-step build kits for people who don't code (yet). AI does the typing. You make the decisions. And the program you build is yours, forever.</p>
+  <div class="manifesto">
+    <p><b>This is not a course.</b> You're not buying videos to watch. <b>This is not software you rent.</b> There's no subscription, no monthly fee, no account that expires. You're buying instructions that turn you and your AI into a builder, and everything you build runs on your own computer, free, for as long as you want it.</p>
+  </div>
+  <div class="cta-row">
+    <a class="btn btn-green" href="#builds">See Build No. 1</a>
+    <a class="btn btn-ghost" href="https://x.com/mydevkits">Follow the build →</a>
+  </div>
+</div>
+
+<section id="story" class="story">
+  <div class="kicker">The story</div>
+  <h2>Remember MySpace?</h2>
+  <div class="rule"></div>
+  <p>Nobody "knew how to code." And then, one profile at a time, everyone kind of did. People copied little scripts onto their pages: music players, glitter text, custom backgrounds. Without ever taking a class, millions of people learned the fundamentals of building by building on what already existed.</p>
+  <p>That moment is happening again, and it's a hundred times bigger. AI can now write, run, test, and fix real programs (trading bots, dashboards, games, automations) while you steer. The only thing missing is the instruction manual.</p>
+  <p><b style="color:#fff">That's what a MyDevKit is:</b> the instruction manual. Every kit walks you from an empty folder to a finished, running program in numbered steps, with copy-paste prompts, achievements along the way, and nothing vital skipped. You don't need to know how to code. You need to know what you want.</p>
+</section>
+
+<section id="builds">
+  <div class="kicker" style="font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--green);font-weight:700">The shelf</div>
+  <h2>The Builds</h2>
+  <div class="rule"></div>
+  <div class="shelf">
+    <div class="build">
+      <span class="tag tag-first">Build No. 1 · Coming Soon</span>
+      <div class="no">&nbsp;</div>
+      <h3>The Trading Bot</h3>
+      <p>A real prediction-market trading bot running 24/7 on your own PC, with its own dashboard, phone access from anywhere, and risk rails you set. Built on Kalshi, the regulated exchange. No coding skills needed.</p>
+      <div class="bricks">🧱🧱🧱🧱 · 12 achievements · runs for $0/month</div>
+    </div>
+    <div class="build">
+      <span class="tag tag-soon">In the workshop</span>
+      <div class="no">&nbsp;</div>
+      <h3>The Watcher</h3>
+      <p>A bot that stalks any price or listing (flights, sneakers, collectibles) and texts your phone the moment something happens.</p>
+      <div class="bricks">🧱🧱🧱 · coming later</div>
+    </div>
+    <div class="build">
+      <span class="tag tag-soon">In the workshop</span>
+      <div class="no">&nbsp;</div>
+      <h3>The Kids Line</h3>
+      <p>Builds for young makers: their pet's own webpage and a real arcade game their friends can play, published safely, with nothing about themselves online. Ever.</p>
+      <div class="bricks">🧱–🧱🧱🧱 · ages 6 and up</div>
+    </div>
+  </div>
+</section>
+
+<section id="promise">
+  <div class="kicker" style="font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--green);font-weight:700">The promise on every box</div>
+  <h2>How every kit works</h2>
+  <div class="rule"></div>
+  <div class="promises">
+    <div class="promise"><b>No coding skills needed</b><span>The AI does the typing. The kit tells you both exactly what to do.</span></div>
+    <div class="promise"><b>A real finished thing</b><span>Every kit ends with a working program. Not a certificate, not a badge: a machine.</span></div>
+    <div class="promise"><b>Yours forever</b><span>It runs on your computer. No subscriptions, no hosting fees, no landlord.</span></div>
+    <div class="promise"><b>Achievements inside</b><span>Every milestone unlocks one. Finishing feels like finishing should.</span></div>
+  </div>
+</section>
+
+<footer>
+  <div class="socials">
+    <a href="https://x.com/mydevkits">X</a>
+    <a href="https://www.youtube.com/@mydevkits">YouTube</a>
+    <a href="https://www.instagram.com/mydevkits">Instagram</a>
+    <a href="https://www.facebook.com/mydevkits">Facebook</a>
+  </div>
+  <p class="fine">© 2026 MyDevKits. Build kits are educational materials, not financial advice. Trading involves real risk of loss. Every kit teaches demo-first, paper-first, evidence-first building, and means it.</p>
+</footer>
+
+</div>
+</body>
+</html>
