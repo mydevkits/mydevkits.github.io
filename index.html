@@ -159,5 +159,86 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:34px 0 44px;text
 </footer>
 
 </div>
+
+<!-- ===== MyDevKits chat (talks to the command center at home) ===== -->
+<style>
+#mdk-chat-btn{position:fixed;right:22px;bottom:22px;width:58px;height:58px;
+  border-radius:50%;background:#35d399;color:#052018;font-size:26px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  box-shadow:0 6px 24px rgba(0,0,0,.45);z-index:9998;border:none}
+#mdk-chat{position:fixed;right:22px;bottom:92px;width:330px;max-width:92vw;
+  background:#0d1726;border:1px solid #1f3a5c;border-radius:16px;z-index:9999;
+  display:none;flex-direction:column;overflow:hidden;
+  box-shadow:0 12px 40px rgba(0,0,0,.55);font-family:'Segoe UI',system-ui,sans-serif}
+#mdk-chat.open{display:flex}
+#mdk-head{background:#0a1f3c;padding:14px 16px;border-bottom:1px solid #1f3a5c}
+#mdk-head b{color:#dbe4f3;font-size:15px}
+#mdk-head span{display:block;color:#8fa2bd;font-size:12px;margin-top:3px}
+#mdk-msgs{flex:1;max-height:300px;overflow-y:auto;padding:12px;display:flex;
+  flex-direction:column;gap:8px}
+.mdk-m{max-width:85%;padding:8px 12px;border-radius:12px;font-size:13.5px;
+  line-height:1.45;white-space:pre-wrap;word-wrap:break-word}
+.mdk-v{align-self:flex-end;background:#35d399;color:#052018;border-bottom-right-radius:4px}
+.mdk-o{align-self:flex-start;background:#122036;color:#dbe4f3;border:1px solid #1f3a5c;border-bottom-left-radius:4px}
+#mdk-form{padding:10px;border-top:1px solid #1f3a5c;display:flex;flex-direction:column;gap:8px}
+#mdk-form input,#mdk-form textarea{background:#0a1220;border:1px solid #1f3a5c;
+  border-radius:9px;color:#dbe4f3;padding:8px 10px;font-size:13px;outline:none;
+  font-family:inherit;resize:none}
+#mdk-form input:focus,#mdk-form textarea:focus{border-color:#7cd4fc}
+#mdk-send{background:#35d399;color:#052018;border:none;border-radius:9px;
+  padding:9px;font-weight:700;font-size:14px;cursor:pointer}
+#mdk-note{color:#5d738f;font-size:11px;text-align:center;padding-bottom:8px}
+</style>
+<button id="mdk-chat-btn" aria-label="Chat with us">&#128172;</button>
+<div id="mdk-chat">
+  <div id="mdk-head"><b>MyDevKits</b>
+    <span>Ask us anything - replies usually land in a few minutes.</span></div>
+  <div id="mdk-msgs"></div>
+  <form id="mdk-form">
+    <input id="mdk-email" type="email" placeholder="Your email (so we can reply if you leave)">
+    <textarea id="mdk-text" rows="2" placeholder="Type your question..." required></textarea>
+    <button id="mdk-send" type="submit">Send</button>
+  </form>
+  <div id="mdk-note">Answered by a human. Built on our own machine, naturally.</div>
+</div>
+<script>
+(function(){
+  var CHAT_URL="https://mydevkits-chat.jcarpinteria21.workers.dev";
+  var btn=document.getElementById('mdk-chat-btn'),panel=document.getElementById('mdk-chat'),
+      msgs=document.getElementById('mdk-msgs'),form=document.getElementById('mdk-form'),
+      text=document.getElementById('mdk-text'),email=document.getElementById('mdk-email');
+  var convo=localStorage.getItem('mdk_convo');
+  if(!convo){convo=Date.now().toString(36)+Math.random().toString(36).slice(2,12);
+    localStorage.setItem('mdk_convo',convo);}
+  var saved=localStorage.getItem('mdk_email');if(saved)email.value=saved;
+  var timer=null,lastCount=-1;
+  btn.onclick=function(){panel.classList.toggle('open');
+    if(panel.classList.contains('open')){poll();timer=setInterval(poll,8000);text.focus();}
+    else clearInterval(timer);};
+  function render(list){
+    if(list.length===lastCount)return;lastCount=list.length;
+    msgs.innerHTML='';
+    list.forEach(function(m){var d=document.createElement('div');
+      d.className='mdk-m '+(m.from==='visitor'?'mdk-v':'mdk-o');
+      d.textContent=m.text;msgs.appendChild(d);});
+    msgs.scrollTop=msgs.scrollHeight;}
+  function poll(){
+    if(CHAT_URL.indexOf('PASTE')===0)return;
+    fetch(CHAT_URL+'/replies?convo='+convo).then(function(r){return r.json();})
+      .then(function(d){if(d.messages)render(d.messages);}).catch(function(){});}
+  form.onsubmit=function(e){
+    e.preventDefault();
+    var t=text.value.trim();if(!t)return;
+    localStorage.setItem('mdk_email',email.value);
+    fetch(CHAT_URL+'/msg',{method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({convo:convo,text:t,email:email.value,
+        name:email.value?email.value.split('@')[0]:''})})
+      .then(function(){text.value='';poll();}).catch(function(){});
+    var d=document.createElement('div');d.className='mdk-m mdk-v';
+    d.textContent=t;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;};
+})();
+</script>
+
 </body>
 </html>
