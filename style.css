@@ -236,13 +236,13 @@ footer{border-top:1px solid var(--bl);margin-top:40px;padding:34px 0 44px;text-a
 
 /* hover-to-open demo overlay on laptop frames */
 .frame-lap{position:relative}
-.frame-lap .demolink{position:absolute;inset:0 0 14px 0;display:flex;align-items:center;
-  justify-content:center;background:rgba(5,10,20,0);transition:background .2s;z-index:6;text-decoration:none}
-.frame-lap .demolink span{opacity:0;transform:translateY(8px);transition:.22s;
+.frame-lap .demolink{position:absolute;inset:0 0 14px 0;display:flex;align-items:flex-end;
+  justify-content:center;padding-bottom:26px;background:rgba(5,10,20,0);transition:background .2s;z-index:6;text-decoration:none}
+.frame-lap .demolink span{transition:.22s;
   background:linear-gradient(135deg,#3fe3a8,#12b57f);color:#04241a;font-weight:700;
-  padding:13px 24px;font-size:14.5px;box-shadow:0 14px 36px rgba(0,0,0,.45)}
-.frame-lap:hover .demolink{background:rgba(5,10,20,.38)}
-.frame-lap:hover .demolink span{opacity:1;transform:none}
+  padding:12px 22px;font-size:14px;box-shadow:0 14px 36px rgba(0,0,0,.5)}
+.frame-lap:hover .demolink{background:rgba(5,10,20,.28)}
+.frame-lap:hover .demolink span{transform:translateY(-4px)}
 
 /* ---- mobile sanity ---- */
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
