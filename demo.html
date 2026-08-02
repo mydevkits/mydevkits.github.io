@@ -791,11 +791,11 @@ async function loadInbox(){
     const open=(c.convo in EXPANDED)?EXPANDED[c.convo]:(waitingC&&INBOX_FILTER!=='done');
     const last=c.messages[c.messages.length-1]||{};
     const when=c.updated?new Date(c.updated).toLocaleString():'';
-    const head='<div style="display:flex;align-items:center;gap:10px">'+
+    const head='<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">'+
       '<button class="tgl" onclick="toggleConvo(\''+c.convo+'\')">'+(open?'&#9662; close':'&#9656; open')+'</button>'+
-      '<strong style="font-size:14px;white-space:nowrap"><span class="pficon">&#127760;</span> '+(esc(c.name)||'Visitor')+
+      '<strong style="font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%"><span class="pficon">&#127760;</span> '+(esc(c.name)||'Visitor')+
       (c.email?' <span style="color:var(--muted);font-weight:400;font-size:12px">('+esc(c.email)+')</span>':'')+'</strong>'+
-      (open?'<span style="flex:1"></span>':'<span style="color:var(--muted);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">'+esc((last.text||'').slice(0,70))+'</span>')+
+      (open?'<span style="flex:1"></span>':'<span style="color:var(--muted);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:110px">'+esc((last.text||'').slice(0,70))+'</span>')+
       '<span style="font-size:11px;color:var(--muted);white-space:nowrap">'+when+'</span>'+
       (c.finished
         ?'<button class="tgl" style="color:var(--green)" onclick="markFinished(\''+c.convo+'\',false)">&#8634; reactivate</button>'
@@ -1285,32 +1285,40 @@ const TEXT_TIPS={
  'Reply':'Sends through the right platform automatically.',
 };
 const tipEl=document.getElementById('demotip');
-document.addEventListener('mouseover',e=>{
-  let text=null,anchor=null;
+let TIP_TIMER=null;
+function resolveTip(target){
   for(const [sel,t] of TIP_RULES){
-    const hit=e.target.closest(sel);
-    if(hit){text=t;anchor=hit;break;}
+    const hit=target.closest(sel);
+    if(hit)return{text:t,anchor:hit};
   }
-  if(!text){
-    const b=e.target.closest('button');
-    if(b){const k=b.textContent.trim();if(TEXT_TIPS[k]){text=TEXT_TIPS[k];anchor=b;}}
-  }
-  if(!text){tipEl.style.display='none';return;}
-  tipEl.textContent=text;tipEl.style.display='block';
-  const r=anchor.getBoundingClientRect();
-  if(anchor.id==='sprompt'||anchor.id==='genbtn'||anchor.closest&&anchor.closest('#sprompt')){
-    /* studio prompt + generate: park the info box on the far left so it never covers the button */
-    tipEl.style.top=Math.max(8,r.top)+'px';
-    tipEl.style.left='8px';
-    return;
+  const b=target.closest('button');
+  if(b){const k=b.textContent.trim();if(TEXT_TIPS[k])return{text:TEXT_TIPS[k],anchor:b};}
+  return null;
+}
+function showTip(found){
+  tipEl.textContent=found.text;tipEl.style.display='block';
+  const r=found.anchor.getBoundingClientRect();
+  if(found.anchor.id==='sprompt'||found.anchor.id==='genbtn'){
+    tipEl.style.top=Math.max(8,r.top)+'px';tipEl.style.left='8px';return;
   }
   let top=r.bottom+10;
-  if(top+80>window.innerHeight)top=r.top-10-80;
+  if(top+80>window.innerHeight)top=Math.max(8,r.top-10-80);
   tipEl.style.top=top+'px';
   tipEl.style.left=Math.min(Math.max(8,r.left),window.innerWidth-280)+'px';
+}
+document.addEventListener('mouseover',e=>{
+  const f=resolveTip(e.target);
+  if(!f){tipEl.style.display='none';return;}
+  clearTimeout(TIP_TIMER);showTip(f);
 });
 document.addEventListener('mouseout',e=>{if(!e.relatedTarget)tipEl.style.display='none';});
-document.addEventListener('click',()=>tipEl.style.display='none');
+document.addEventListener('click',e=>{
+  const f=resolveTip(e.target);
+  if(!f){tipEl.style.display='none';return;}
+  showTip(f);
+  clearTimeout(TIP_TIMER);
+  TIP_TIMER=setTimeout(()=>{tipEl.style.display='none';},3800);
+});
 boot();
 </script>
 </body>

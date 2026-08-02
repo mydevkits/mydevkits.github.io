@@ -376,7 +376,23 @@ document.addEventListener('mouseover',function(e){
   dtip.style.left=Math.min(Math.max(8,r.left),window.innerWidth-290)+'px';
 });
 document.addEventListener('mouseout',function(e){if(!e.relatedTarget)dtip.style.display='none';});
-document.addEventListener('click',function(){dtip.style.display='none';});
+var DTIP_TIMER=null;
+document.addEventListener('click',function(e){
+  var text=null,anchor=null,el;
+  if(el=e.target.closest('.cat')){text='Kalshi\'s market categories. Your strategy decides which arenas the bot is allowed to play in.';anchor=el;}
+  if(!text&&(el=e.target.closest('.vtab,.hbtn'))){var k=el.textContent.trim();if(BTN_TIPS[k]){text=BTN_TIPS[k];anchor=el;}}
+  if(!text&&(el=e.target.closest('.tile'))){var l=el.querySelector('.lbl');if(l&&TILE_TIPS[l.textContent.trim()]){text=TILE_TIPS[l.textContent.trim()];anchor=el;}}
+  if(!text&&(el=e.target.closest('.card'))){var h=el.querySelector('h2');if(h&&CARD_TIPS[h.textContent.trim()]){text=CARD_TIPS[h.textContent.trim()];anchor=el;}}
+  if(!text){dtip.style.display='none';return;}
+  dtip.textContent=text;dtip.style.display='block';
+  var r=anchor.getBoundingClientRect();
+  var top=r.bottom+10;
+  if(top+90>window.innerHeight)top=Math.max(8,r.top-100);
+  dtip.style.top=top+'px';
+  dtip.style.left=Math.min(Math.max(8,r.left),window.innerWidth-290)+'px';
+  clearTimeout(DTIP_TIMER);
+  DTIP_TIMER=setTimeout(function(){dtip.style.display='none';},3800);
+});
 </script>
 </body>
 </html>
