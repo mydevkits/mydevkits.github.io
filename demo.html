@@ -326,6 +326,37 @@ const DEMO_FILES={
  'launch_video.mp4':'demo/demo_video.mp4'
 };
 function U(m){return DEMO_FILES[m]||('demo/bg/'+m);}
+/* Demo-only media: the demo NEVER touches the visitor's real camera or files. */
+let SAMPLE_N=0;
+const SAMPLE_POOL=['backdrop_sunset.png','backdrop_emerald_waves.png','backdrop_neon_horizon.png','backdrop_warm_paper.png'];
+function demoSampleName(kind){
+  SAMPLE_N++;
+  if(kind==='video'){const n='sample_clip_'+SAMPLE_N+'.mp4';DEMO_FILES[n]='demo/demo_video.mp4';return n;}
+  const n='sample_photo_'+SAMPLE_N+'.png';
+  DEMO_FILES[n]='demo/bg/'+SAMPLE_POOL[SAMPLE_N%SAMPLE_POOL.length];
+  return n;
+}
+function demoToast(msg){
+  let t=document.getElementById('demotoast');
+  if(!t){t=document.createElement('div');t.id='demotoast';
+    t.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:600;'+
+    'background:#0d1726;border:1px solid #35d399;color:#dbe4f3;font-size:12.5px;line-height:1.5;'+
+    'padding:10px 16px;max-width:86vw;box-shadow:0 10px 30px #000a;transition:opacity .4s';
+    document.body.appendChild(t);}
+  t.textContent=msg;t.style.opacity='1';
+  clearTimeout(t._h);t._h=setTimeout(function(){t.style.opacity='0';},3400);
+}
+function demoAddComposer(kind){
+  media.push(demoSampleName(kind));
+  paintChips();paintLimits();
+  demoToast(kind==='video'
+    ?'Demo: sample clip added. In the real app, this records straight from your camera.'
+    :'Demo: sample photo added. In the real app, this opens your own camera roll.');
+}
+function demoAddStudio(){
+  SMEDIA.push(demoSampleName('photo'));paintSChips();
+  demoToast('Demo: sample photo added. In the real app, this opens your own camera roll.');
+}
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 let DEMO_CHAT=[
  {convo:'demo1',name:'Sarah',email:'sarah@lemarsbakery.com',updated:Date.now()-540000,finished:false,
@@ -505,9 +536,9 @@ function renderComposer(){
     <input type="file" id="camshot" accept="image/*" capture="environment" style="display:none">
     <input type="file" id="camvid" accept="video/*" capture="environment" style="display:none">
     <div class="row" style="margin-top:10px">
-      <button class="tgl" style="padding:9px 16px;font-size:13px" onclick="document.getElementById('filepick').click()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:7px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Upload photos &amp; videos</button>
-      <button class="tgl" style="padding:9px 16px;font-size:13px" onclick="document.getElementById('camshot').click()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:7px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Camera</button>
-      <button class="tgl" style="padding:9px 16px;font-size:13px" onclick="document.getElementById('camvid').click()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:7px"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>Record</button>
+      <button class="tgl" style="padding:9px 16px;font-size:13px" onclick="demoAddComposer('photo')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:7px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Upload photos &amp; videos</button>
+      <button class="tgl" style="padding:9px 16px;font-size:13px" onclick="demoAddComposer('photo')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:7px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Camera</button>
+      <button class="tgl" style="padding:9px 16px;font-size:13px" onclick="demoAddComposer('video')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:7px"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>Record</button>
     </div>
     <div id="chips"></div>
     <div style="margin-top:16px" class="platforms" id="plats"></div>
@@ -523,14 +554,11 @@ function renderComposer(){
   <div class="card" id="queuecard"><h2>Queue</h2><div id="queuebox"></div>
     <div class="note">Scheduled posts publish automatically once the worker
     (Prompt 4) is running. Until then they wait here patiently.</div></div>`;
-  const dz=document.getElementById('dropzone'),fp=document.getElementById('filepick');
-  dz.onclick=()=>fp.click();
+  const dz=document.getElementById('dropzone');
+  dz.onclick=()=>demoAddComposer('photo');
   dz.ondragover=e=>{e.preventDefault();dz.classList.add('drag');};
   dz.ondragleave=()=>dz.classList.remove('drag');
-  dz.ondrop=e=>{e.preventDefault();dz.classList.remove('drag');uploadFiles(e.dataTransfer.files);};
-  fp.onchange=()=>uploadFiles(fp.files);
-  document.getElementById('camshot').onchange=function(){uploadFiles(this.files);this.value='';};
-  document.getElementById('camvid').onchange=function(){uploadFiles(this.files);this.value='';};
+  dz.ondrop=e=>{e.preventDefault();dz.classList.remove('drag');demoAddComposer('photo');};
   paintPlatforms();paintChips();loadQueue();
 }
 function paintPlatforms(){
@@ -873,18 +901,18 @@ async function renderLibrary(){
   c.innerHTML=`
   <div class="card"><h2>Backdrops</h2>
     <div class="note" style="margin-bottom:8px">Images the Studio can put behind your videos. Vertical (9:16) looks best.</div>
-    <button class="tgl" style="padding:9px 16px" onclick="document.getElementById('libbg').click()">Upload backdrops</button>
+    <button class="tgl" style="padding:9px 16px" onclick="demoToast('Demo: uploads are turned off here. In the real app your backdrops land in the library instantly.')">Upload backdrops</button>
     <input type="file" id="libbg" multiple accept="image/*" style="display:none">
     <div class="bgshelf" id="libbgshelf" style="margin-top:14px">loading...</div>
   </div>
   <div class="card" id="musiccard"><h2>Music</h2>
     <div class="note" style="margin-bottom:8px">Tracks for under your videos. Use royalty-free sources: the YouTube Audio Library or pixabay.com/music.</div>
-    <button class="tgl" style="padding:9px 16px" onclick="document.getElementById('libmu').click()">Upload music</button>
+    <button class="tgl" style="padding:9px 16px" onclick="demoToast('Demo: uploads are turned off here. In the real app your tracks land in the library instantly.')">Upload music</button>
     <input type="file" id="libmu" multiple accept="audio/*,.mp3,.wav,.m4a,.ogg" style="display:none">
     <div id="libmulist" style="margin-top:14px">loading...</div>
   </div>`;
-  document.getElementById('libbg').onchange=function(){libUpload('bg',this.files);};
-  document.getElementById('libmu').onchange=function(){libUpload('music',this.files);};
+  
+  
   const bgs=await api('/api/studio/backgrounds');
   LIB_BG=bgs.backgrounds||[];
   document.getElementById('libbgshelf').innerHTML=LIB_BG.map(b=>
@@ -966,7 +994,7 @@ function renderStudio(){
     <textarea id="sprompt" placeholder="What should today's post be about? e.g. 'Announce that our social media presence kit is almost ready - build your own Buffer for $0'">Write today's post from these two photos of the shop at sunrise - warm, confident, ends with a question.</textarea>
     <div class="row" style="margin-top:12px">
       <span style="position:relative;display:inline-block"><span class="clickhint clickhint-gen">click here &#8595;</span><button class="btn" id="genbtn" onclick="studioGenerate()">Generate drafts</button></span>
-      <button class="tgl" style="padding:10px 16px;font-size:13px" onclick="document.getElementById('spick').click()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:7px"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Add photos / video</button>
+      <button class="tgl" style="padding:10px 16px;font-size:13px" onclick="demoAddStudio()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:7px"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Add photos / video</button>
       <span class="note">The AI looks at attached photos and writes about what it sees; they become the video's backgrounds too. Upload your OWN video and the Studio dresses it: captions + narration.</span>
     </div>
     <input type="file" id="spick" multiple accept="image/*,video/*" style="display:none">
@@ -974,7 +1002,7 @@ function renderStudio(){
     <div id="sresults"></div>
   </div>`;
   const sp=document.getElementById('spick');
-  if(sp&&!sp._wired){sp._wired=true;sp.onchange=function(){studioUpload(this.files);this.value='';};}
+  /* demo: real file inputs unwired */
   paintSChips();
   if(STUDIO.content)paintStudioResults();
 }
@@ -1002,7 +1030,7 @@ async function studioUpload(files){
 }
 async function studioGenerate(){
   const sp=document.getElementById('spick');
-  if(sp&&!sp._wired){sp._wired=true;sp.onchange=function(){studioUpload(this.files);this.value='';};}
+  /* demo: real file inputs unwired */
   const btn=document.getElementById('genbtn');
   btn.disabled=true;btn.textContent='Thinking...';
   try{
