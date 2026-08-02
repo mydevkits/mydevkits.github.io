@@ -320,8 +320,8 @@ let STATUS={platforms:{}},media=[],checked={facebook:false,instagram:false,x:fal
 
 /* ================= DEMO STAGING LAYER ================= */
 const DEMO_FILES={
- 'sunrise_jobsite.png':'demo/bg/backdrop_sunset.png',
- 'shop_floor.png':'demo/bg/backdrop_charcoal_bokeh.png',
+ 'sunrise_jobsite.png':'img/storefront_1.jpg',
+ 'shop_floor.png':'img/storefront_2.jpg',
  'edit_demo.png':'demo/bg/backdrop_purple_glow.png',
  'studio_demo.mp4':'demo/demo_video.mp4',
  'launch_video.mp4':'demo/demo_video.mp4'
@@ -348,6 +348,7 @@ function demoToast(msg){
   clearTimeout(t._h);t._h=setTimeout(function(){t.style.opacity='0';},3400);
 }
 function demoAddComposer(kind){
+  if(media.length>=6){demoToast("That's plenty for the demo - the real app has no such limit.");return;}
   media.push(demoSampleName(kind));
   paintChips();paintLimits();
   demoToast(kind==='video'
@@ -993,10 +994,10 @@ function renderStudio(){
   const c=document.getElementById('content');
   c.innerHTML=`
   <div class="card"><h2>Studio - one prompt, everything drafted</h2>
-    <textarea id="sprompt" placeholder="What should today's post be about? e.g. 'Announce that our social media presence kit is almost ready - build your own Buffer for $0'">Write today's post from these two photos of the shop at sunrise - warm, confident, ends with a question.</textarea>
+    <textarea id="sprompt" readonly style="cursor:default;background:var(--input)" placeholder="What should today's post be about? e.g. 'Announce that our social media presence kit is almost ready - build your own Buffer for $0'">Write today's post from these two photos of the shop at sunrise - warm, confident, ends with a question.</textarea>
     <div class="row" style="margin-top:12px">
       <span style="position:relative;display:inline-block"><span class="clickhint clickhint-gen">click here &#8595;</span><button class="btn" id="genbtn" onclick="studioGenerate()">Generate drafts</button></span>
-      <button class="tgl" style="padding:10px 16px;font-size:13px" onclick="demoAddStudio()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:7px"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Add photos / video</button>
+      <button type="button" class="tgl" style="padding:10px 16px;font-size:13px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:7px"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Add photos / video</button>
       <span class="note">The AI looks at attached photos and writes about what it sees; they become the video's backgrounds too. Upload your OWN video and the Studio dresses it: captions + narration.</span>
     </div>
     <input type="file" id="spick" multiple accept="image/*,video/*" style="display:none">
@@ -1271,7 +1272,7 @@ const TIP_RULES=[
  ['.nav[data-view="numbers"]','Followers, reach, and post performance across every platform.'],
  ['.nav[data-view="themes"]','Eight palettes. Assign one to light mode and one to dark.'],
  ['.nav[data-view="library"]','Upload and manage your backdrop and music collections.'],
- ['#sprompt','Type what today\'s post should be about, in plain words. Then hit Generate drafts.'],
+ ['#sprompt','The prompt is pre-written for the demo. In the real app, you type what today\'s post should be about, then hit Generate drafts.'],
  ['#text','Write it once here. The counters below check it against every platform you select, and Restyle can rewrite it per platform.'],
  ['#paintrow','Describe any scene in the box and hit Paint backdrop: the AI paints it straight onto your shelf.'],
  ['#capsarea','Every caption is a draft you can edit freely. Each platform gets its own version, and nothing publishes until you approve it.'],
@@ -1286,6 +1287,7 @@ const TEXT_TIPS={
  'Record':'Record video straight into the post.',
  'Upload photos & videos':'Multi-select uploads from your computer.',
  'Upload backdrops':'Add your own images to the backdrop shelf.',
+ 'Add photos / video':'In the demo, two sample shots are already attached. In the real app this opens your camera roll - and the AI writes about what it actually sees in your photos.',
  'Upload music':'Add royalty-free tracks: YouTube Audio Library and pixabay.com/music are free.',
  'Schedule':'Queue this post for any date and time. It publishes while you sleep.',
  'Paint backdrop':'The AI paints a brand-new backdrop from your description.',
