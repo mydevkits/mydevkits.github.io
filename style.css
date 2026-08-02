@@ -243,3 +243,13 @@ footer{border-top:1px solid var(--bl);margin-top:40px;padding:34px 0 44px;text-a
   padding:13px 24px;font-size:14.5px;box-shadow:0 14px 36px rgba(0,0,0,.45)}
 .frame-lap:hover .demolink{background:rgba(5,10,20,.38)}
 .frame-lap:hover .demolink span{opacity:1;transform:none}
+
+/* ---- mobile sanity ---- */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{overflow-x:hidden}
+@media(max-width:700px){
+  .heroglow{display:none}
+  .heroart a{width:calc(50% - 9px)}
+  .ll-form{width:100%}
+  .pcta .btn{flex:1;text-align:center;padding:13px 10px}
+}
