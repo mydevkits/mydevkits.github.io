@@ -651,6 +651,7 @@ function paintOpts(){
     <option value="unlisted">Unlisted</option><option value="private">Private</option></select>
     <div class="note">Vertical video under 3 minutes becomes a Short automatically.</div></div>`;
   box.innerHTML=html;
+  growAll('#optbox textarea');
 }
 async function uploadFiles(files){
   for(const f of files){
@@ -1007,6 +1008,11 @@ function renderStudio(){
   paintSChips();
   if(STUDIO.content)paintStudioResults();
 }
+function autoGrow(el){el.style.height='auto';el.style.height=(el.scrollHeight+4)+'px';el.style.overflowY='hidden';}
+function growAll(sel){document.querySelectorAll(sel).forEach(function(t){
+  autoGrow(t);
+  if(!t._grow){t._grow=true;t.addEventListener('input',function(){autoGrow(t);});}
+});}
 function sfield(id,label,val,rows){
   return '<label style="display:block;font-size:12px;color:var(--muted);margin:12px 0 4px">'+label+
     '</label><textarea id="'+id+'" style="min-height:'+(rows||60)+'px">'+(val||'').replace(/</g,'&lt;')+'</textarea>';
@@ -1100,6 +1106,7 @@ function paintStudioResults(){
   html+='<div class="row" style="margin-top:16px"><button class="btn" onclick="studioToComposer()">Send to Composer &rarr;</button>'+
     '<span class="note">Loads the caption + video into the Composer; you still press Publish.</span></div>';
   document.getElementById('sresults').innerHTML=html;
+  growAll('#sresults textarea');
   loadBackdrops();
   api('/api/studio/music').then(r=>{
     const sel=document.getElementById('s_music');
