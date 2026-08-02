@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Custom Builds, On Site · MyDevKits</title>
+<meta name="description" content="Custom automation built on your hardware for the Siouxland tri-state region. Free consultation: your pain points, your subscription bills, replaced by software you own.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="wrap">
+
+<div class="topnav">
+  <a class="logo" href="index.html"><span class="my">My</span>DevKits</a>
+  <nav>
+    <a href="builds.html">Dev Kits</a>
+    <a href="shelf.html">The Shelf</a>
+    <a href="whyus.html">Why Us</a>
+    <a href="service.html" style="color:var(--green)">Customer Kits</a>
+    <a href="service.html#consult" style="color:var(--green)">Book a Consult</a>
+  </nav>
+</div>
+
+<section id="service" style="padding-top:34px">
+  <div class="kicker">Path 02 &middot; done for you</div>
+  <h2>On-Site Automation Builds</h2>
+  <div class="rule"></div>
+  <div class="svc">
+    <div class="svc-grid">
+      <div>
+        <p><b style="color:var(--ink)">You run a business, not a computer lab.</b> Every build starts with a consultation, not a catalog: we go over your pain points, what eats your week, and every piece of software you're paying for monthly. Then we design custom automation to replace it with something you own outright.</p>
+        <p>Posting and scheduling, customer messages, quotes and invoices, reports, alerts, dashboards: if it's repetitive and it's costing you time or subscription fees, it's a candidate.</p>
+        <ul>
+          <li>Built on <b style="color:var(--ink)">your</b> hardware. Nothing lives on our servers</li>
+          <li>Every key, password, and file handed to you. We keep nothing</li>
+          <li>Built to replace the software you rent, and the fees that ride along</li>
+          <li>No subscriptions created. Not to us, not to anyone</li>
+          <li>Plain-English walkthrough so your team can drive it</li>
+          <li>Built with the same kits we publish. You can look inside</li>
+        </ul>
+        <div class="area"><b>Service area:</b> the Siouxland tri-state region: Northwest Iowa, Northeast Nebraska &amp; Southeast South Dakota. Sioux City, Le Mars &amp; Cherokee to Norfolk, Hartington &amp; Wayne to Yankton, Vermillion &amp; everywhere between.</div>
+      </div>
+      <div class="cform" id="consult">
+        <div class="kicker" style="margin-bottom:4px">Book a free consultation</div>
+        <form id="consult-form">
+          <label>Your name</label>
+          <input id="cf-name" type="text" required placeholder="First and last name">
+          <label>Email</label>
+          <input id="cf-email" type="email" required placeholder="you@business.com">
+          <label>Phone</label>
+          <input id="cf-phone" type="tel" required placeholder="(555) 555-5555">
+          <label>Your town</label>
+          <select id="cf-town" required>
+            <option value="">Select your town...</option>
+            <optgroup label="Northwest Iowa">
+              <option>Sioux City</option><option>Sergeant Bluff</option>
+              <option>Le Mars</option><option>Orange City</option>
+              <option>Hawarden</option><option>Akron</option>
+              <option>Kingsley</option><option>Hinton</option>
+              <option>Cherokee</option>
+            </optgroup>
+            <optgroup label="Northeast Nebraska">
+              <option>South Sioux City</option><option>Norfolk</option>
+              <option>Columbus</option><option>Hartington</option>
+              <option>Fordyce</option><option>St. Helena</option>
+              <option>Wynot</option><option>Laurel</option>
+              <option>Randolph</option><option>Coleridge</option>
+              <option>Wayne</option><option>Wakefield</option>
+              <option>Ponca</option><option>Crofton</option>
+              <option>Bloomfield</option><option>Niobrara</option>
+              <option>Creighton</option><option>Pierce</option>
+              <option>Osmond</option><option>Plainview</option>
+              <option>Madison</option><option>Stanton</option>
+              <option>Wisner</option><option>West Point</option>
+              <option>O'Neill</option><option>Neligh</option>
+              <option>Fremont</option>
+            </optgroup>
+            <optgroup label="Southeast South Dakota">
+              <option>North Sioux City</option><option>Dakota Dunes</option>
+              <option>Elk Point</option><option>Vermillion</option>
+              <option>Yankton</option>
+            </optgroup>
+            <option>Other / nearby</option>
+          </select>
+          <label>What eats your week? Pain points, repetitive work, or monthly software you&rsquo;d rather own</label>
+          <textarea id="cf-goal" required placeholder="e.g. we pay $89/month for scheduling software... answering the same customer questions... invoices done by hand every Sunday night..."></textarea>
+          <label>Any software you already use that we should connect to? (optional)</label>
+          <textarea id="cf-integrations" style="min-height:56px" placeholder="e.g. QuickBooks, Square, Google Calendar, Facebook page..."></textarea>
+          <button class="btn btn-green" type="submit" style="margin-top:16px;width:100%">Request my consultation</button>
+          <div class="fine-consent">By submitting, you agree we may contact you about your request and send occasional MyDevKits updates. No spam, unsubscribe anytime.</div>
+          <div id="c-result"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+// Consultation form -> the same drop-box the chat uses -> the hub inbox.
+(function(){
+  var CHAT_URL="https://mydevkits-chat.jcarpinteria21.workers.dev";
+  var f=document.getElementById('consult-form');
+  f.onsubmit=function(e){
+    e.preventDefault();
+    var g=function(id){return document.getElementById(id).value.trim();};
+    var name=g('cf-name');
+    var text="CONSULTATION REQUEST\n"+
+      "Name: "+name+"\n"+
+      "Email: "+g('cf-email')+"\n"+
+      "Phone: "+g('cf-phone')+"\n"+
+      "Town: "+g('cf-town')+"\n"+
+      "Wants to automate: "+g('cf-goal')+"\n"+
+      "Existing software: "+(g('cf-integrations')||"(none listed)");
+    var convo="consult-"+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+    var btn=f.querySelector('button');btn.disabled=true;btn.textContent="Sending...";
+    fetch(CHAT_URL+"/msg",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({convo:convo,name:name,email:g('cf-email'),text:text})})
+      .then(function(r){return r.json();})
+      .then(function(){
+        var res=document.getElementById('c-result');
+        res.style.display='block';
+        res.textContent="Request received. It just landed in our hub. We'll reach out within one business day.";
+        f.reset();btn.disabled=false;btn.textContent="Request my consultation";
+      })
+      .catch(function(){
+        var res=document.getElementById('c-result');
+        res.style.display='block';res.style.borderColor='var(--amber)';
+        res.textContent="Hmm, that didn't go through. Try once more, or use the chat bubble instead.";
+        btn.disabled=false;btn.textContent="Request my consultation";
+      });
+  };
+})();
+</script>
+
+<footer>
+  <div class="socials">
+    <a href="https://x.com/mydevkits">X</a>
+    <a href="https://www.youtube.com/@mydevkits">YouTube</a>
+    <a href="https://www.instagram.com/mydevkits">Instagram</a>
+    <a href="https://www.facebook.com/mydevkits">Facebook</a>
+  </div>
+  <p class="fine">&copy; 2026 MyDevKits &middot; Siouxland tri-state region (IA &middot; NE &middot; SD). Build kits are educational materials, not financial advice. Trading involves real risk of loss. Every kit teaches demo-first, paper-first, evidence-first building, and means it.</p>
+</footer>
+
+</div>
+<script src="widget.js"></script>
+</body>
+</html>

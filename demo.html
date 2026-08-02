@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Live demo · Social Media Presence Kit · MyDevKits</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{
+  /* PLAY - the dark command center */
+  --bg:#0a0f18; --card:#0d1726; --border:#1f3a5c; --text:#dbe4f3;
+  --muted:#5d738f; --label:#7cd4fc; --green:#35d399; --red:#f87171;
+  --amber:#fbbf24; --radius:14px;
+  --raise:#12203a; --input:#0a1220; --bubble:#122036; --own:#0f2a22;
+  --div:#16243c;
+}
+body.lighttheme .card,body.lighttheme #sidebar,body.lighttheme #header{box-shadow:0 10px 30px rgba(18,38,63,.07)}
+body.lighttheme .btn{color:#053a28}
+/* themes room */
+.swatch{display:inline-block;width:150px;border:2px solid var(--border);cursor:pointer;
+ margin:8px 10px 4px 0;transition:transform .12s;vertical-align:top}
+.swatch:hover{transform:translateY(-3px)}
+.swatch.on{border-color:var(--green)}
+.swatch .sw-top{height:64px;padding:8px;display:flex;flex-direction:column;gap:5px}
+.swatch .sw-card{flex:1;display:flex;align-items:center;padding:0 8px;gap:6px;font-size:9px;font-weight:700}
+.swatch .sw-dot{width:8px;height:8px;border-radius:50%}
+.swatch .sw-name{font-size:11.5px;padding:7px 9px;color:var(--text);background:var(--card);border-top:1px solid var(--border)}
+.swatch .sw-name b{display:block;font-size:9px;color:var(--green);letter-spacing:.1em}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);
+  font-family:Inter,system-ui,'Segoe UI',sans-serif;font-size:15px}
+.mono{font-family:'JetBrains Mono',Consolas,monospace}
+#layout{display:flex;min-height:100vh}
+#sidebar{width:210px;background:var(--card);border-right:1px solid var(--border);
+  padding:18px 10px;flex-shrink:0}
+#sidebar h1{font-size:15px;padding:4px 10px 16px;color:var(--text)}
+#sidebar h1 span{color:var(--green)}
+.navlabel{font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--label);padding:14px 10px 6px}
+.nav{display:block;width:100%;text-align:left;padding:9px 12px;margin:2px 0;
+  background:none;border:none;border-radius:9px;color:var(--muted);
+  font-size:14px;cursor:pointer;font-family:inherit}
+.nav:hover{background:var(--raise);color:var(--text)}
+.nav.active{background:var(--raise);color:var(--text)}
+.nav .dot{display:inline-block;width:8px;height:8px;border-radius:50%;
+  margin-right:8px;background:var(--muted)}
+.nav .dot.on{background:var(--green)}
+.nav .dot.off{background:var(--red)}
+#main{flex:1;display:flex;flex-direction:column;min-width:0}
+#header{display:flex;align-items:center;justify-content:space-between;
+  padding:14px 26px;border-bottom:1px solid var(--border);background:var(--card)}
+#header .crumb{font-size:13px;color:var(--muted)}
+#pausebtn{background:none;border:1px solid var(--border);color:var(--muted);
+  border-radius:9px;padding:7px 14px;font-size:13px;cursor:pointer;font-family:inherit}
+#pausebtn.paused{border-color:var(--red);color:var(--red)}
+#content{padding:26px;max-width:980px;width:100%}
+.card{background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:20px;margin-bottom:18px}
+.card h2{font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--label);margin-bottom:14px}
+textarea,input[type=text],input[type=url],input[type=datetime-local],select{
+  width:100%;background:var(--input);border:1px solid var(--border);
+  border-radius:9px;color:var(--text);padding:10px 12px;font-size:15px;
+  font-family:inherit;outline:none}
+textarea:focus,input:focus,select:focus{border-color:var(--label)}
+textarea{min-height:110px;resize:vertical}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.platforms{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+.plat{border:1px solid var(--border);border-radius:10px;padding:11px 13px;
+  cursor:pointer;user-select:none}
+.plat.checked{border-color:var(--green)}
+.plat.disabled{opacity:.45;cursor:not-allowed}
+.plat .pname{font-weight:600;font-size:14px}
+.plat .plimit{font-size:12px;color:var(--muted);margin-top:3px}
+.plat .plimit.over{color:var(--red)}
+#dropzone{border:1.5px dashed #35507a;border-radius:10px;padding:22px;
+  text-align:center;color:var(--text);font-size:14px;cursor:pointer;
+  background:var(--bubble)}
+#dropzone:hover{background:var(--raise);border-color:var(--label)}
+#dropzone.drag{border-color:var(--green);background:var(--own);color:var(--text)}
+.chip{display:inline-flex;align-items:center;gap:7px;background:var(--input);
+  border:1px solid var(--border);border-radius:8px;padding:5px 10px;
+  font-size:13px;margin:6px 6px 0 0}
+.chip button{background:none;border:none;color:var(--red);cursor:pointer;font-size:14px}
+.opts{margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.opts label{display:block;font-size:12px;color:var(--muted);margin:10px 0 4px}
+.btn{background:var(--green);color:#052018;border:none;border-radius:9px;
+  padding:11px 20px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.btn.secondary{background:none;border:1px solid var(--border);color:var(--text);font-weight:500}
+.btn:disabled{opacity:.5;cursor:wait}
+.result{border-radius:9px;padding:10px 14px;margin-top:10px;font-size:14px;
+  border:1px solid var(--border)}
+.result.ok{border-color:var(--green)}
+.result.err{border-color:var(--red)}
+.result a{color:var(--label)}
+.postrow{display:flex;justify-content:space-between;gap:12px;padding:11px 2px;
+  border-bottom:1px solid var(--border);font-size:14px}
+.postrow:last-child{border-bottom:none}
+.postrow a{color:var(--label);text-decoration:none}
+.postrow .when{color:var(--muted);font-size:12px;white-space:nowrap}
+.placeholder{color:var(--muted);text-align:center;padding:40px 0;font-size:14px}
+.qrow{display:flex;justify-content:space-between;align-items:center;gap:10px;
+  padding:10px 2px;border-bottom:1px solid var(--border);font-size:14px}
+.qrow:last-child{border-bottom:none}
+.qrow .qwhen{color:var(--amber);font-size:13px;white-space:nowrap}
+.qrow button{background:none;border:1px solid var(--border);color:var(--red);
+  border-radius:7px;padding:4px 10px;cursor:pointer;font-size:12px}
+.note{font-size:13px;color:var(--muted);margin-top:8px}
+/* media chips + grids */
+.mchip{position:relative;display:inline-block;margin:8px 8px 0 0;border:1px solid var(--border);
+ background:var(--input);transition:transform .15s;z-index:1}
+.mchip:hover{transform:scale(1.5);z-index:5;box-shadow:0 8px 30px #000a}
+.mchip img,.mchip video{width:86px;height:86px;object-fit:cover;display:block;cursor:default}
+.mchip button{position:absolute;top:2px;right:2px;background:#000b;border:none;color:#fff;
+ cursor:pointer;font-size:12px;width:20px;height:20px;line-height:1}
+.bgshelf{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.bgpick{width:74px;height:120px;object-fit:cover;border:2px solid var(--border);
+ cursor:pointer;transition:transform .12s;display:block}
+.bgpick:hover{transform:translateY(-3px)}
+.bgpick.on{border-color:var(--green);box-shadow:0 0 0 1px var(--green)}
+.bgsel{position:absolute;top:4px;right:4px;background:#000b;border:1px solid #ffffff66;
+ color:#fff;cursor:pointer;width:24px;height:24px;font-size:13px;line-height:1}
+.bgsel.on{background:var(--green);color:#052018;border-color:var(--green)}
+.bgwrap{position:relative;display:inline-block}
+#lightbox{display:none;position:fixed;inset:0;background:rgba(4,8,13,.92);z-index:200;
+ align-items:center;justify-content:center;cursor:default}
+#lightbox.open{display:flex}
+#lightbox img,#lightbox video{max-width:92vw;max-height:92vh;box-shadow:0 20px 80px #000}
+#lightbox .lbx{position:fixed;top:18px;right:26px;background:none;border:1px solid #ffffff55;
+ color:#fff;font-size:16px;width:38px;height:38px;cursor:pointer}
+#lbedit{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);display:flex;gap:8px;
+ width:min(560px,92vw);background:#0d1726ee;border:1px solid #1f3a5c;padding:10px}
+#lbedit input{flex:1;background:#0a1220;border:1px solid #1f3a5c;color:#dbe4f3;
+ padding:10px 12px;font-size:14px;font-family:inherit;outline:none}
+#lbedit button{background:#35d399;color:#052018;border:none;padding:10px 18px;
+ font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;white-space:nowrap}
+#lbedit button:disabled{opacity:.5}
+.lbarrow{position:fixed;top:50%;transform:translateY(-50%);background:none;border:none;
+ color:#ffffffcc;font-size:54px;font-weight:200;cursor:pointer;padding:30px 22px;
+ user-select:none;transition:color .12s,transform .12s;font-family:inherit;line-height:1}
+.lbarrow:hover{color:#35d399;transform:translateY(-50%) scale(1.15)}
+.lbarrow.left{left:8px}.lbarrow.right{right:8px}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.pcard{border:1px solid var(--border);background:var(--input);overflow:hidden}
+.pcard .pmedia{width:100%;aspect-ratio:1;object-fit:cover;display:block;background:var(--bubble)}
+.pcard .pnone{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+ color:var(--muted);font-size:26px;background:var(--bubble)}
+.pcard .pinfo{padding:8px 10px}
+.pcard .pinfo a{color:var(--label);font-size:11.5px;text-decoration:none;word-break:break-all}
+.pcard .pwhen{font-size:10px;color:var(--muted);margin-top:4px}
+/* ---------- phone layout ---------- */
+@media(max-width:860px){
+  #layout{flex-direction:column}
+  #sidebar{width:100%;display:flex;align-items:center;gap:4px;padding:10px 12px;
+   overflow-x:auto;border-right:none;border-bottom:1px solid var(--border);
+   position:sticky;top:0;z-index:40;-webkit-overflow-scrolling:touch}
+  #sidebar h1{font-size:12px;padding:0 10px 0 0;white-space:nowrap}
+  #sidebar h1 br{display:none}
+  .navlabel{display:none}
+  .nav{width:auto;white-space:nowrap;padding:8px 12px;font-size:13px;flex-shrink:0}
+  #header{padding:10px 14px}
+  #content{padding:14px;max-width:100%}
+  .card{padding:14px}
+  .row{gap:8px}
+  .btn{padding:10px 14px;font-size:13px}
+  .platforms{grid-template-columns:1fr 1fr}
+  .qrow,.postrow{flex-wrap:wrap}
+  input[type=datetime-local]{width:100%!important}
+  #pausebtn,#themebtn{padding:6px 8px;font-size:11px}
+  .pgrid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
+}
+
+/* pressable toggle buttons */
+.tgl{background:var(--bubble);border:1px solid var(--border);color:var(--text);
+  padding:3px 10px;cursor:pointer;font-size:12px;font-family:inherit;line-height:1.4}
+.tgl:hover{border-color:var(--label)}
+.tgl:active{transform:translateY(1px);background:var(--input)}
+/* demo guidance layer */
+.nav:hover,.btn:hover,.tgl:hover,.plat:hover:not(.disabled),
+.bgsel:hover,#pausebtn:hover,#themebtn:hover,#dropzone:hover,
+.qrow button:hover,.libplay:hover,select:hover,.lbarrow:hover,.lbx:hover{
+ outline:2px solid rgba(53,211,153,.6);outline-offset:2px}
+.mchip:hover,.bgpick:hover,.pcard:hover{outline:2px solid rgba(53,211,153,.6);outline-offset:2px}
+#sprompt:hover{outline:2px solid rgba(53,211,153,.6);outline-offset:2px}
+.card:has(#sprompt:hover) #genbtn{outline:2px solid rgba(53,211,153,.6);outline-offset:2px}
+#text:hover,#themelight:hover,#themedark:hover,#queuecard:hover{
+ outline:2px solid rgba(53,211,153,.6);outline-offset:3px}
+#capsarea:hover,#storyarea:hover,#paintrow:hover,#constraints:hover,
+#musiccard:hover,#platroom:hover,#numroom:hover{
+ outline:2px solid rgba(53,211,153,.6);outline-offset:3px}
+.clickhint-gen{display:none;position:absolute;left:50%;transform:translateX(-50%);
+ top:-24px;margin:0;pointer-events:none}
+.card:has(#sprompt:hover) .clickhint-gen,.card:has(#genbtn:hover) .clickhint-gen{display:block}
+.clickhint{color:var(--green);font-family:ui-monospace,Consolas,monospace;
+ font-size:12px;letter-spacing:.08em;margin:0 10px;white-space:nowrap;font-weight:700}
+.pficon{display:inline-block;padding:1px 4px}
+.pficon:hover{outline:2px solid rgba(53,211,153,.7);outline-offset:1px}
+#demotip{position:fixed;z-index:400;max-width:260px;background:var(--card);
+ border:1px solid var(--green);color:var(--text);font-size:12.5px;line-height:1.5;
+ padding:9px 12px;pointer-events:none;display:none;box-shadow:0 10px 30px #0008}
+/* numbers */
+.ntile .nval{font-size:26px;font-weight:700;font-family:ui-monospace,Consolas,monospace}
+.spark{border:1px solid var(--border);background:var(--input);padding:12px 14px}
+.spark .sl{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--label);margin-bottom:6px}
+.spark .sv{font-size:17px;font-weight:700;font-family:ui-monospace,Consolas,monospace}
+.spark .sd{font-size:11px;color:var(--green)}
+.btn:active,.nav:active,#pausebtn:active{transform:translateY(1px)}
+/* crisp corners everywhere (status dots stay round) */
+#layout *,#layout{border-radius:0!important}
+.dot{border-radius:50%!important}
+</style>
+</head>
+<body>
+<div id="layout">
+  <div id="sidebar">
+    <h1>MYDEVKITS <span>&#9679;</span><br><span style="font-size:9px;letter-spacing:.24em;color:var(--muted)">SOCIAL MEDIA PRESENCE</span></h1>
+    <div class="navlabel">Rooms</div>
+    <button class="nav active" data-view="composer">Composer</button>
+    <button class="nav" data-view="studio">Studio</button>
+    <button class="nav" data-view="inbox">Inbox</button>
+    <button class="nav" data-view="numbers">Numbers</button>
+    <button class="nav" data-view="themes">Themes</button>
+    <button class="nav" data-view="library">Library</button>
+    <div class="navlabel">Platforms</div>
+    <button class="nav" data-view="facebook"><span class="dot" id="dot-facebook"></span>Facebook</button>
+    <button class="nav" data-view="instagram"><span class="dot" id="dot-instagram"></span>Instagram</button>
+    <button class="nav" data-view="x"><span class="dot" id="dot-x"></span>X</button>
+    <button class="nav" data-view="youtube"><span class="dot" id="dot-youtube"></span>YouTube</button>
+  </div>
+  <div id="main">
+    <div id="header">
+      <span class="crumb" id="crumb">Composer</span>
+      <span class="mono" style="border:1px solid var(--amber);color:var(--amber);font-size:10px;letter-spacing:.16em;padding:4px 10px;margin-left:12px">DEMO</span>
+      <span style="display:flex;gap:10px">
+      <span class="clickhint">try me &#8594;</span><button id="themebtn" onclick="toggleTheme()" style="background:none;border:1px solid var(--border);color:var(--muted);padding:7px 14px;font-size:13px;cursor:pointer;font-family:inherit">&#9728; work mode</button>
+      <button id="pausebtn" onclick="togglePause()">&#9646;&#9646; queue running</button>
+      </span>
+    </div>
+    <div id="content"></div>
+  </div>
+</div>
+<div id="demotip"></div>
+<a id="leavedemo" href="index.html" style="display:none;position:fixed;right:16px;bottom:16px;z-index:500;background:#0d1726;border:1px solid #35d399;color:#dbe4f3;font-size:11px;letter-spacing:.1em;padding:10px 16px;text-decoration:none;font-family:ui-monospace,Consolas,monospace;box-shadow:0 10px 30px #000a">&#8592; LEAVE DEMO</a>
+<script>if(window.self===window.top)document.getElementById('leavedemo').style.display='block';</script>
+<div id="lightbox" onclick="closeLightbox()">
+  <button class="lbx" onclick="closeLightbox()">&#10005;</button>
+  <button class="lbarrow left" onclick="event.stopPropagation();lbNav(-1)">&#8249;</button>
+  <span id="lbslot"></span>
+  <button class="lbarrow right" onclick="event.stopPropagation();lbNav(1)">&#8250;</button>
+  <div id="lbedit" onclick="event.stopPropagation()">
+    <input id="lbprompt" placeholder="Describe an edit for THIS photo... 'make the sky golden hour', 'remove the car'"
+      oninput="LB_DRAFTS[(LB_LIST||media)[LB_IDX]]=this.value"
+      onkeydown="if(event.key==='Enter')aiEditPhoto()">
+    <button id="lbeditbtn" onclick="aiEditPhoto()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72Z"/><path d="m14 7 3 3"/><path d="M5 6v4"/><path d="M19 14v4"/><path d="M10 2v2"/><path d="M7 8H3"/><path d="M21 16h-4"/><path d="M11 3H9"/></svg>Edit</button>
+  </div>
+</div>
+<script>
+let LB_IDX=-1,LB_LIST=null,LB_DRAFTS={},LB_PREFIX='/uploads/',LIB_BG=[];
+function lbShow(i){
+  const list=LB_LIST||media;
+  if(!list.length)return;
+  LB_IDX=(i+list.length)%list.length;
+  const m=list[LB_IDX];
+  const isvid=/\.(mp4|mov|m4v|avi|webm)$/i.test(m);
+  document.querySelectorAll('.lbarrow').forEach(a=>a.style.display=list.length>1?'block':'none');
+  document.getElementById('lbedit').style.display=(isvid||LB_PREFIX!=='/uploads/')?'none':'flex';
+  const lp=document.getElementById('lbprompt');
+  if(lp&&!isvid){lp.value=LB_DRAFTS[m]||'';}
+  document.getElementById('lbslot').innerHTML=isvid
+    ?'<video src="'+U(m)+'" controls autoplay onclick="event.stopPropagation()"></video>'
+    :'<img src="'+U(m)+'">';
+}
+function openLightbox(m,which){
+  if(which==='bg'){LB_LIST=LIB_BG;LB_PREFIX='/backgrounds/';}
+  else if(which==='s'){LB_LIST=SMEDIA;LB_PREFIX='/uploads/';}
+  else{LB_LIST=media;LB_PREFIX='/uploads/';}
+  lbShow(Math.max(0,LB_LIST.indexOf(m)));
+  document.getElementById('lightbox').classList.add('open');
+}
+async function aiEditPhoto(){
+  const list=LB_LIST||media,m=list[LB_IDX];
+  const inp=document.getElementById('lbprompt'),btn=document.getElementById('lbeditbtn');
+  const ins=(inp.value||'').trim();if(!ins)return;
+  btn.disabled=true;btn.textContent='Editing...';
+  try{
+    const r=await api('/api/studio/edit_photo',{method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({photo:m,instruction:ins})});
+    if(r.error){alert(r.error);return;}
+    delete LB_DRAFTS[m];
+    list.push(r.photo);
+    if(LB_LIST===SMEDIA)paintSChips();else{paintChips();paintLimits();}
+    inp.value='';
+    lbShow(list.length-1);
+  }finally{btn.disabled=false;btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72Z"/><path d="m14 7 3 3"/><path d="M5 6v4"/><path d="M19 14v4"/><path d="M10 2v2"/><path d="M7 8H3"/><path d="M21 16h-4"/><path d="M11 3H9"/></svg>Edit';}
+}
+function lbNav(d){lbShow(LB_IDX+d);}
+function closeLightbox(){
+  document.getElementById('lightbox').classList.remove('open');
+  document.getElementById('lbslot').innerHTML='';LB_IDX=-1;
+}
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('lightbox').classList.contains('open'))return;
+  if(e.key==='Escape')closeLightbox();
+  if(e.key==='ArrowLeft')lbNav(-1);
+  if(e.key==='ArrowRight')lbNav(1);
+});
+(function(){let tx=null;
+  const lb=document.getElementById('lightbox');
+  lb.addEventListener('touchstart',e=>tx=e.touches[0].clientX,{passive:true});
+  lb.addEventListener('touchend',e=>{
+    if(tx===null)return;
+    const dx=e.changedTouches[0].clientX-tx;tx=null;
+    if(Math.abs(dx)>60)lbNav(dx<0?1:-1);
+  },{passive:true});
+})();
+const LIMITS={x:280,instagram:2200,facebook:63206,youtube:5000};
+const PNAMES={facebook:"Facebook",instagram:"Instagram",x:"X",youtube:"YouTube"};
+let STATUS={platforms:{}},media=[],checked={facebook:false,instagram:false,x:false,youtube:false},overrides={};
+
+/* ================= DEMO STAGING LAYER ================= */
+const DEMO_FILES={
+ 'sunrise_jobsite.png':'demo/bg/backdrop_sunset.png',
+ 'shop_floor.png':'demo/bg/backdrop_charcoal_bokeh.png',
+ 'edit_demo.png':'demo/bg/backdrop_purple_glow.png',
+ 'studio_demo.mp4':'demo/demo_video.mp4',
+ 'launch_video.mp4':'demo/demo_video.mp4'
+};
+function U(m){return DEMO_FILES[m]||('demo/bg/'+m);}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+let DEMO_CHAT=[
+ {convo:'demo1',name:'Sarah',email:'sarah@lemarsbakery.com',updated:Date.now()-540000,finished:false,
+  messages:[
+   {from:'visitor',text:'Hi! Do you build systems for bakeries? We spend every Sunday doing the week\'s posts by hand.',ts:Date.now()-720000},
+   {from:'owner',text:'We do - that\'s exactly what the Social Presence build replaces. Want a free consultation this week?',ts:Date.now()-600000},
+   {from:'visitor',text:'Yes please! Tuesday afternoon works.',ts:Date.now()-540000}]},
+ {convo:'demo2',name:'Mike',email:'mike@siouxlandhvac.com',updated:Date.now()-7200000,finished:true,
+  messages:[
+   {from:'visitor',text:'How much to set up automated review responses?',ts:Date.now()-8000000},
+   {from:'owner',text:'Depends on your setup - booked you for Thursday at 2. See you then!',ts:Date.now()-7200000}]}
+];
+const DEMO_CONTENT={
+ facebook:"Our shop floor at sunrise, before the phones start ringing.\n\nEvery post you see this week was written, narrated, and published by the hub we built ourselves - one screen, every platform, zero subscriptions. We build the same thing for local businesses.\n\nWhat's the first job you'd hand it?",
+ instagram:"Sunrise at the shop. The hub posts while we pour the coffee. ☕\n\nOne dashboard. Every platform. Owned outright.\n\n#siouxland #smallbusiness #automation #buildit #ownit",
+ x:"Sunrise at the shop. Every post this week was written, narrated, and published by a hub we built ourselves. One screen, every platform, $0/month. Your move, subscription software.",
+ youtube_title:"One Machine Posts Everywhere (We Built It Ourselves)",
+ youtube_description:"A look at the Social Presence hub running our shop's accounts: one dashboard that writes, narrates, and publishes to every platform at once. Built once, owned forever. MyDevKits shows you how.",
+ video:{scenes:[
+  {headline:"One hub, every platform",sub:"Written, voiced, and posted from one screen."},
+  {headline:"Your photos, your voice",sub:"The AI looks at your shots and writes what it sees."},
+  {headline:"Posts while you pour coffee",sub:"Scheduled, narrated, published. Hands free."},
+  {headline:"Built once, owned forever",sub:"No subscriptions. Every key stays home."}],
+ voiceover:"This is our shop at sunrise. By the time the coffee's ready, the hub has already written the day's posts, narrated this video, and published everywhere at once. We built it ourselves, we own it outright, and it costs nothing a month. MyDevKits can show you how - or build one for you."}};
+async function api(path,opts){
+ const body=opts&&opts.body?JSON.parse(opts.body):{};
+ if(path.startsWith('/api/status'))return{title:'MYDEVKITS',queue_paused:false,platforms:{facebook:true,instagram:true,x:true,youtube:true}};
+ if(path.startsWith('/api/toggle_pause')){window._qp=!window._qp;return{queue_paused:window._qp};}
+ if(path.startsWith('/api/queue'))return{items:[
+  {id:'q1',when:tomorrow(9),text:'Behind the scenes: how the hub schedules this very post',platforms:['facebook','instagram','x'],media:['sunrise_jobsite.png'],status:'scheduled'},
+  {id:'q2',when:tomorrow(17),text:'Friday drop: the week in 40 seconds',platforms:['youtube'],media:['studio_demo.mp4'],status:'scheduled'}]};
+ if(path.startsWith('/api/published')){
+  const pf=new URLSearchParams(path.split('?')[1]||'').get('platform');
+  const items=[
+   {platform:'facebook',url:'#demo',timestamp:stamp(2),media:['studio_demo.mp4']},
+   {platform:'facebook',url:'#demo',timestamp:stamp(26),media:['sunrise_jobsite.png']},
+   {platform:'instagram',url:'#demo',timestamp:stamp(3),media:['sunrise_jobsite.png']},
+   {platform:'instagram',url:'#demo',timestamp:stamp(27),media:['shop_floor.png']},
+   {platform:'x',url:'#demo',timestamp:stamp(2),media:['studio_demo.mp4']},
+   {platform:'x',url:'#demo',timestamp:stamp(30),media:[]},
+   {platform:'youtube',url:'#demo',timestamp:stamp(2),media:['studio_demo.mp4']},
+   {platform:'youtube',url:'#demo',timestamp:stamp(50),media:['launch_video.mp4']}];
+  return{items:items.filter(i=>!pf||i.platform===pf)};}
+ if(path.startsWith('/api/chat/conversations'))return{conversations:DEMO_CHAT};
+ if(path.startsWith('/api/chat/reply')){
+  const c=DEMO_CHAT.find(x=>x.convo===body.convo);
+  if(c){c.messages.push({from:'owner',text:body.text,ts:Date.now()});c.updated=Date.now();}
+  return{ok:true};}
+ if(path.startsWith('/api/chat/finish')){
+  const c=DEMO_CHAT.find(x=>x.convo===body.convo);
+  if(c)c.finished=!!body.finished;return{ok:true};}
+ if(path.startsWith('/api/studio/generate')){await sleep(1600);return{content:JSON.parse(JSON.stringify(DEMO_CONTENT))};}
+ if(path.startsWith('/api/studio/restyle')){await sleep(1300);return{styled:{facebook:DEMO_CONTENT.facebook,instagram:DEMO_CONTENT.instagram,x:DEMO_CONTENT.x}};}
+ if(path.startsWith('/api/studio/build_video')){await sleep(2800);return{video:'studio_demo.mp4'};}
+ if(path.startsWith('/api/studio/music'))return{tracks:['blockbuster-by-alex-productions.mp3','serenity-by-mezcla.mp3']};
+ if(path.startsWith('/api/studio/backgrounds'))return{backgrounds:['backdrop_navy_grid.png','backdrop_emerald_waves.png','backdrop_sunset.png','backdrop_charcoal_bokeh.png','backdrop_steel_lines.png','backdrop_purple_glow.png','backdrop_warm_paper.png','backdrop_neon_horizon.png']};
+ if(path.startsWith('/api/studio/gen_background')){await sleep(1900);return{background:'backdrop_purple_glow.png'};}
+ if(path.startsWith('/api/studio/edit_photo')){await sleep(2200);return{photo:'edit_demo.png'};}
+ if(path.startsWith('/api/publish')){await sleep(1700);return{results:body.platforms.map(p=>({platform:p,ok:true,url:'#demo-post'}))};}
+ if(path.startsWith('/api/schedule'))return{scheduled:{when:body.when}};
+ return{};
+}
+function stamp(hoursAgo){return new Date(Date.now()-hoursAgo*3600000).toISOString();}
+function tomorrow(h){const d=new Date(Date.now()+86400000);d.setHours(h,0,0,0);
+ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+'T'+String(h).padStart(2,'0')+':00';}
+/* ================= END STAGING LAYER ================= */
+
+
+const THEMES={
+  midnight:{name:'Midnight',light:false,v:{bg:'#0a0f18',card:'#0d1726',border:'#1f3a5c',
+    text:'#dbe4f3',muted:'#5d738f',label:'#7cd4fc',green:'#35d399',red:'#f87171',
+    amber:'#fbbf24',raise:'#12203a',input:'#0a1220',bubble:'#122036',own:'#0f2a22',div:'#16243c'}},
+  daylight:{name:'Daylight',light:true,v:{bg:'#f6f8fb',card:'#ffffff',border:'#e3e8ee',
+    text:'#12263f',muted:'#5b6b7d',label:'#3d90ba',green:'#2fbf8a',red:'#dc5b5b',
+    amber:'#b45309',raise:'#eef2f7',input:'#f8fafc',bubble:'#eef2f7',own:'#e6f7f0',div:'#e9eef4'}},
+  mono:{name:'Black & White',light:false,v:{bg:'#0c0c0e',card:'#151517',border:'#2e2e33',
+    text:'#f2f2f2',muted:'#8f8f96',label:'#d6d6dc',green:'#ffffff',red:'#b9b9c0',
+    amber:'#9c9ca4',raise:'#1d1d21',input:'#101013',bubble:'#1d1d21',own:'#26262b',div:'#232327'}},
+  tan:{name:'Desert Tan',light:true,v:{bg:'#efe7db',card:'#f9f4ec',border:'#d8cbb8',
+    text:'#3d3226',muted:'#8a7a66',label:'#8a5a28',green:'#4a7c59',red:'#b3564d',
+    amber:'#9a6410',raise:'#e7dccb',input:'#fdfaf5',bubble:'#e7dccb',own:'#dcead9',div:'#e0d5c3'}},
+  metallic:{name:'Metallic',light:false,v:{bg:'#191c21',card:'#23272e',border:'#3d434d',
+    text:'#e6e9ee',muted:'#8d97a5',label:'#b7c6d6',green:'#57d9a3',red:'#e07a7a',
+    amber:'#d9a743',raise:'#2c313a',input:'#15181d',bubble:'#2c313a',own:'#27463b',div:'#333944'}},
+  pink:{name:'Pink',light:true,v:{bg:'#fdf1f5',card:'#fff8fb',border:'#f2cfdd',
+    text:'#45222f',muted:'#a06c80',label:'#c94f8c',green:'#d6488f',red:'#c44f4f',
+    amber:'#b07a26',raise:'#f8e3ec',input:'#fffbfd',bubble:'#f8e3ec',own:'#fce4f0',div:'#f3dae5'}},
+  purple:{name:'Purple',light:false,v:{bg:'#120f1d',card:'#1a1528',border:'#3a2f57',
+    text:'#e6dff5',muted:'#8b7fa8',label:'#b79df0',green:'#9d6bfa',red:'#f87171',
+    amber:'#fbbf24',raise:'#241c38',input:'#150f22',bubble:'#241c38',own:'#2f2547',div:'#2a2240'}},
+  neon:{name:'Neon Green',light:false,v:{bg:'#050807',card:'#0b120d',border:'#1d3b2a',
+    text:'#d7ffe8',muted:'#5d8f74',label:'#7dffc4',green:'#39ff88',red:'#ff5f5f',
+    amber:'#ffd23e',raise:'#0f1f16',input:'#060b08',bubble:'#0f1f16',own:'#123324',div:'#14271d'}},
+};
+// migrate old work/play settings once
+if(localStorage.getItem('hub_mode')==='work')localStorage.setItem('hub_mode','light');
+if(localStorage.getItem('hub_mode')==='play')localStorage.setItem('hub_mode','dark');
+['work:light','play:dark'].forEach(pair=>{
+  const [o,n]=pair.split(':'),v=localStorage.getItem('hub_theme_'+o);
+  if(v&&!localStorage.getItem('hub_theme_'+n))localStorage.setItem('hub_theme_'+n,v);
+});
+let MODE=localStorage.getItem('hub_mode')||'light';
+function assigned(mode){
+  return localStorage.getItem('hub_theme_'+mode)||(mode==='light'?'daylight':'midnight');
+}
+function applyPalette(){
+  const t=THEMES[assigned(MODE)]||THEMES.midnight;
+  for(const k in t.v)document.documentElement.style.setProperty('--'+k,t.v[k]);
+  document.body.classList.toggle('lighttheme',!!t.light);
+}
+function paintTheme(){
+  document.getElementById('themebtn').innerHTML=
+    MODE==='light'?'&#9789; dark mode':'&#9728; light mode';
+}
+function toggleTheme(){
+  MODE=(MODE==='light')?'dark':'light';
+  localStorage.setItem('hub_mode',MODE);
+  applyPalette();paintTheme();
+}
+function setThemeFor(mode,key){
+  localStorage.setItem('hub_theme_'+mode,key);
+  applyPalette();
+  if(document.getElementById('themeroom'))renderThemes();
+}
+applyPalette();
+async function boot(){
+  paintTheme();
+  STATUS=await api('/api/status');
+  for(const p in STATUS.platforms){
+    const d=document.getElementById('dot-'+p);
+    if(d)d.className='dot '+(STATUS.platforms[p]?'on':'off');
+  }
+  paintPause();
+  show('composer');
+}
+function paintPause(){
+  const b=document.getElementById('pausebtn');
+  if(STATUS.queue_paused){b.className='paused';b.innerHTML='&#9654; queue paused';}
+  else{b.className='';b.innerHTML='&#9646;&#9646; queue running';}
+}
+async function togglePause(){
+  const r=await api('/api/toggle_pause',{method:'POST'});
+  STATUS.queue_paused=r.queue_paused;paintPause();
+}
+document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');show(b.dataset.view);
+});
+
+function show(view){
+  if(typeof stopPreview==='function')stopPreview();
+  document.getElementById('crumb').textContent=
+    view==='composer'?'Composer':view==='studio'?'Studio':view==='inbox'?'Inbox':view==='numbers'?'Numbers':view==='themes'?'Themes':view==='library'?'Library':PNAMES[view];
+  if(view==='composer')return renderComposer();
+  if(view==='studio')return renderStudio();
+  if(view==='inbox')return renderInbox();
+  if(view==='numbers')return renderNumbersDemo();
+  if(view==='themes')return renderThemes();
+  if(view==='library')return renderLibrary();
+  renderPlatform(view);
+}
+function renderPlaceholder(msg){
+  document.getElementById('content').innerHTML=
+    '<div class="card"><div class="placeholder">'+msg+'</div></div>';
+}
+
+/* ---------------- Composer ---------------- */
+function renderComposer(){
+  const c=document.getElementById('content');
+  c.innerHTML=`
+  <div class="card"><h2>Compose once, publish everywhere</h2>
+    <textarea id="text" placeholder="Write it once..." oninput="paintLimits()"></textarea>
+    <div id="constraints" style="display:none;margin-top:8px;font-size:13px;
+      border:1px solid var(--border);border-radius:9px;padding:9px 12px"></div>
+    <div id="dropzone" style="margin-top:12px">drag &amp; drop images or <strong>videos</strong> here (mp4, mov...), or click to browse</div>
+    <input type="file" id="filepick" multiple accept="image/*,video/*" style="display:none">
+    <input type="file" id="camshot" accept="image/*" capture="environment" style="display:none">
+    <input type="file" id="camvid" accept="video/*" capture="environment" style="display:none">
+    <div class="row" style="margin-top:10px">
+      <button class="tgl" style="padding:9px 16px;font-size:13px" onclick="document.getElementById('filepick').click()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:7px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Upload photos &amp; videos</button>
+      <button class="tgl" style="padding:9px 16px;font-size:13px" onclick="document.getElementById('camshot').click()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:7px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Camera</button>
+      <button class="tgl" style="padding:9px 16px;font-size:13px" onclick="document.getElementById('camvid').click()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:7px"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>Record</button>
+    </div>
+    <div id="chips"></div>
+    <div style="margin-top:16px" class="platforms" id="plats"></div>
+    <div id="optbox"></div>
+    <div class="row" style="margin-top:16px">
+      <button class="btn" id="pubbtn" onclick="publishNow()">Publish now</button>
+      <button class="btn secondary" id="restylebtn" onclick="restyleNow()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72Z"/><path d="m14 7 3 3"/><path d="M5 6v4"/><path d="M19 14v4"/><path d="M10 2v2"/><path d="M7 8H3"/><path d="M21 16h-4"/><path d="M11 3H9"/></svg>Restyle per platform</button>
+      <input type="datetime-local" id="when" style="width:auto">
+      <button class="btn secondary" onclick="scheduleIt()">Schedule</button>
+    </div>
+    <div id="results"></div>
+  </div>
+  <div class="card" id="queuecard"><h2>Queue</h2><div id="queuebox"></div>
+    <div class="note">Scheduled posts publish automatically once the worker
+    (Prompt 4) is running. Until then they wait here patiently.</div></div>`;
+  const dz=document.getElementById('dropzone'),fp=document.getElementById('filepick');
+  dz.onclick=()=>fp.click();
+  dz.ondragover=e=>{e.preventDefault();dz.classList.add('drag');};
+  dz.ondragleave=()=>dz.classList.remove('drag');
+  dz.ondrop=e=>{e.preventDefault();dz.classList.remove('drag');uploadFiles(e.dataTransfer.files);};
+  fp.onchange=()=>uploadFiles(fp.files);
+  document.getElementById('camshot').onchange=function(){uploadFiles(this.files);this.value='';};
+  document.getElementById('camvid').onchange=function(){uploadFiles(this.files);this.value='';};
+  paintPlatforms();paintChips();loadQueue();
+}
+function paintPlatforms(){
+  const el=document.getElementById('plats');if(!el)return;
+  el.innerHTML='';
+  for(const p of ['facebook','instagram','x','youtube']){
+    const avail=STATUS.platforms[p];
+    const div=document.createElement('div');
+    div.className='plat'+(checked[p]?' checked':'')+(avail?'':' disabled');
+    div.innerHTML='<div class="pname">'+PNAMES[p]+'</div><div class="plimit" id="lim-'+p+'"></div>';
+    if(avail)div.onclick=()=>{checked[p]=!checked[p];paintPlatforms();paintOpts();};
+    else div.title=p==='instagram'?'Not connected yet - parked until the Page link':'Not connected';
+    el.appendChild(div);
+  }
+  paintLimits();
+}
+function effText(p){
+  return (overrides[p]||'').trim()||((document.getElementById('text')||{}).value||'');
+}
+function paintLimits(){
+  for(const p in LIMITS){
+    const el=document.getElementById('lim-'+p);if(!el)continue;
+    if(!STATUS.platforms[p]){el.textContent=p==='instagram'?'parked - not linked yet':'not connected';continue;}
+    const t=effText(p);
+    const over=t.length>LIMITS[p];
+    el.className='plimit'+(over?' over':'');
+    el.textContent=t.length+' / '+LIMITS[p]+(over?' - too long':' characters')
+      +((overrides[p]||'').trim()?' (custom)':'');
+    if(p==='youtube')el.textContent='video required - '+el.textContent;
+    if(p==='instagram')el.textContent='media required - '+el.textContent;
+  }
+  paintConstraints();
+}
+
+function activeRules(){
+  const sel=selectedPlatforms();
+  if(!sel.length)return null;
+  const imgs=media.filter(m=>!isVideo(m)),vids=media.filter(isVideo);
+  const rules={sel,problems:[]};
+  for(const p of sel){
+    const t=effText(p);
+    if(t.length>LIMITS[p])
+      rules.problems.push(PNAMES[p]+' text is '+t.length+' chars (allows '+LIMITS[p]+') - add a custom caption for it or shorten.');
+  }
+  if(sel.includes('youtube')&&!vids.length)
+    rules.problems.push('YouTube needs a video attached.');
+  if(sel.includes('instagram')&&!media.length)
+    rules.problems.push('Instagram needs an image or video attached.');
+  if(sel.includes('x')&&imgs.length>4)
+    rules.problems.push('X allows at most 4 images ('+imgs.length+' attached).');
+  return rules;
+}
+function isVideo(m){const e=m.slice(m.lastIndexOf('.')).toLowerCase();
+  return ['.mp4','.mov','.m4v','.avi','.webm'].includes(e);}
+function paintConstraints(){
+  const box=document.getElementById('constraints');if(!box)return;
+  const r=activeRules();
+  if(!r){box.style.display='none';return;}
+  box.style.display='block';
+  let head='<span style="font-size:10px;letter-spacing:.16em;color:var(--label)">POSTING REGULATIONS</span><br>Posting to '+r.sel.map(p=>
+    PNAMES[p]+' <span class="mono">'+effText(p).length+'/'+LIMITS[p]+'</span>').join(' &middot; ');
+  if(r.problems.length){
+    box.style.borderColor='var(--red)';
+    box.innerHTML=head+'<br><span style="color:var(--red)">&#9888; '+
+      r.problems.join(' ')+'</span>';
+  }else{
+    box.style.borderColor='var(--green)';
+    box.innerHTML=head+' <span style="color:var(--green)">&#10003; fits everywhere selected</span>';
+  }
+}
+function ovBox(p){
+  return '<label>Custom caption for '+PNAMES[p]+' (empty = use the main text)</label>'+
+    '<textarea style="min-height:56px" oninput="overrides[\''+p+'\']=this.value;paintLimits()" id="ov_'+p+'">'+
+    (overrides[p]||'').replace(/</g,'&lt;')+'</textarea>';
+}
+function paintOpts(){
+  const box=document.getElementById('optbox');if(!box)return;
+  let html='';
+  for(const p of ['facebook','instagram','x'])
+    if(checked[p])html+='<div class="opts"><strong style="font-size:13px">'+PNAMES[p]+' caption</strong>'+ovBox(p)+'</div>';
+  if(checked.facebook)html+=`<div class="opts"><strong style="font-size:13px">Facebook options</strong>
+    <label>Link to attach (text-only posts)</label><input type="url" id="fb_link" placeholder="https://..."></div>`;
+  if(checked.instagram)html+=`<div class="opts"><strong style="font-size:13px">Instagram options</strong>
+    <label><input type="checkbox" id="ig_story"> Post as a Story instead of feed</label></div>`;
+  if(checked.youtube)html+=`<div class="opts"><strong style="font-size:13px">YouTube options</strong>
+    <label>Title</label><input type="text" id="yt_title" maxlength="100" placeholder="Video title">
+    <label>Description</label><textarea id="yt_description" style="min-height:70px"></textarea>
+    <label>Privacy</label><select id="yt_privacy"><option value="public">Public</option>
+    <option value="unlisted">Unlisted</option><option value="private">Private</option></select>
+    <div class="note">Vertical video under 3 minutes becomes a Short automatically.</div></div>`;
+  box.innerHTML=html;
+}
+async function uploadFiles(files){
+  for(const f of files){
+    const name='your_'+f.name;
+    DEMO_FILES[name]=URL.createObjectURL(f);
+    media.push(name);
+  }
+  paintChips();paintLimits();
+}
+function paintChips(){
+  const el=document.getElementById('chips');if(!el)return;
+  el.innerHTML=media.map((m,i)=>{
+    const media_el=isVideo(m)
+      ?'<video src="'+U(m)+'" muted preload="metadata" onmouseover="this.play()" onmouseout="this.pause()" onclick="openLightbox(\''+m+'\')"></video>'
+      :'<img src="'+U(m)+'" loading="lazy" onclick="openLightbox(\''+m+'\')">';
+    return '<span class="mchip">'+media_el+
+      '<button title="remove" onclick="event.stopPropagation();media.splice('+i+',1);paintChips();paintLimits()">&#10005;</button></span>';
+  }).join('');
+}
+function gatherOptions(){
+  const v=id=>{const e=document.getElementById(id);return e?(e.type==='checkbox'?e.checked:e.value):undefined;};
+  return {fb_link:v('fb_link'),ig_story:v('ig_story'),yt_title:v('yt_title'),
+          yt_description:v('yt_description'),yt_privacy:v('yt_privacy')};
+}
+function selectedPlatforms(){return Object.keys(checked).filter(p=>checked[p]);}
+async function restyleNow(){
+  const btn=document.getElementById('restylebtn');
+  btn.disabled=true;btn.textContent='Styling...';
+  try{
+    const r=await api('/api/studio/restyle',{method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({text:document.getElementById('text').value})});
+    if(r.error){document.getElementById('results').innerHTML=
+      '<div class="result err">'+r.error+'</div>';return;}
+    document.getElementById('text').value=r.styled.facebook||document.getElementById('text').value;
+    overrides.x=r.styled.x||'';overrides.instagram=r.styled.instagram||'';
+    paintOpts();paintLimits();
+    document.getElementById('results').innerHTML=
+      '<div class="result ok">Styled for each platform - main text is now the Facebook version; X and Instagram have their own captions below. Edit anything, then publish.</div>';
+  }finally{btn.disabled=false;btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72Z"/><path d="m14 7 3 3"/><path d="M5 6v4"/><path d="M19 14v4"/><path d="M10 2v2"/><path d="M7 8H3"/><path d="M21 16h-4"/><path d="M11 3H9"/></svg>Restyle per platform';}
+}
+async function publishNow(){
+  const r0=activeRules();
+  if(r0&&r0.problems.length)return alert('Not yet:\n\n'+r0.problems.join('\n'));
+  const btn=document.getElementById('pubbtn');btn.disabled=true;btn.textContent='Publishing...';
+  try{
+    const r=await api('/api/publish',{method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({text:document.getElementById('text').value,
+        platforms:selectedPlatforms(),media:media,options:gatherOptions(),
+        overrides:overrides})});
+    const box=document.getElementById('results');
+    if(r.error){box.innerHTML='<div class="result err">'+r.error+'</div>';}
+    else box.innerHTML=r.results.map(x=>x.ok
+      ?'<div class="result ok">'+PNAMES[x.platform]+' &#10003; <a href="'+x.url+'" target="_blank">'+x.url+'</a></div>'
+      :'<div class="result err">'+PNAMES[x.platform]+' failed: '+x.error+'</div>').join('');
+  }finally{btn.disabled=false;btn.textContent='Publish now';}
+}
+async function scheduleIt(){
+  const r0=activeRules();
+  if(r0&&r0.problems.length)return alert('Not yet:\n\n'+r0.problems.join('\n'));
+  const when=document.getElementById('when').value;
+  if(!when)return alert('Pick a date and time first.');
+  const r=await api('/api/schedule',{method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({when:when,text:document.getElementById('text').value,
+      platforms:selectedPlatforms(),media:media,options:gatherOptions(),
+      overrides:overrides})});
+  if(r.error)return alert(r.error);
+  document.getElementById('results').innerHTML=
+    '<div class="result ok">Scheduled for '+r.scheduled.when.replace('T',' at ')+'</div>';
+  loadQueue();
+}
+async function loadQueue(){
+  const box=document.getElementById('queuebox');if(!box)return;
+  const r=await api('/api/queue');
+  if(!r.items.length){box.innerHTML='<div class="placeholder" style="padding:14px 0">Nothing scheduled yet.</div>';return;}
+  box.innerHTML=r.items.map(i=>
+    '<div class="qrow"><span>'+(i.text?i.text.slice(0,60):'(media only)')+
+    ' <span style="color:var(--muted)">&rarr; '+i.platforms.map(p=>PNAMES[p]).join(', ')+'</span></span>'+
+    '<span class="qwhen mono">'+i.when.replace('T',' ')+'</span>'+
+    '<button onclick="delQueue(\''+i.id+'\')">delete</button></div>').join('');
+}
+async function delQueue(id){await fetch('/api/queue/'+id,{method:'DELETE'});loadQueue();}
+
+/* ---------------- Inbox (website chat first; FB/IG/YT join in Prompt 5) ---------------- */
+let INBOX_TIMER=null,INBOX_FILTER='active',EXPANDED={};
+function renderInbox(){
+  const c=document.getElementById('content');
+  c.innerHTML=`
+  <div class="card"><h2>Unified inbox</h2>
+    <div class="row" style="margin-bottom:12px">
+      <span id="inboxcount" class="note" style="flex:1"></span>
+      <button class="btn secondary" id="fActive" style="padding:6px 12px;font-size:12px" onclick="setFilter('active')">Active</button>
+      <button class="btn secondary" id="fWait" style="padding:6px 12px;font-size:12px" onclick="setFilter('wait')">Awaiting reply</button>
+      <button class="btn secondary" id="fDone" style="padding:6px 12px;font-size:12px" onclick="setFilter('done')">Finished</button>
+    </div>
+    <div id="inboxbox"><div class="placeholder">loading...</div></div>
+  </div>`;
+  loadInbox();
+  clearInterval(INBOX_TIMER);
+  INBOX_TIMER=setInterval(()=>{
+    if(document.getElementById('inboxbox'))loadInbox();else clearInterval(INBOX_TIMER);
+  },30000);
+}
+function setFilter(f){INBOX_FILTER=f;loadInbox();}
+function esc(t){return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function toggleConvo(id){EXPANDED[id]=!EXPANDED[id];loadInbox();}
+async function markFinished(convo,fin){
+  await api('/api/chat/finish',{method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({convo:convo,finished:fin})});
+  loadInbox();
+}
+async function loadInbox(){
+  const box=document.getElementById('inboxbox');if(!box)return;
+  const r=await api('/api/chat/conversations');
+  if(r.error){box.innerHTML='<div class="result err">'+esc(r.error)+'</div>';return;}
+  const all=r.conversations.slice();
+  const isWaiting=c=>!c.finished&&c.messages.length&&c.messages[c.messages.length-1].from==='visitor';
+  const active=all.filter(c=>!c.finished),done=all.filter(c=>c.finished);
+  const waiting=active.filter(isWaiting).length;
+  const cnt=document.getElementById('inboxcount');
+  if(cnt)cnt.textContent=active.length+' active · '+waiting+' awaiting reply · '+done.length+' finished';
+  const marks={active:'fActive',wait:'fWait',done:'fDone'};
+  for(const k in marks){const b=document.getElementById(marks[k]);
+    if(b)b.style.borderColor=(INBOX_FILTER===k)?(k==='wait'?'var(--amber)':'var(--green)'):'var(--border)';}
+  let convos=INBOX_FILTER==='done'?done:INBOX_FILTER==='wait'?active.filter(isWaiting):active;
+  convos.sort((a,b)=>(isWaiting(b)-isWaiting(a))||((b.updated||0)-(a.updated||0)));
+  if(!convos.length){
+    box.innerHTML='<div class="placeholder">'+(INBOX_FILTER==='done'
+      ?'No finished conversations yet.'
+      :INBOX_FILTER==='wait'?'Nothing awaiting reply. Inbox zero.'
+      :'No active conversations. Check the Finished tab or enjoy the quiet.')+'</div>';
+    return;}
+  box.innerHTML=convos.map(c=>{
+    const waitingC=isWaiting(c);
+    const open=(c.convo in EXPANDED)?EXPANDED[c.convo]:(waitingC&&INBOX_FILTER!=='done');
+    const last=c.messages[c.messages.length-1]||{};
+    const when=c.updated?new Date(c.updated).toLocaleString():'';
+    const head='<div style="display:flex;align-items:center;gap:10px">'+
+      '<button class="tgl" onclick="toggleConvo(\''+c.convo+'\')">'+(open?'&#9662; close':'&#9656; open')+'</button>'+
+      '<strong style="font-size:14px;white-space:nowrap"><span class="pficon">&#127760;</span> '+(esc(c.name)||'Visitor')+
+      (c.email?' <span style="color:var(--muted);font-weight:400;font-size:12px">('+esc(c.email)+')</span>':'')+'</strong>'+
+      (open?'<span style="flex:1"></span>':'<span style="color:var(--muted);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">'+esc((last.text||'').slice(0,70))+'</span>')+
+      '<span style="font-size:11px;color:var(--muted);white-space:nowrap">'+when+'</span>'+
+      (c.finished
+        ?'<button class="tgl" style="color:var(--green)" onclick="markFinished(\''+c.convo+'\',false)">&#8634; reactivate</button>'
+        :(waitingC?'<span style="color:var(--amber);font-size:12px;white-space:nowrap">&#9679; awaiting</span>':''))+
+      '</div>';
+    if(!open)return '<div style="border:1px solid '+(c.finished?'var(--border)':waitingC?'var(--amber)':'var(--border)')+
+      ';padding:12px 14px;margin-bottom:10px'+(c.finished?';opacity:.7':'')+'">'+head+'</div>';
+    const msgs=c.messages.map(m=>
+      '<div style="margin:6px 0;padding:8px 12px;font-size:14px;max-width:85%;'+
+      (m.from==='visitor'
+        ?'background:var(--bubble);border:1px solid var(--border)'
+        :'background:var(--own);border:1px solid var(--green);margin-left:auto')+
+      '">'+esc(m.text)+'<div style="font-size:11px;color:var(--muted);margin-top:4px">'+
+      (m.from==='visitor'?(esc(c.name)||'visitor'):'you')+' &middot; '+
+      new Date(m.ts).toLocaleString()+'</div></div>').join('');
+    const replyRow=c.finished?'':'<div class="row" style="margin-top:10px">'+
+      '<input type="text" id="rep_'+c.convo+'" placeholder="Write a reply..." style="flex:1" '+
+      'onkeydown="if(event.key===\'Enter\')sendChatReply(\''+c.convo+'\')">'+
+      '<button class="btn" style="padding:9px 16px" onclick="sendChatReply(\''+c.convo+'\')">Reply</button>'+
+      '<button class="tgl" style="padding:9px 12px" onclick="markFinished(\''+c.convo+'\',true)">&#10003; finished</button>'+
+      '</div>';
+    return '<div style="border:1px solid '+(c.finished?'var(--border)':waitingC?'var(--amber)':'var(--border)')+
+      ';padding:12px 14px;margin-bottom:10px'+(c.finished?';opacity:.85':'')+'">'+head+
+      '<div class="thread" id="th_'+c.convo+'" style="max-height:280px;overflow-y:auto;margin-top:8px;padding-right:6px">'+msgs+'</div>'+
+      replyRow+'</div>';
+  }).join('');
+  document.querySelectorAll('.thread').forEach(t=>t.scrollTop=t.scrollHeight);
+}
+async function sendChatReply(convo){
+  const inp=document.getElementById('rep_'+convo);
+  const t=(inp.value||'').trim();if(!t)return;
+  inp.disabled=true;
+  const r=await api('/api/chat/reply',{method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({convo:convo,text:t})});
+  inp.disabled=false;
+  if(r.error)alert(r.error);else{inp.value='';loadInbox();}
+}
+
+/* ---------------- Numbers (staged) ---------------- */
+const NUM={
+ facebook:{name:'Facebook',now:1284,d7:'+38',series:[1051,1064,1071,1088,1094,1102,1118,1121,1139,1146,1160,1158,1171,1183,1190,1204,1201,1216,1224,1231,1238,1246,1244,1252,1259,1263,1268,1271,1277,1284]},
+ instagram:{name:'Instagram',now:2417,d7:'+112',series:[1790,1812,1836,1849,1878,1902,1915,1943,1961,1980,2004,2018,2041,2060,2077,2103,2118,2140,2151,2177,2196,2214,2229,2251,2268,2290,2311,2340,2378,2417]},
+ x:{name:'X',now:894,d7:'+21',series:[742,748,751,760,765,771,778,780,789,793,801,806,812,815,823,828,834,838,845,849,856,860,866,869,875,878,883,886,890,894]},
+ youtube:{name:'YouTube',now:463,d7:'+44',series:[201,208,214,219,230,238,247,252,266,271,283,290,301,312,318,330,342,349,361,370,381,389,398,410,419,428,437,446,452,463]}};
+function sparkSVG(series,w,h){
+ const mn=Math.min(...series),mx=Math.max(...series);
+ const pts=series.map((v,i)=>((i/(series.length-1))*(w-6)+3).toFixed(1)+','+
+   ((h-4)-((v-mn)/(mx-mn||1))*(h-10)).toFixed(1)).join(' ');
+ return '<svg width="'+w+'" height="'+h+'" style="display:block">'+
+  '<polyline points="'+pts+'" fill="none" stroke="var(--green)" stroke-width="2" stroke-linejoin="round"/>'+
+  '<circle cx="'+((w-3)).toFixed(1)+'" cy="'+((h-4)-((series[series.length-1]-mn)/(mx-mn||1))*(h-10)).toFixed(1)+'" r="3.5" fill="var(--green)"/></svg>';
+}
+function renderNumbersDemo(){
+ const total=Object.values(NUM).reduce((a,p)=>a+p.now,0);
+ document.getElementById('content').innerHTML=`
+ <div id="numroom">
+ <div class="card"><h2>Today</h2>
+  <div class="row" style="gap:12px;flex-wrap:wrap">
+   <div class="spark ntile" style="flex:1;min-width:150px"><div class="sl">Total followers</div><div class="nval">${total.toLocaleString()}</div><div class="sd">&#9650; +215 this week</div></div>
+   <div class="spark ntile" style="flex:1;min-width:150px"><div class="sl">Reach &middot; 7 days</div><div class="nval">18,392</div><div class="sd">&#9650; +22% vs last week</div></div>
+   <div class="spark ntile" style="flex:1;min-width:150px"><div class="sl">Posts this week</div><div class="nval">12</div><div class="sd">9 by schedule &middot; 3 by hand</div></div>
+   <div class="spark ntile" style="flex:1;min-width:150px"><div class="sl">Replies sent</div><div class="nval">31</div><div class="sd">median 4m to answer</div></div>
+  </div></div>
+ <div class="card"><h2>Followers &middot; 30 days</h2>
+  <div class="row" style="gap:12px;flex-wrap:wrap">
+  ${Object.values(NUM).map(pf=>
+   '<div class="spark" style="flex:1;min-width:200px"><div class="sl">'+pf.name+'</div>'+
+   sparkSVG(pf.series,220,56)+
+   '<div class="row" style="justify-content:space-between;margin-top:6px"><span class="sv">'+pf.now.toLocaleString()+'</span><span class="sd">'+pf.d7+' / 7d</span></div></div>').join('')}
+  </div></div>
+ <div class="card"><h2>Best recent posts</h2>
+  <div class="qrow"><span style="flex:1">Sunrise at the shop (video)</span><span class="mono" style="color:var(--muted)">FB &middot; IG &middot; X &middot; YT</span><span class="mono" style="color:var(--green)">4,812 reach</span></div>
+  <div class="qrow"><span style="flex:1">One hub, every platform</span><span class="mono" style="color:var(--muted)">IG</span><span class="mono" style="color:var(--green)">2,203 reach</span></div>
+  <div class="qrow"><span style="flex:1">Your move, subscription software</span><span class="mono" style="color:var(--muted)">X</span><span class="mono" style="color:var(--green)">1,178 reach</span></div>
+  <div class="note" style="margin-top:10px">Pulled daily from each platform&#39;s own numbers. All read-only, all yours.</div>
+ </div>
+ </div>`;
+}
+
+/* ---------------- Library ---------------- */
+let LIBPREV=null;
+function libStop(){if(LIBPREV){LIBPREV.pause();LIBPREV=null;}
+  document.querySelectorAll('.libplay').forEach(b=>b.innerHTML='&#9654;');}
+function libPlay(t,btn){
+  if(LIBPREV){libStop();return;}
+  LIBPREV=new Audio('demo/music/'+encodeURIComponent(t));LIBPREV.volume=0.6;
+  LIBPREV.play();LIBPREV.onended=libStop;btn.innerHTML='&#9632;';}
+async function libUpload(kind,files){
+  const fd=new FormData();
+  for(const f of files)fd.append('files',f);
+  const r=await api('/api/library/upload?kind='+kind,{method:'POST',body:fd});
+  if(r.error)alert(r.error);
+  renderLibrary();
+}
+async function libDelete(kind,name){
+  if(!confirm('Remove '+name+' from the library?'))return;
+  await fetch('/api/library/'+kind+'/'+encodeURIComponent(name),{method:'DELETE'});
+  renderLibrary();
+}
+async function renderLibrary(){
+  libStop();
+  const c=document.getElementById('content');
+  c.innerHTML=`
+  <div class="card"><h2>Backdrops</h2>
+    <div class="note" style="margin-bottom:8px">Images the Studio can put behind your videos. Vertical (9:16) looks best.</div>
+    <button class="tgl" style="padding:9px 16px" onclick="document.getElementById('libbg').click()">Upload backdrops</button>
+    <input type="file" id="libbg" multiple accept="image/*" style="display:none">
+    <div class="bgshelf" id="libbgshelf" style="margin-top:14px">loading...</div>
+  </div>
+  <div class="card" id="musiccard"><h2>Music</h2>
+    <div class="note" style="margin-bottom:8px">Tracks for under your videos. Use royalty-free sources: the YouTube Audio Library or pixabay.com/music.</div>
+    <button class="tgl" style="padding:9px 16px" onclick="document.getElementById('libmu').click()">Upload music</button>
+    <input type="file" id="libmu" multiple accept="audio/*,.mp3,.wav,.m4a,.ogg" style="display:none">
+    <div id="libmulist" style="margin-top:14px">loading...</div>
+  </div>`;
+  document.getElementById('libbg').onchange=function(){libUpload('bg',this.files);};
+  document.getElementById('libmu').onchange=function(){libUpload('music',this.files);};
+  const bgs=await api('/api/studio/backgrounds');
+  LIB_BG=bgs.backgrounds||[];
+  document.getElementById('libbgshelf').innerHTML=LIB_BG.map(b=>
+    '<span style="position:relative;display:inline-block">'+
+    '<img class="bgpick" src="demo/bg/'+b+'" loading="lazy" title="'+b+'" onclick="openLightbox(\''+b+'\',\'bg\')">'+
+    '<button style="position:absolute;top:2px;right:2px;background:#000b;border:none;color:#fff;cursor:pointer;width:20px;height:20px;font-size:12px" onclick="libDelete(\'bg\',\''+b+'\')">&#10005;</button></span>').join('')
+    ||'<span class="note">Shelf is empty.</span>';
+  const mus=await api('/api/studio/music');
+  document.getElementById('libmulist').innerHTML=(mus.tracks||[]).map(t=>
+    '<div class="qrow"><button class="tgl libplay" style="padding:4px 12px" onclick="libPlay(\''+t+'\',this)">&#9654;</button>'+
+    '<span style="flex:1;font-size:14px">'+t+'</span>'+
+    '<button onclick="libDelete(\'music\',\''+t+'\')">remove</button></div>').join('')
+    ||'<span class="note">No tracks yet.</span>';
+}
+
+/* ---------------- Themes ---------------- */
+function swatchHTML(key,mode){
+  const t=THEMES[key],on=assigned(mode)===key;
+  return '<span class="swatch'+(on?' on':'')+'" onclick="setThemeFor(\''+mode+'\',\''+key+'\')">'+
+    '<span class="sw-top" style="background:'+t.v.bg+'">'+
+    '<span class="sw-card" style="background:'+t.v.card+';border:1px solid '+t.v.border+';color:'+t.v.text+'">'+
+    '<span class="sw-dot" style="background:'+t.v.green+'"></span>Aa</span>'+
+    '<span class="sw-card" style="background:'+t.v.raise+';border:1px solid '+t.v.border+';color:'+t.v.muted+'">'+
+    '<span class="sw-dot" style="background:'+t.v.label+'"></span>label</span></span>'+
+    '<span class="sw-name"><b>'+(on?'&#10003; SELECTED':'&nbsp;')+'</b>'+t.name+'</span></span>';
+}
+function renderThemes(){
+  const keys=Object.keys(THEMES);
+  document.getElementById('content').innerHTML=`
+  <div id="themeroom">
+  <div class="card" id="themelight"><h2>&#9728; Light mode</h2>
+    <div class="note" style="margin-bottom:6px">Pick the palette the app wears in light mode.</div>
+    ${keys.map(k=>swatchHTML(k,'light')).join('')}
+  </div>
+  <div class="card" id="themedark"><h2>&#9789; Dark mode</h2>
+    <div class="note" style="margin-bottom:6px">Pick the palette for dark mode.</div>
+    ${keys.map(k=>swatchHTML(k,'dark')).join('')}
+  </div>
+  <div class="card"><div class="note">You're in <b style="color:var(--green)">${MODE}</b> mode right now; the &#9728;/&#9789; button in the header flips between your two picks, set ahead of time here. Choices are remembered on this computer.</div></div>
+  </div>`;
+}
+
+/* ---------------- Studio ---------------- */
+let STUDIO={content:null,video:null};let SMEDIA=['sunrise_jobsite.png','shop_floor.png'];let STOCK=['backdrop_sunset.png'];
+let PREVIEW=null,VPREV=null;
+function stopVoicePrev(){
+  if(VPREV){VPREV.pause();VPREV=null;}
+  const b=document.getElementById('vprevbtn');
+  if(b)b.innerHTML='&#9654; hear this voice';
+}
+function toggleVoicePrev(){
+  if(VPREV){stopVoicePrev();return;}
+  const sel=document.getElementById('s_voicepick');
+  if(!sel||!sel.value){alert("That's the No Voice option: captions and music only, no narration.");return;}
+  VPREV=new Audio('demo/voices/'+sel.value+'.mp3');
+  VPREV.onerror=function(){stopVoicePrev();alert('Preview clip not found for this voice yet.');};
+  VPREV.play();VPREV.onended=stopVoicePrev;
+  document.getElementById('vprevbtn').innerHTML='&#9632; stop';
+}
+function stopPreview(){
+  if(PREVIEW){PREVIEW.pause();PREVIEW=null;}
+  const b=document.getElementById('prevbtn');
+  if(b)b.innerHTML='&#9654; listen';
+}
+function togglePreview(){
+  const sel=document.getElementById('s_music');
+  if(PREVIEW){stopPreview();return;}
+  if(!sel||!sel.value)return alert('Pick a track first.');
+  PREVIEW=new Audio('demo/music/'+encodeURIComponent(sel.value));
+  PREVIEW.volume=0.6;
+  PREVIEW.play();
+  PREVIEW.onended=stopPreview;
+  document.getElementById('prevbtn').innerHTML='&#9632; stop';
+}
+function renderStudio(){
+  const c=document.getElementById('content');
+  c.innerHTML=`
+  <div class="card"><h2>Studio - one prompt, everything drafted</h2>
+    <textarea id="sprompt" placeholder="What should today's post be about? e.g. 'Announce that our social media presence kit is almost ready - build your own Buffer for $0'">Write today's post from these two photos of the shop at sunrise - warm, confident, ends with a question.</textarea>
+    <div class="row" style="margin-top:12px">
+      <span style="position:relative;display:inline-block"><span class="clickhint clickhint-gen">click here &#8595;</span><button class="btn" id="genbtn" onclick="studioGenerate()">Generate drafts</button></span>
+      <button class="tgl" style="padding:10px 16px;font-size:13px" onclick="document.getElementById('spick').click()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:7px"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Add photos / video</button>
+      <span class="note">The AI looks at attached photos and writes about what it sees; they become the video's backgrounds too. Upload your OWN video and the Studio dresses it: captions + narration.</span>
+    </div>
+    <input type="file" id="spick" multiple accept="image/*,video/*" style="display:none">
+    <div id="schips"></div>
+    <div id="sresults"></div>
+  </div>`;
+  const sp=document.getElementById('spick');
+  if(sp&&!sp._wired){sp._wired=true;sp.onchange=function(){studioUpload(this.files);this.value='';};}
+  paintSChips();
+  if(STUDIO.content)paintStudioResults();
+}
+function sfield(id,label,val,rows){
+  return '<label style="display:block;font-size:12px;color:var(--muted);margin:12px 0 4px">'+label+
+    '</label><textarea id="'+id+'" style="min-height:'+(rows||60)+'px">'+(val||'').replace(/</g,'&lt;')+'</textarea>';
+}
+function paintSChips(){
+  const el=document.getElementById('schips');if(!el)return;
+  el.innerHTML=SMEDIA.map((m,i)=>{
+    const el2=isVideo(m)
+      ?'<video src="'+U(m)+'" muted preload="metadata" onmouseover="this.play()" onmouseout="this.pause()" onclick="openLightbox(\''+m+'\',\'s\')"></video>'
+      :'<img src="'+U(m)+'" loading="lazy" onclick="openLightbox(\''+m+'\',\'s\')">';
+    return '<span class="mchip">'+el2+
+      '<button title="remove" onclick="event.stopPropagation();SMEDIA.splice('+i+',1);paintSChips()">&#10005;</button></span>';
+  }).join('');
+}
+async function studioUpload(files){
+  for(const f of files){
+    const name='your_'+f.name;
+    DEMO_FILES[name]=URL.createObjectURL(f);
+    SMEDIA.push(name);
+  }
+  paintSChips();
+}
+async function studioGenerate(){
+  const sp=document.getElementById('spick');
+  if(sp&&!sp._wired){sp._wired=true;sp.onchange=function(){studioUpload(this.files);this.value='';};}
+  const btn=document.getElementById('genbtn');
+  btn.disabled=true;btn.textContent='Thinking...';
+  try{
+    const r=await api('/api/studio/generate',{method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({prompt:document.getElementById('sprompt').value,photos:SMEDIA})});
+    if(r.error){document.getElementById('sresults').innerHTML=
+      '<div class="result err">'+r.error+'</div>';return;}
+    STUDIO.content=r.content;STUDIO.video=null;paintStudioResults();
+  }finally{btn.disabled=false;btn.textContent='Generate drafts';}
+}
+function paintStudioResults(){
+  const ct=STUDIO.content;
+  const scenes=(ct.video&&ct.video.scenes)||[];
+  let html='<div class="opts" id="capsarea"><strong style="font-size:13px">Captions - edit freely</strong>';
+  html+=sfield('s_facebook','Facebook',ct.facebook,90);
+  html+=sfield('s_x','X (280 max)',ct.x,60);
+  html+=sfield('s_instagram','Instagram (parked until linked)',ct.instagram,90);
+  html+=sfield('s_yt_title','YouTube title',ct.youtube_title,40);
+  html+=sfield('s_yt_desc','YouTube description',ct.youtube_description,70);
+  html+='</div><div class="opts" id="storyarea"><strong style="font-size:13px">Video storyboard</strong>';
+  scenes.forEach((sc,i)=>{
+    html+='<div class="row" style="margin-top:8px"><input type="text" id="sc_h'+i+'" value="'+
+      (sc.headline||'').replace(/"/g,'&quot;')+'" placeholder="headline" style="flex:1">'+
+      '<input type="text" id="sc_s'+i+'" value="'+(sc.sub||'').replace(/"/g,'&quot;')+
+      '" placeholder="supporting line" style="flex:2"></div>';
+  });
+  html+='</div><div class="opts">';
+  html+=sfield('s_voice','Voiceover script',
+    ct.video?ct.video.voiceover:'',60);
+  html+='<label style="display:block;font-size:12px;color:var(--muted);margin:12px 0 4px">Backdrops <span style="color:var(--dim)">(your uploaded photos come first; pick up to 6 from the shelf - they rotate through the scenes)</span></label>'+
+    '<div class="bgshelf" id="bgshelf">loading...</div>'+
+    '<div class="row" id="paintrow" style="margin-top:10px">'+
+    '<input type="text" id="bgprompt" placeholder="Or paint a new one... e.g. rolling Iowa farmland at dusk, cinematic" style="flex:1">'+
+    '<button class="tgl" id="bggen" style="padding:9px 14px" onclick="genBackdrop()">Paint backdrop</button></div>';
+  html+='<label style="display:block;font-size:12px;color:var(--muted);margin:12px 0 4px">Background music <span style="color:var(--dim)">(drop free tracks into social-hub\\music - try the YouTube Audio Library or pixabay.com/music)</span></label>'+
+    '<div class="row"><select id="s_music" style="width:auto;min-width:220px" onchange="stopPreview()"><option value="">No music</option></select>'+
+    '<button class="tgl" id="prevbtn" style="padding:8px 14px" onclick="togglePreview()">&#9654; listen</button>'+
+    '<label style="font-size:12px;color:var(--muted)">volume <input type="range" id="s_mvol" min="5" max="40" value="15" style="vertical-align:middle;width:110px"></label></div>'+
+    '<label style="display:block;font-size:12px;color:var(--muted);margin:12px 0 4px">Format</label>'+
+    '<select id="s_fmt" style="width:auto" onchange="loadBackdrops()">'+
+    '<option value="portrait" selected>Tall 9:16 - Shorts, Reels, feeds</option>'+
+    '<option value="landscape">Wide 16:9 - YouTube proper</option>'+
+    '<option value="square">Square 1:1 - feed posts</option>'+
+    '</select>'+
+    '<label style="display:block;font-size:12px;color:var(--muted);margin:12px 0 4px">Voice</label>'+
+    '<select id="s_voicepick" style="width:auto" onchange="stopVoicePrev()">'+
+    '<option value="" selected>No voice</option>'+
+    '<option value="en-US-AvaMultilingualNeural">Ava - US female, most natural</option>'+
+    '<option value="en-US-AndrewMultilingualNeural">Andrew HD - US male, most natural</option>'+
+    '<option value="en-US-EmmaMultilingualNeural">Emma HD - US female</option>'+
+    '<option value="en-US-BrianMultilingualNeural">Brian HD - US male</option>'+
+    '<option value="en-US-AndrewNeural">Andrew - US male, natural</option>'+
+    '<option value="en-US-BrianNeural">Brian - US male, casual</option>'+
+    '<option value="en-US-GuyNeural">Guy - US male, deeper</option>'+
+    '<option value="en-US-AriaNeural">Aria - US female, warm</option>'+
+    '<option value="en-US-JennyNeural">Jenny - US female, friendly</option>'+
+    '<option value="en-US-MichelleNeural">Michelle - US female, calm</option>'+
+    '<option value="en-GB-RyanNeural">Ryan - British male</option>'+
+    '<option value="en-GB-SoniaNeural">Sonia - British female</option>'+
+    '<option value="en-AU-WilliamNeural">William - Australian male</option>'+
+    '</select>'+
+    '<button class="tgl" id="vprevbtn" style="padding:8px 14px;margin-left:8px" onclick="toggleVoicePrev()">&#9654; hear this voice</button>'+
+    '<div class="row" style="margin-top:12px"><button class="btn secondary" id="vbtn" onclick="studioBuildVideo('+scenes.length+')">Build video preview</button></div>';
+  html+='<div id="vpreview">'+(STUDIO.video?studioVideoTag():'')+'</div></div>';
+  html+='<div class="row" style="margin-top:16px"><button class="btn" onclick="studioToComposer()">Send to Composer &rarr;</button>'+
+    '<span class="note">Loads the caption + video into the Composer; you still press Publish.</span></div>';
+  document.getElementById('sresults').innerHTML=html;
+  loadBackdrops();
+  api('/api/studio/music').then(r=>{
+    const sel=document.getElementById('s_music');
+    if(sel&&r.tracks)r.tracks.forEach(t=>{
+      const o=document.createElement('option');o.value=t;o.textContent=t;sel.appendChild(o);});
+  });
+}
+function studioVideoTag(){
+  return '<video src="'+U(STUDIO.video)+'" controls style="width:250px;margin-top:12px;border-radius:10px;border:1px solid var(--border)"></video>'+
+    '<div class="note">Saved as '+STUDIO.video+'</div>';
+}
+function bgThumbSize(){
+  const f=(document.getElementById('s_fmt')||{}).value||'portrait';
+  return f==='landscape'?'width:128px;height:72px':
+         f==='square'?'width:96px;height:96px':'width:74px;height:120px';
+}
+function loadBackdrops(){
+  api('/api/studio/backgrounds').then(r=>{
+    const el=document.getElementById('bgshelf');if(!el)return;
+    if(!r.backgrounds||!r.backgrounds.length){el.innerHTML='<span class="note">Shelf is empty - drop images into social-hub\\backgrounds</span>';return;}
+    const dim=bgThumbSize();
+    LIB_BG=r.backgrounds;
+    el.innerHTML=r.backgrounds.map(b=>
+      '<span class="bgwrap">'+
+      '<img class="bgpick'+(STOCK.includes(b)?' on':'')+'" style="'+dim+'" src="demo/bg/'+b+'" loading="lazy" title="'+b+'" onclick="openLightbox(\''+b+'\',\'bg\')">'+
+      '<button class="bgsel'+(STOCK.includes(b)?' on':'')+'" title="use in video" onclick="event.stopPropagation();toggleBackdrop(\''+b+'\')">'+(STOCK.includes(b)?'&#10003;':'+')+'</button>'+
+      '</span>').join('');
+  });
+}
+function toggleBackdrop(b){
+  const i=STOCK.indexOf(b);
+  if(i>=0)STOCK.splice(i,1);
+  else{
+    if(STOCK.length>=6)return alert('Six backdrops max - they rotate through the scenes; more would never be seen.');
+    STOCK.push(b);
+  }
+  loadBackdrops();
+}
+async function genBackdrop(){
+  const inp=document.getElementById('bgprompt'),btn=document.getElementById('bggen');
+  const d=(inp.value||'').trim();if(!d)return alert('Describe the backdrop first.');
+  btn.disabled=true;btn.textContent='Painting...';
+  try{
+    const r=await api('/api/studio/gen_background',{method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({prompt:d})});
+    if(r.error){alert(r.error);return;}
+    if(STOCK.length<6)STOCK.push(r.background);
+    inp.value='';loadBackdrops();
+    btn.textContent='Painted ✓ saved to Library';
+    setTimeout(function(){btn.textContent='Paint backdrop';},2800);
+  }finally{btn.disabled=false;if(btn.textContent==='Painting...')btn.textContent='Paint backdrop';}
+}
+async function studioBuildVideo(n){
+  stopPreview();
+  const btn=document.getElementById('vbtn');
+  btn.disabled=true;btn.textContent='Building (voiceover + cards + ffmpeg)...';
+  const scenes=[];
+  for(let i=0;i<n;i++)scenes.push({headline:document.getElementById('sc_h'+i).value,
+    sub:document.getElementById('sc_s'+i).value});
+  try{
+    const r=await api('/api/studio/build_video',{method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({scenes:scenes,
+        voiceover:document.getElementById('s_voicepick').value===''?'':document.getElementById('s_voice').value,
+        voice:document.getElementById('s_voicepick').value,photos:SMEDIA,
+        music:document.getElementById('s_music').value,
+        music_vol:document.getElementById('s_mvol').value/100,
+        stock:STOCK,fmt:document.getElementById('s_fmt').value})});
+    if(r.error){document.getElementById('vpreview').innerHTML=
+      '<div class="result err">'+r.error+'</div>';return;}
+    STUDIO.video=r.video;
+    document.getElementById('vpreview').innerHTML=studioVideoTag();
+  }finally{btn.disabled=false;btn.textContent='Build video preview';}
+}
+function studioToComposer(){
+  const g=id=>{const e=document.getElementById(id);return e?e.value:'';};
+  const text=g('s_facebook')||g('s_x');
+  overrides={x:g('s_x'),instagram:g('s_instagram')};
+  if(STUDIO.video&&!media.includes(STUDIO.video))media.push(STUDIO.video);
+  SMEDIA.forEach(m=>{if(!media.includes(m))media.push(m);});
+  for(const k in checked)checked[k]=false;
+  checked.facebook=!!STATUS.platforms.facebook;
+  checked.x=!!STATUS.platforms.x&&g('s_x').length>0;
+  if(STUDIO.video)checked.youtube=!!STATUS.platforms.youtube;
+  window._studioPrefill={text:text,yt_title:g('s_yt_title'),yt_desc:g('s_yt_desc')};
+  document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));
+  document.querySelector('.nav[data-view=composer]').classList.add('active');
+  show('composer');paintOpts();
+  document.getElementById('text').value=text;
+  const yt=document.getElementById('yt_title');if(yt)yt.value=g('s_yt_title');
+  const yd=document.getElementById('yt_description');if(yd)yd.value=g('s_yt_desc');
+  paintLimits();
+}
+
+/* ---------------- Platform tabs ---------------- */
+async function renderPlatform(p){
+  const c=document.getElementById('content');
+  const avail=STATUS.platforms[p];
+  const note=p==='instagram'&&!avail
+    ?'<div class="card"><div class="placeholder">Instagram is parked: link it to your Facebook Page, regenerate the token, run the roll call - and this tab lights up with no rebuild.</div></div>':'';
+  c.innerHTML='<div id="platroom">'+note+
+    '<div class="card"><h2>Recent posts from this hub</h2><div id="plog">loading...</div></div>'+
+    (avail?'<div class="card"><h2>Quick compose &rarr; '+PNAMES[p]+' only</h2>'+
+    '<div class="note">Opens the Composer with just '+PNAMES[p]+' selected.</div>'+
+    '<button class="btn secondary" style="margin-top:10px" onclick="quickCompose(\''+p+'\')">Compose for '+PNAMES[p]+'</button></div>':'')+'</div>';
+  const r=await api('/api/published?platform='+p);
+  const el=document.getElementById('plog');
+  el.innerHTML=r.items.length?'<div class="pgrid">'+r.items.map(e=>{
+    let media_el='<div class="pnone">&#128240;</div>';
+    if(e.media&&e.media.length){
+      const m=e.media[0],ext=m.slice(m.lastIndexOf('.')).toLowerCase();
+      if(['.mp4','.mov','.m4v','.avi','.webm'].includes(ext))
+        media_el='<video class="pmedia" src="'+U(m)+'" muted preload="metadata" onmouseover="this.play()" onmouseout="this.pause()" onerror="this.outerHTML=\'<div class=pnone>&#127909;</div>\'"></video>';
+      else
+        media_el='<img class="pmedia" src="'+U(m)+'" loading="lazy" onerror="this.outerHTML=\'<div class=pnone>&#128247;</div>\'">';
+    }
+    const extra=(e.media&&e.media.length>1)?' <span style="color:var(--muted)">+'+(e.media.length-1)+'</span>':'';
+    return '<div class="pcard">'+media_el+'<div class="pinfo">'+
+      '<a href="'+e.url+'" target="_blank">open post &rarr;</a>'+extra+
+      '<div class="pwhen mono">'+e.timestamp.slice(0,16).replace('T',' ')+'</div></div></div>';
+  }).join('')+'</div>'
+    :'<div class="placeholder" style="padding:14px 0">No posts from this hub yet.</div>';
+}
+function quickCompose(p){
+  for(const k in checked)checked[k]=(k===p);
+  document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));
+  document.querySelector('.nav[data-view=composer]').classList.add('active');
+  show('composer');paintOpts();
+}
+/* ---------- demo guidance tooltips ---------- */
+const TIP_RULES=[
+ ['#themebtn','Flip between light and dark mode. Pick what each mode wears in the Themes room.'],
+ ['#pausebtn','Pause the queue: scheduled posts wait until you resume. Nothing publishes while paused.'],
+ ['#pubbtn','Publish to every selected platform at once, each in its native format.'],
+ ['#restylebtn','The AI rewrites your text in each platform\'s native style: short for X, hashtags for Instagram.'],
+ ['#genbtn','The AI reads your prompt AND your photos, then drafts captions for every platform plus a video storyboard.'],
+ ['#vbtn','Builds the video: your photos or backdrops, timed captions, narration, and music.'],
+ ['#prevbtn','Listen to the selected track before committing it to the video.'],
+ ['#bggen','Describe any scene and the AI paints a new backdrop. It saves straight into your Library, so you can reuse it forever without repainting.'],
+ ['#s_music','Pick a background track from your library. Add more in the Library room.'],
+ ['#s_voicepick','Choose a narrator, or No voice for a captions-and-music video.'],
+ ['#s_fmt','Tall for Shorts and Reels, wide for YouTube, square for feeds. Backdrop previews reshape to match.'],
+ ['#s_mvol','How loud the music sits under the narration.'],
+ ['#dropzone','Drag photos or videos here, or click to browse. They become thumbnails you can expand.'],
+ ['.bgsel','Add this backdrop to the video. Up to six rotate through the scenes.'],
+ ['.bgpick','Click to expand it full-screen and browse the shelf with arrows. Add your own in the Library.'],
+ ['.mchip','Click to expand. In the viewer you can flip through everything and ask the AI to edit a photo.'],
+ ['.plat','Click to include this platform. Its counter checks your text against this platform\'s limit.'],
+ ['#constraints','Posting Regulations: live-checks your text and media against every selected platform\'s rules so nothing bounces. The Studio automatically writes content that fits through these rules.'],
+ ['#vprevbtn','Play a short sample of the selected narrator before you build the video.'],
+ ['#musiccard','Your music library: upload royalty-free tracks, preview them here, and they show up in the Studio\'s music picker.'],
+ ['#platroom','This is that platform\'s home base: every post this hub has published there, with one-click compose for just this platform.'],
+ ['#numroom','The Numbers room: followers, reach, and best posts pulled daily from each platform\'s own stats. Read-only and all yours.'],
+ ['.libplay','Preview the track.'],
+ ['.lbarrow','Flip through your media.'],
+ ['#lbeditbtn','Describe an edit and the AI returns an edited copy; the original is never touched.'],
+ ['#lbprompt','Each photo keeps its own edit note as you flip through.'],
+ ['.nav[data-view="composer"]','Write once, attach media, publish everywhere at once.'],
+ ['.nav[data-view="studio"]','One prompt in: captions, narrated video, and per-platform posts out.'],
+ ['.nav[data-view="inbox"]','Every message from every platform and your website chat, in one stream.'],
+ ['.nav[data-view="numbers"]','Followers, reach, and post performance across every platform.'],
+ ['.nav[data-view="themes"]','Eight palettes. Assign one to light mode and one to dark.'],
+ ['.nav[data-view="library"]','Upload and manage your backdrop and music collections.'],
+ ['#sprompt','Type what today\'s post should be about, in plain words. Then hit Generate drafts.'],
+ ['#text','Write it once here. The counters below check it against every platform you select, and Restyle can rewrite it per platform.'],
+ ['#paintrow','Describe any scene in the box and hit Paint backdrop: the AI paints it straight onto your shelf.'],
+ ['#capsarea','Every caption is a draft you can edit freely. Each platform gets its own version, and nothing publishes until you approve it.'],
+ ['#storyarea','The video\'s storyboard: each row is one scene, a headline plus a supporting line. Edit any of them before building.'],
+ ['#themelight','Light mode: click any palette in this box to make it your daytime look.'],
+ ['#themedark','Dark mode: click any palette in this box for the night look. The header button flips between the two.'],
+ ['#queuecard','Scheduled posts wait here with their date and time. The hub publishes them automatically, even with this window closed.'],
+ ['.pficon','This icon shows which platform the message came from: website chat, Facebook, Instagram, or YouTube.'],
+];
+const TEXT_TIPS={
+ 'Camera':'Opens the phone\'s camera; the shot lands here as a thumbnail, ready to post.',
+ 'Record':'Record video straight into the post.',
+ 'Upload photos & videos':'Multi-select uploads from your computer.',
+ 'Upload backdrops':'Add your own images to the backdrop shelf.',
+ 'Upload music':'Add royalty-free tracks: YouTube Audio Library and pixabay.com/music are free.',
+ 'Schedule':'Queue this post for any date and time. It publishes while you sleep.',
+ 'Paint backdrop':'The AI paints a brand-new backdrop from your description.',
+ 'Reply':'Sends through the right platform automatically.',
+};
+const tipEl=document.getElementById('demotip');
+document.addEventListener('mouseover',e=>{
+  let text=null,anchor=null;
+  for(const [sel,t] of TIP_RULES){
+    const hit=e.target.closest(sel);
+    if(hit){text=t;anchor=hit;break;}
+  }
+  if(!text){
+    const b=e.target.closest('button');
+    if(b){const k=b.textContent.trim();if(TEXT_TIPS[k]){text=TEXT_TIPS[k];anchor=b;}}
+  }
+  if(!text){tipEl.style.display='none';return;}
+  tipEl.textContent=text;tipEl.style.display='block';
+  const r=anchor.getBoundingClientRect();
+  if(anchor.id==='sprompt'||anchor.id==='genbtn'||anchor.closest&&anchor.closest('#sprompt')){
+    /* studio prompt + generate: park the info box on the far left so it never covers the button */
+    tipEl.style.top=Math.max(8,r.top)+'px';
+    tipEl.style.left='8px';
+    return;
+  }
+  let top=r.bottom+10;
+  if(top+80>window.innerHeight)top=r.top-10-80;
+  tipEl.style.top=top+'px';
+  tipEl.style.left=Math.min(Math.max(8,r.left),window.innerWidth-280)+'px';
+});
+document.addEventListener('mouseout',e=>{if(!e.relatedTarget)tipEl.style.display='none';});
+document.addEventListener('click',()=>tipEl.style.display='none');
+boot();
+</script>
+</body>
+</html>

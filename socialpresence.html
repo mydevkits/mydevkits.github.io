@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Social Media Presence Kit · MyDevKits</title>
+<meta name="description" content="Manage every social media channel from one hub you own: publish everywhere at once, AI-drafted posts and videos, every message in one inbox. No subscriptions, ever.">
+<link rel="stylesheet" href="style.css">
+<style>
+.wrap{max-width:1440px}
+/* centered section marker */
+.secmark{text-align:center;padding:64px 0 10px}
+.secmark .k{font-size:12px;letter-spacing:.3em;color:var(--blue);font-family:ui-monospace,Consolas,monospace;text-transform:uppercase}
+.secmark h2{font-size:clamp(30px,4vw,44px);margin:10px 0 0;color:var(--ink)}
+.secmark h2 span{color:var(--green)}
+.secmark .ssub{max-width:640px;margin:14px auto 0;color:var(--muted);font-size:15.5px;line-height:1.65}
+/* device combo (tradingbot-style) */
+.combo{position:relative;width:800px;max-width:100%;height:560px;flex-shrink:0}
+.combo .lap{position:absolute;right:0;top:14px;transform:perspective(1600px) rotateY(-7deg)}
+.combo.mirror .lap{transform:perspective(1600px) rotateY(7deg);right:auto;left:0}
+.combo .lapscreen{width:640px;height:404px;background:#05080d;border:3px solid var(--line);
+ border-radius:16px 16px 0 0!important;padding:11px 11px 13px;box-shadow:0 30px 80px rgba(18,38,63,.30);position:relative}
+.combo .cam{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%!important;background:var(--line)}
+.combo .lapview{width:100%;height:100%;overflow:hidden;background:#0a0f18}
+.combo .lapview img{width:100%;height:100%;object-fit:cover;object-position:top left}
+.combo .lapview iframe{width:1240px;height:780px;border:none;transform:scale(.497);transform-origin:top left}
+.combo .lapbase{width:700px;height:15px;margin-left:-30px;background:linear-gradient(#22355a,#0d1726);
+ border-radius:2px 2px 14px 14px!important;position:relative}
+.combo.mirror .lapbase{margin-left:-30px}
+.combo .lapbase:after{content:"";position:absolute;left:50%;top:0;transform:translateX(-50%);
+ width:100px;height:6px;background:#0a1220;border-radius:0 0 8px 8px!important}
+.combo .phone{position:absolute;left:0;bottom:0;width:216px;height:456px;background:#05080d;
+ border:3px solid var(--line);border-radius:34px!important;padding:7px;z-index:5;box-shadow:0 24px 60px rgba(18,38,63,.32)}
+.combo.mirror .phone{left:auto;right:0}
+.combo .screen{width:100%;height:100%;border-radius:27px!important;overflow:hidden;position:relative;background:#0a0f18}
+.combo .island{position:absolute;top:7px;left:50%;transform:translateX(-50%);width:64px;height:17px;
+ background:#05080d;border-radius:12px!important;z-index:10}
+.combo .screen img{width:200%;height:100%;object-fit:cover;object-position:top left}
+/* proper mobile mockups inside the phones */
+.pmock{width:100%;height:100%;background:#0a0f18;color:#dbe4f3;font-size:10px;
+ display:flex;flex-direction:column;padding:26px 12px 12px;gap:8px}
+.pmock .pm-brand{font-size:8px;letter-spacing:.22em;color:#7cd4fc;font-family:ui-monospace,Consolas,monospace}
+.pmock .pm-title{font-size:14px;font-weight:800;color:#fff}
+.pmock .pm-box{background:#0d1726;border:1px solid #1f3a5c;padding:8px 9px;line-height:1.5;color:#a9bdd9}
+.pmock .pm-thumbs{display:flex;gap:5px}
+.pmock .pm-thumbs span{width:34px;height:34px;background:linear-gradient(135deg,#22355a,#0d1726);
+ border:1px solid #1f3a5c;display:flex;align-items:center;justify-content:center;font-size:12px}
+.pmock .pm-plats{display:flex;gap:4px;flex-wrap:wrap}
+.pmock .pm-plats i{font-style:normal;border:1px solid #1f3a5c;background:#0d1726;color:#dbe4f3;
+ padding:3px 7px;font-size:8.5px;letter-spacing:.04em}
+.pmock .pm-plats i.on{border-color:#35d399;color:#35d399}
+.pmock .pm-btn{background:#35d399;color:#052018;font-weight:800;text-align:center;padding:8px;font-size:11px;margin-top:auto}
+.pmock .pm-row{display:flex;align-items:center;gap:7px;background:#0d1726;border:1px solid #1f3a5c;padding:7px 8px}
+.pmock .pm-row .av{width:22px;height:22px;background:#22355a;display:flex;align-items:center;
+ justify-content:center;font-size:10px;font-weight:800;color:#7cd4fc;flex-shrink:0}
+.pmock .pm-row .who{flex:1;min-width:0}
+.pmock .pm-row .who b{display:block;font-size:10px;color:#fff}
+.pmock .pm-row .who span{display:block;font-size:8.5px;color:#5d738f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pmock .pm-tag{font-size:7.5px;letter-spacing:.06em;padding:2px 5px;white-space:nowrap}
+.pmock .pm-tag.me{background:#0f2a22;color:#35d399;border:1px solid #35d399}
+.pmock .pm-tag.rep{background:#101c33;color:#7cd4fc;border:1px solid #2b4a76}
+.pmock .pm-foot{display:flex;justify-content:space-around;border-top:1px solid #1f3a5c;padding-top:7px;
+ font-size:7.5px;letter-spacing:.1em;color:#5d738f;font-family:ui-monospace,Consolas,monospace}
+.pmock .pm-foot b{color:#35d399}
+/* click-to-demo overlay on the combo laptop */
+.combo .lap{cursor:default}
+.combo .lapdemo{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+ background:rgba(5,10,20,0);transition:background .2s;z-index:4;text-decoration:none}
+.combo .lapdemo span{opacity:0;transform:translateY(8px);transition:.22s;
+ background:linear-gradient(135deg,#3fe3a8,#12b57f);color:#04241a;font-weight:700;
+ padding:12px 22px;font-size:14px;box-shadow:0 14px 36px rgba(0,0,0,.45)}
+.combo .lapscreen:hover .lapdemo{background:rgba(5,10,20,.38)}
+.combo .lapscreen:hover .lapdemo span{opacity:1;transform:none}
+@media(max-width:1360px){.combo{transform:scale(.8);transform-origin:top center;height:460px;width:640px}}
+@media(max-width:900px){.combo{transform:none;height:auto;width:100%}
+ .combo .lap{position:static;transform:none!important}.combo .lapscreen{width:100%;height:auto;aspect-ratio:16/10}
+ .combo .phone{display:none}.combo .lapbase{width:100%;margin:0}}
+/* feature list */
+.featlist{max-width:440px}
+.featlist .f{padding:12px 0 12px 30px;position:relative;border-bottom:1px solid #e9eef4}
+.featlist .f:last-child{border-bottom:none}
+.featlist .f:before{content:"\2713";position:absolute;left:0;top:12px;color:var(--green-dark);font-weight:700;font-size:16px}
+.featlist .f b{display:block;color:var(--ink);font-size:15.5px;margin-bottom:3px}
+.featlist .f span{color:var(--muted);font-size:14px;line-height:1.55}
+/* full feature grid */
+.featgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:12px;max-width:1100px;margin:26px auto 0}
+.featgrid .fg{background:#fff;border:1px solid var(--bl);padding:15px 17px;box-shadow:0 8px 24px rgba(18,38,63,.07);text-align:left}
+.featgrid .fg b{display:block;color:var(--ink);font-size:14px;margin-bottom:4px}
+.featgrid .fg b:before{content:"\2713\00a0\00a0";color:var(--green-dark)}
+.featgrid .fg span{font-size:12.5px;color:var(--muted);line-height:1.55}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="wrap">
+
+<div class="topnav">
+  <a class="logo" href="index.html"><span class="my">My</span>DevKits</a>
+  <nav>
+    <a href="builds.html" style="color:var(--green-dark)">Dev Kits</a>
+    <a href="shelf.html">The Shelf</a>
+    <a href="whyus.html">Why Us</a>
+    <a href="service.html">Customer Kits</a>
+    <a href="service.html#consult" style="color:var(--green-dark)">Book a Consult</a>
+  </nav>
+</div>
+
+<!-- compact hero -->
+<div style="text-align:center;padding:64px 0 8px">
+  <div class="k mono" style="font-size:11px;letter-spacing:.24em;color:var(--blue)">LAUNCHING SOON</div>
+  <h1 style="font-size:clamp(38px,5.5vw,60px);margin:16px 0">Five platforms.<br>One <span class="accent">hub.</span></h1>
+  <p class="sub">Facebook, Instagram, X, YouTube, and your own website's chat: one application, running on your computer, owned by you. Hand the blueprint to your computer person; get back the hub. No subscriptions, ever.</p>
+  <form class="ll-form ll-center" data-kit="The Social Media Presence Kit">
+    <input type="email" required placeholder="you@business.com" aria-label="Email">
+    <button class="btn btn-green" type="submit">Notify me at launch</button>
+  </form>
+  <div class="ll-note" style="margin-left:auto;margin-right:auto;text-align:center">No payment now; one email when it launches. No spam, unsubscribe anytime.</div>
+  <div class="pcta" style="justify-content:center">
+    <a class="btn btn-ghost" href="demo.html">Try the live demo</a>
+    <a class="btn btn-ghost" href="builds.html">All the kits</a>
+  </div>
+</div>
+
+<!-- ============ THE APPLICATION ============ -->
+<div class="secmark">
+  <div class="k">The application</div>
+  <h2>Run <span>everything</span> from one hub.</h2>
+  <div class="ssub">That's the real application below &mdash; a live demo with staged data. Click through the composer, the AI studio, the inbox, and the themes.</div>
+</div>
+<div class="panel" style="min-height:auto;padding-top:26px">
+  <div class="pvisual">
+    <div class="combo">
+      <div class="lap">
+        <div class="lapscreen"><div class="cam"></div>
+          <div class="lapview"><iframe src="demo.html" title="The Social Media Presence Kit — live demo" tabindex="-1"></iframe></div>
+          <a class="lapdemo" href="demo.html"><span>Click here to view the demo &rarr;</span></a>
+        </div>
+        <div class="lapbase"></div>
+      </div>
+      <div class="phone">
+        <div class="screen"><div class="island"></div>
+          <div class="pmock">
+            <div class="pm-brand">MYDEVKITS &#9679; SOCIAL PRESENCE</div>
+            <div class="pm-title">Composer</div>
+            <div class="pm-box">Sunrise at the shop. The hub posts while we pour the coffee. &#9749;</div>
+            <div class="pm-thumbs"><span>&#127748;</span><span>&#127981;</span><span>&#9654;</span></div>
+            <div class="pm-plats"><i class="on">&#10003; Facebook</i><i class="on">&#10003; Instagram</i><i class="on">&#10003; X</i><i class="on">&#10003; YouTube</i></div>
+            <div class="pm-box" style="border-color:#35d399;color:#35d399">&#10003; fits everywhere selected</div>
+            <div class="pm-btn">Publish everywhere</div>
+            <div class="pm-foot"><b>COMPOSE</b><span>STUDIO</span><span>INBOX</span><span>NUMBERS</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ppitch featlist" style="max-width:440px">
+    <div class="f"><b>Marketing on autopilot</b><span>One prompt becomes tailored posts for every platform, with AI-built, AI-narrated videos. Publish now or schedule the whole week.</span></div>
+    <div class="f"><b>Every customer, one inbox</b><span>Messages from your platforms and your website's chat stream into one feed you answer from.</span></div>
+    <div class="f"><b>Replies in your voice</b><span>The assistant drafts answers from your own FAQ; nothing sends without your one-click approval.</span></div>
+    <div class="f"><b>It learns from every conversation</b><span>Repeat questions become a reply library you approve once and reuse forever. The more it talks, the sharper it gets.</span></div>
+    <div class="f"><b>Hours back, every week</b><span>Four apps, four inboxes, four sets of numbers, collapsed into one hub and a queue that posts while you sleep.</span></div>
+  </div>
+</div>
+
+<!-- ============ STAGE TWO: TEAM ============ -->
+<div class="secmark">
+  <div class="k">Stage two</div>
+  <h2>Then it grows <span>with you.</span></h2>
+  <div class="ssub">The first release puts one person in full control of every channel. The Team Edition comes next: the same hub, more hands on it.</div>
+</div>
+<div class="panel" style="min-height:auto;padding-top:26px">
+  <div class="ppitch featlist" style="max-width:440px">
+    <div class="f"><b>Up to five seats</b><span>Everyone signs into the same hub from their own computer or phone. One install, one owner, no per-seat fees ever.</span></div>
+    <div class="f"><b>One inbox, many hands</b><span>Every rep works the same feed at the same time, so customers never wait on the one person with the password.</span></div>
+    <div class="f"><b>Delegate or auto-assign</b><span>New conversations route round-robin to whoever's on, or a manager hands them off with one click. Everyone sees who owns what.</span></div>
+    <div class="f"><b>Same promise</b><span>Still on your hardware, still $0/month, still every key in your vault. More seats never means a meter.</span></div>
+  </div>
+  <div class="pvisual">
+    <div class="combo mirror">
+      <div class="lap">
+        <div class="lapscreen"><div class="cam"></div>
+          <div class="lapview"><img src="img/video.jpg" alt="The Studio's built video, previewed before publishing"></div>
+        </div>
+        <div class="lapbase"></div>
+      </div>
+      <div class="phone">
+        <div class="screen"><div class="island"></div>
+          <div class="pmock">
+            <div class="pm-brand">MYDEVKITS &#9679; TEAM INBOX</div>
+            <div class="pm-title">Inbox <span style="font-size:9px;color:#35d399;font-weight:400">3 reps online</span></div>
+            <div class="pm-row"><span class="av">D</span><div class="who"><b>Dana &middot; website chat</b><span>Do you service Le Mars?</span></div><span class="pm-tag me">YOU</span></div>
+            <div class="pm-row"><span class="av">M</span><div class="who"><b>Mike R. &middot; Facebook</b><span>How much is the social kit?</span></div><span class="pm-tag rep">KAYLA</span></div>
+            <div class="pm-row"><span class="av">T</span><div class="who"><b>@tblake &middot; X</b><span>Is the demo the real app?</span></div><span class="pm-tag rep">MARCUS</span></div>
+            <div class="pm-row"><span class="av">J</span><div class="who"><b>Jen P. &middot; website chat</b><span>Can you replace our scheduler?</span></div><span class="pm-tag rep">AUTO &rarr;</span></div>
+            <div class="pm-box" style="font-size:8.5px;color:#5d738f">New chats auto-assign round-robin. Tap a name to delegate.</div>
+            <div class="pm-foot"><span>COMPOSE</span><span>STUDIO</span><b>INBOX</b><span>NUMBERS</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div style="text-align:center;margin-top:-20px">
+  <form class="ll-form ll-center" data-kit="The Team Edition">
+    <input type="email" required placeholder="you@business.com" aria-label="Email">
+    <button class="btn btn-green" type="submit">Notify me about the Team Edition</button>
+  </form>
+</div>
+
+<!-- ============ the promise box ============ -->
+<div class="giftbox" style="max-width:820px;margin:44px auto;background:#fff;border:1px solid #e3e8ee;box-shadow:0 24px 60px rgba(18,38,63,.18);overflow:hidden;color:#1d2b3a">
+  <div style="background:#12263f;color:#fff;font-weight:700;font-size:16px;padding:15px 22px"><span style="display:inline-block;width:10px;height:10px;background:#35d399;margin-right:12px;box-shadow:0 0 8px #35d39966"></span>What you'll have by the last page</div>
+  <div class="giftcols" style="display:grid;grid-template-columns:1fr 1fr">
+    <div class="giftcol" style="padding:22px 26px">
+      <h3 style="font-size:12px;letter-spacing:.14em;color:#0e9f6e;margin:0 0 14px;text-transform:uppercase">What you'll own</h3>
+      <ul style="list-style:none;margin:0;padding:0">
+        <li><b>The Social Presence application</b>: every social media channel, managed from one hub</li>
+        <li>A <b>composer</b>: type once, attach media, tick the platforms, publish everywhere at once</li>
+        <li>A <b>scheduler</b>: queue posts for any date and time; it publishes while you sleep</li>
+        <li>A <b>unified inbox</b>: messages and comments from everywhere, streaming into one feed</li>
+        <li>A <b>desk assistant</b> that drafts replies in your voice, waiting for your approval</li>
+        <li>A <b>numbers view</b>: followers, reach, and post performance at a glance</li>
+        <li class="gold"><b style="color:#0e9f6e">No ongoing costs</b>: replaces the $6&ndash;$120/month schedulers, forever</li>
+      </ul>
+    </div>
+    <div class="giftcol" style="padding:22px 26px;border-left:1px solid #e3e8ee">
+      <h3 style="font-size:12px;letter-spacing:.14em;color:#0e9f6e;margin:0 0 14px;text-transform:uppercase">The skills you'll keep</h3>
+      <ul style="list-style:none;margin:0;padding:0">
+        <li>How <b>OAuth and API keys</b> work: the credential system behind every modern app</li>
+        <li>How to navigate <b>developer portals</b> (Meta, X, Google) most non-coders never dare open</li>
+        <li>How to manage <b>secrets</b> so they physically cannot leak</li>
+        <li>How to read a platform's <b>rules and rate limits</b> and build inside them</li>
+        <li>How to <b>direct an AI developer</b> through a genuinely multi-part build</li>
+        <li>A skeleton that extends to <b>LinkedIn, TikTok, and whatever comes next</b></li>
+      </ul>
+    </div>
+  </div>
+  <div style="border-top:1px solid #e3e8ee;text-align:center;font-style:italic;color:#5b6b7d;font-size:14px;padding:14px">The hub is the project; the skill is the prize.</div>
+</div>
+
+<style>
+.giftcol li{font-size:14px;line-height:1.55;color:#33475e;padding:7px 0 7px 26px;position:relative}
+.giftcol li:before{content:"\2713";position:absolute;left:0;color:#0e9f6e;font-weight:700}
+.giftcol li b{color:#12263f}
+@media(max-width:720px){.giftcols{grid-template-columns:1fr!important}}
+</style>
+
+<!-- ============ EVERY FEATURE ============ -->
+<div class="secmark">
+  <div class="k">The full list</div>
+  <h2>Every <span>feature</span> in the box.</h2>
+</div>
+<div style="padding:10px 0 40px">
+  <div class="featgrid">
+    <div class="fg"><b>One-hub publishing</b><span>Facebook, Instagram, X, and YouTube from a single composer.</span></div>
+    <div class="fg"><b>Write once, tailor everywhere</b><span>Per-platform versions of the same post, edited side by side.</span></div>
+    <div class="fg"><b>Platform guardrails</b><span>Live limits for whichever platforms you've ticked, so a post never bounces.</span></div>
+    <div class="fg"><b>Drag-and-drop media</b><span>Photos and videos straight into the composer as clean thumbnails.</span></div>
+    <div class="fg"><b>Built-in camera &amp; recorder</b><span>Take photos and record clips inside the hub, phone or desktop.</span></div>
+    <div class="fg"><b>Gallery lightbox</b><span>Any shot expands full screen; swipe or arrow through the set.</span></div>
+    <div class="fg"><b>AI copywriter</b><span>One idea becomes tailored captions for every platform at once.</span></div>
+    <div class="fg"><b>AI that sees your photos</b><span>Attach shots and it writes around what's actually in them.</span></div>
+    <div class="fg"><b>Per-photo AI edits</b><span>Give each photo its own instruction; each one is edited individually.</span></div>
+    <div class="fg"><b>AI backdrop painter</b><span>Describe a scene and it paints a backdrop for your video.</span></div>
+    <div class="fg"><b>AI video builder</b><span>Storyboarded videos from your photos: tall, wide, or square.</span></div>
+    <div class="fg"><b>Natural narration</b><span>Lifelike voices, or pick No Voice for captions and music only.</span></div>
+    <div class="fg"><b>Music bed</b><span>A built-in library with preview and a volume slider for the mix.</span></div>
+    <div class="fg"><b>Enhance your own footage</b><span>Upload a video and it adds captions and narration without re-cutting.</span></div>
+    <div class="fg"><b>Backdrop &amp; music library</b><span>Upload your own; previews reshape to your chosen video format.</span></div>
+    <div class="fg"><b>Scheduling queue</b><span>Line posts up for any date and time, then walk away.</span></div>
+    <div class="fg"><b>Published history</b><span>What went out, where, and when, with the media that went with it.</span></div>
+    <div class="fg"><b>Website chat inbox</b><span>The chat bubble on your site lands here. This very website runs it.</span></div>
+    <div class="fg"><b>Active / Awaiting / Finished</b><span>Conversation lanes that revive a finished chat if the visitor returns.</span></div>
+    <div class="fg"><b>Lead capture built in</b><span>Launch-list, pre-order, and consultation forms land in the same inbox.</span></div>
+    <div class="fg"><b>Eight themes, two modes</b><span>Pick a palette for light and for dark; one button flips between them.</span></div>
+    <div class="fg"><b>Phone-ready</b><span>The whole hub reshapes for your pocket. Post from anywhere.</span></div>
+    <div class="fg"><b>Your keys, your vault</b><span>Every password and API key stays on your computer. We never see them.</span></div>
+    <div class="fg"><b>$0 a month</b><span>Official platform APIs, your own PC, no subscription anywhere.</span></div>
+  </div>
+  <div style="text-align:center">
+    <form class="ll-form ll-center" data-kit="The Social Media Presence Kit" style="margin-top:34px">
+      <input type="email" required placeholder="you@business.com" aria-label="Email">
+      <button class="btn btn-green" type="submit">Notify me at launch</button>
+    </form>
+  </div>
+</div>
+
+<footer>
+  <div class="socials">
+    <a href="https://x.com/mydevkits">X</a>
+    <a href="https://www.youtube.com/@mydevkits">YouTube</a>
+    <a href="https://www.instagram.com/mydevkits">Instagram</a>
+    <a href="https://www.facebook.com/mydevkits">Facebook</a>
+  </div>
+  <p class="fine">&copy; 2026 MyDevKits &middot; Siouxland tri-state region (IA &middot; NE &middot; SD). Build kits are educational materials. Every kit teaches by-the-book building on official platform APIs, and means it.</p>
+</footer>
+
+</div>
+<script src="widget.js"></script>
+</body>
+</html>
