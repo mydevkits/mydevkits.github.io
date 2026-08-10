@@ -157,3 +157,46 @@ document.body.insertAdjacentHTML("beforeend",'</style>\n<button id="mdk-chat-btn
         f.parentNode.insertBefore(ok,f);f.style.display='none';})
       .catch(function(){btn.disabled=false;btn.textContent='Try again';});};
 })();
+
+// ===========================================================================
+// Proactive greeting: say hello to new visitors, welcome back returning ones.
+// Shows a small bubble by the chat button; clicking it opens the chat.
+// (Demo intentionally held off for now.)
+// ===========================================================================
+(function(){
+  var BOT_NAME = "Astro";   // <-- CHANGE THIS to your assistant's name
+
+  if (sessionStorage.getItem('mdk_greeted')) return;        // greet once per visit
+  var returning = !!localStorage.getItem('mdk_seen');
+  sessionStorage.setItem('mdk_greeted','1');
+  localStorage.setItem('mdk_seen','1');
+
+  var msg = returning
+    ? "Welcome back. I'm " + BOT_NAME + ", right here in the bottom right corner if you need anything."
+    : "Hi, I'm " + BOT_NAME + ", the MyDevKits assistant. I'm right here in the bottom right corner whenever you need anything. Just ask.";
+
+  var st = document.createElement('style');
+  st.textContent =
+    "#mdk-greet{position:fixed;right:22px;bottom:96px;max-width:262px;background:#122036;"+
+    "color:#dbe4f3;border:1px solid #35d399;padding:12px 30px 12px 14px;font-family:'Segoe UI',system-ui,sans-serif;"+
+    "font-size:13.5px;line-height:1.5;box-shadow:0 10px 30px rgba(0,0,0,.5);z-index:9997;cursor:pointer;"+
+    "opacity:0;transform:translateY(8px);transition:opacity .3s,transform .3s}"+
+    "#mdk-greet.show{opacity:1;transform:none}"+
+    "#mdk-greet .gx{position:absolute;top:3px;right:8px;color:#8fa2bd;font-size:16px;line-height:1;cursor:pointer}"+
+    "#mdk-greet:hover{border-color:#7cd4fc}";
+  document.head.appendChild(st);
+
+  var g = document.createElement('div');
+  g.id = 'mdk-greet';
+  g.innerHTML = '<span class="gx" id="mdk-greet-x" aria-label="Close">&times;</span>' + msg.replace(/</g,'&lt;');
+  document.body.appendChild(g);
+
+  function hide(){ g.classList.remove('show'); setTimeout(function(){ if(g.parentNode) g.parentNode.removeChild(g); },300); }
+  setTimeout(function(){ g.classList.add('show'); }, 1200);   // appear shortly after load
+  var auto = setTimeout(hide, 14000);                         // fade on its own after a while
+
+  document.getElementById('mdk-greet-x').addEventListener('click', function(e){ e.stopPropagation(); clearTimeout(auto); hide(); });
+  g.addEventListener('click', function(){ clearTimeout(auto); hide(); var b=document.getElementById('mdk-chat-btn'); if(b) b.click(); });
+  var btn = document.getElementById('mdk-chat-btn');
+  if (btn) btn.addEventListener('click', function(){ clearTimeout(auto); hide(); });
+})();

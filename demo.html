@@ -372,17 +372,17 @@ let DEMO_CHAT=[
    {from:'owner',text:'Depends on your setup - booked you for Thursday at 2. See you then!',ts:Date.now()-7200000}]}
 ];
 const DEMO_CONTENT={
- facebook:"Our shop floor at sunrise, before the phones start ringing.\n\nEvery post you see this week was written, narrated, and published by the hub we built ourselves - one screen, every platform, zero subscriptions. We build the same thing for local businesses.\n\nWhat's the first job you'd hand it?",
+ facebook:"Our shop floor at sunrise, before the phones start ringing.\n\nEvery post you see this week was written, narrated, and published by the hub we built ourselves - one screen, every platform, all from our own shop. We build the same thing for local businesses.\n\nWhat's the first job you'd hand it?",
  instagram:"Sunrise at the shop. The hub posts while we pour the coffee. ☕\n\nOne dashboard. Every platform. Owned outright.\n\n#siouxland #smallbusiness #automation #buildit #ownit",
- x:"Sunrise at the shop. Every post this week was written, narrated, and published by a hub we built ourselves. One screen, every platform, $0/month. Your move, subscription software.",
+ x:"Sunrise at the shop. Every post this week was written, narrated, and published by a hub we built ourselves. One screen, every platform, all from one place.",
  youtube_title:"One Machine Posts Everywhere (We Built It Ourselves)",
  youtube_description:"A look at the Social Presence hub running our shop's accounts: one dashboard that writes, narrates, and publishes to every platform at once. Built once, owned forever. MyDevKits shows you how.",
  video:{scenes:[
   {headline:"One hub, every platform",sub:"Written, voiced, and posted from one screen."},
   {headline:"Your photos, your voice",sub:"The AI looks at your shots and writes what it sees."},
   {headline:"Posts while you pour coffee",sub:"Scheduled, narrated, published. Hands free."},
-  {headline:"Built once, owned forever",sub:"No subscriptions. Every key stays home."}],
- voiceover:"This is our shop at sunrise. By the time the coffee's ready, the hub has already written the day's posts, narrated this video, and published everywhere at once. We built it ourselves, we own it outright, and it costs nothing a month. MyDevKits can show you how - or build one for you."}};
+  {headline:"Built once, owned forever",sub:"Runs on your hardware. Every key stays home."}],
+ voiceover:"This is our shop at sunrise. By the time the coffee's ready, the hub has already written the day's posts, narrated this video, and published everywhere at once. We built it ourselves, we own it outright, and it runs right here in the shop. MyDevKits can show you how - or build one for you."}};
 async function api(path,opts){
  const body=opts&&opts.body?JSON.parse(opts.body):{};
  if(path.startsWith('/api/status'))return{title:'MYDEVKITS',queue_paused:false,platforms:{facebook:true,instagram:true,x:true,youtube:true}};
@@ -872,7 +872,7 @@ function renderNumbersDemo(){
  <div class="card"><h2>Best recent posts</h2>
   <div class="qrow"><span style="flex:1">Sunrise at the shop (video)</span><span class="mono" style="color:var(--muted)">FB &middot; IG &middot; X &middot; YT</span><span class="mono" style="color:var(--green)">4,812 reach</span></div>
   <div class="qrow"><span style="flex:1">One hub, every platform</span><span class="mono" style="color:var(--muted)">IG</span><span class="mono" style="color:var(--green)">2,203 reach</span></div>
-  <div class="qrow"><span style="flex:1">Your move, subscription software</span><span class="mono" style="color:var(--muted)">X</span><span class="mono" style="color:var(--green)">1,178 reach</span></div>
+  <div class="qrow"><span style="flex:1">Sunrise at the shop</span><span class="mono" style="color:var(--muted)">X</span><span class="mono" style="color:var(--green)">1,178 reach</span></div>
   <div class="note" style="margin-top:10px">Pulled daily from each platform&#39;s own numbers. All read-only, all yours.</div>
  </div>
  </div>`;

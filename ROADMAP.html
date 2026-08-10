@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Joey Gonzales · Company & Project Roadmap</title>
+<style>
+  :root{
+    --bg:#0b0f14; --bg2:#0f1620; --panel:#131c28; --panel2:#182433;
+    --ink:#eef4fb; --body:#c3d0de; --muted:#8697a8; --dim:#5b6b7c;
+    --line:#22303f; --line2:#2c3d50;
+    --green:#3ddc97; --greendim:#1c6b4c;
+    --blue:#5aa9ff; --bluedim:#254a72;
+    --amber:#f5b74e; --amberdim:#7a5a1e;
+    --violet:#b98bff; --red:#ff6b6b;
+    --mono:ui-monospace,"SF Mono",Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:radial-gradient(1200px 700px at 80% -10%,#12202e 0,var(--bg) 55%);color:var(--body);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1120px;margin:0 auto;padding:38px 22px 90px}
+  a{color:var(--blue);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .mono{font-family:var(--mono)}
+
+  /* header */
+  header.top{margin-bottom:30px}
+  .kick{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--blue)}
+  h1{font-size:clamp(28px,4.5vw,42px);line-height:1.12;font-weight:800;color:var(--ink);margin:12px 0 10px}
+  h1 .g{color:var(--green)}
+  .sub{max-width:760px;font-size:16px;color:var(--body)}
+  .stamp{margin-top:14px;font-family:var(--mono);font-size:12px;color:var(--dim)}
+
+  /* KPI row */
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:26px 0 8px}
+  .kpi{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:14px;padding:16px 16px 14px}
+  .kpi .n{font-size:30px;font-weight:800;color:var(--ink);line-height:1}
+  .kpi .l{font-size:12px;color:var(--muted);margin-top:6px}
+  .kpi.g .n{color:var(--green)} .kpi.a .n{color:var(--amber)} .kpi.b .n{color:var(--blue)}
+
+  /* section */
+  section{margin-top:40px}
+  .shead{display:flex;align-items:baseline;gap:12px;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:20px}
+  .shead h2{font-size:20px;color:var(--ink);margin:0;font-weight:700}
+  .shead .tag{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+
+  /* strategy callout */
+  .thesis{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line2);border-left:3px solid var(--green);border-radius:14px;padding:20px 22px}
+  .thesis h3{margin:0 0 8px;color:var(--ink);font-size:16px}
+  .thesis p{margin:0 0 10px}
+  .thesis p:last-child{margin-bottom:0}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+  .track{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+  .track h4{margin:0 0 6px;font-size:14px;color:var(--ink);display:flex;align-items:center;gap:8px}
+  .dotm{width:9px;height:9px;border-radius:50%;display:inline-block}
+  .track.income h4 .dotm{background:var(--green)}
+  .track.company h4 .dotm{background:var(--blue)}
+  .track p{margin:0;font-size:13.5px;color:var(--muted)}
+
+  /* project cards */
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .card{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:14px;padding:18px 18px 16px;position:relative;overflow:hidden}
+  .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--dim)}
+  .card.live::before{background:var(--green)}
+  .card.build::before{background:var(--amber)}
+  .card.run::before{background:var(--blue)}
+  .card.plan::before{background:var(--dim)}
+  .card .ctitle{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+  .card h3{margin:0;font-size:16.5px;color:var(--ink);font-weight:700}
+  .card .where{font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:2px}
+  .badge{flex:none;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border-radius:20px;font-weight:600;white-space:nowrap}
+  .b-live{background:rgba(61,220,151,.14);color:var(--green);border:1px solid var(--greendim)}
+  .b-build{background:rgba(245,183,78,.13);color:var(--amber);border:1px solid var(--amberdim)}
+  .b-run{background:rgba(90,169,255,.13);color:var(--blue);border:1px solid var(--bluedim)}
+  .b-plan{background:rgba(139,151,168,.12);color:var(--muted);border:1px solid var(--line2)}
+  .card .desc{font-size:13.5px;color:var(--body);margin:12px 0 12px}
+  .card .lab{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+  .card ul{margin:0 0 12px;padding-left:16px}
+  .card li{font-size:13px;color:var(--body);margin-bottom:4px}
+  .card li::marker{color:var(--dim)}
+  .card .next li::marker{color:var(--amber)}
+  .card .live-list li::marker{color:var(--green)}
+
+  /* phases */
+  .phases{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .phase{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:0 0 8px;overflow:hidden}
+  .phase .ph{padding:14px 18px;border-bottom:1px solid var(--line)}
+  .phase .ph .when{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+  .phase.now .ph .when{color:var(--green)}
+  .phase.next .ph .when{color:var(--amber)}
+  .phase.later .ph .when{color:var(--blue)}
+  .phase .ph .goal{font-size:14px;color:var(--ink);font-weight:600;margin-top:4px}
+  .phase ol{margin:12px 0 4px;padding:0 18px 0 34px}
+  .phase li{font-size:13px;color:var(--body);margin-bottom:10px}
+  .phase li b{color:var(--ink);font-weight:600}
+  .phase li .p{display:inline-block;font-family:var(--mono);font-size:9.5px;padding:1px 6px;border-radius:4px;margin-left:4px;vertical-align:middle}
+  .p.income{background:rgba(61,220,151,.14);color:var(--green)}
+  .p.company{background:rgba(90,169,255,.14);color:var(--blue)}
+
+  /* focus list */
+  .focus{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:6px 4px}
+  .frow{display:flex;gap:14px;padding:14px 18px;border-bottom:1px solid var(--line);align-items:flex-start}
+  .frow:last-child{border-bottom:none}
+  .frank{font-family:var(--mono);font-size:20px;font-weight:800;color:var(--green);flex:none;width:30px;line-height:1.2}
+  .frow:nth-child(2) .frank{color:var(--green)}
+  .fbody h4{margin:0 0 3px;color:var(--ink);font-size:15px}
+  .fbody p{margin:0;font-size:13.5px;color:var(--muted)}
+
+  .note{margin-top:34px;background:rgba(90,169,255,.06);border:1px solid var(--bluedim);border-radius:12px;padding:16px 18px;font-size:13px;color:var(--muted)}
+  .note b{color:var(--body)}
+  .legend{display:flex;flex-wrap:wrap;gap:16px;margin:18px 0 0;font-size:12px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+  footer{margin-top:50px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--dim);font-family:var(--mono)}
+
+  @media(max-width:820px){
+    .kpis{grid-template-columns:1fr 1fr}
+    .two,.cards,.phases{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="kick">MyDevKits · Company & Project Roadmap</div>
+    <h1>Everything you're building,<br>on <span class="g">one map.</span></h1>
+    <p class="sub">Two tracks running at once: a personal job hunt that brings income in now, and MyDevKits, LLC — a real software company with a flagship product and three more kits close to launch. This is the state of every piece and the order to tackle them in.</p>
+    <div class="stamp">Prepared Aug 9, 2026 · covers 7 connected project folders · first pass, built to update</div>
+  </header>
+
+  <div class="kpis">
+    <div class="kpi g"><div class="n">3</div><div class="l">systems live in production right now</div></div>
+    <div class="kpi a"><div class="n">3</div><div class="l">products built, needing launch polish</div></div>
+    <div class="kpi b"><div class="n">2</div><div class="l">tracks: your income + the company</div></div>
+    <div class="kpi"><div class="n">7</div><div class="l">distinct projects on your machine</div></div>
+  </div>
+
+  <div class="legend">
+    <span><i style="background:var(--green)"></i> Live in production</span>
+    <span><i style="background:var(--amber)"></i> Built — needs launch work</span>
+    <span><i style="background:var(--blue)"></i> Running / gathering data</span>
+    <span><i style="background:var(--dim)"></i> Planned / service offering</span>
+  </div>
+
+  <!-- STRATEGY -->
+  <section>
+    <div class="shead"><h2>The strategic picture</h2><span class="tag">Read this first</span></div>
+    <div class="thesis">
+      <h3>You are one person running two companies at once. That's the core tension — and the plan.</h3>
+      <p>Track one is <b style="color:var(--green)">income now</b>: land a remote support / success role. Your job-hunt machine is already live and, unusually, <i>is itself the work sample</i> — a recruiter talking to your agent is watching you demonstrate the exact skills the job needs. That's a real edge, and it's 90% built. The missing 10% is what's blocking it.</p>
+      <p>Track two is <b style="color:var(--blue)">MyDevKits, the company</b>: a genuine product line (a flagship voice-AI engine plus three kits) with a live storefront collecting waitlist emails. The danger here is spreading yourself across four half-finished products instead of taking <i>one</i> all the way to a first paying customer.</p>
+      <p style="margin-top:14px;color:var(--ink)"><b>The recommendation:</b> Finish the job-hunt track this week — it's nearly done and it's your income floor. Then pick <b>one</b> MyDevKits product to carry to a first sale (the flagship engine or the social kit), and let the others hold steady. Depth over breadth is how a solo founder wins.</p>
+      <div class="two">
+        <div class="track income">
+          <h4><span class="dotm"></span> Track 1 — Income now</h4>
+          <p>JoeyLive + meetjoeygonzales.com (live recruiter agent) and Job Hub (your application pipeline tool). Goal: signed offer.</p>
+        </div>
+        <div class="track company">
+          <h4><span class="dotm"></span> Track 2 — MyDevKits, the company</h4>
+          <p>Website AI Engine (flagship), Social Media Kit, Trading Bot, Customer Kits service, and the mydevkits.com storefront. Goal: first paying customer.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRACK 1 PROJECTS -->
+  <section>
+    <div class="shead"><h2>Track 1 — Your income</h2><span class="tag">Job hunt · closest to done</span></div>
+    <div class="cards">
+
+      <div class="card live">
+        <div class="ctitle">
+          <div><h3>JoeyLive + meetjoeygonzales.com</h3><div class="where">joeylive/ · live on Cloudflare + Hetzner VPS</div></div>
+          <span class="badge b-live">Live</span>
+        </div>
+        <div class="desc">Your invitation-only recruiter page with an AI agent that pitches you, plus a 24/7 voice version at talk.meetjoeygonzales.com. Ground-truth-only, admits it's AI — "talking to it is the work sample."</div>
+        <div class="lab">Live &amp; working</div>
+        <ul class="live-list">
+          <li>Web page + agent console (create per-company links, logos, job briefs)</li>
+          <li>Voice bot 24/7 on the VPS behind HTTPS</li>
+        </ul>
+        <div class="lab">Next actions</div>
+        <ul class="next">
+          <li><b>Add your real work history</b> — the page still has empty [Joey:…] placeholders and the agent deflects history questions. This is the #1 blocker.</li>
+          <li>Confirm resume is uploaded into the console</li>
+          <li>Set spending caps on OpenRouter / Deepgram / Cartesia</li>
+          <li>Replace the placeholder astronaut avatar (or use the orb)</li>
+        </ul>
+      </div>
+
+      <div class="card build">
+        <div class="ctitle">
+          <div><h3>Job Hub</h3><div class="where">job-hub/ · local dashboard, localhost:5051</div></div>
+          <span class="badge b-build">Built · use it</span>
+        </div>
+        <div class="desc">Your own remote-job aggregator: pulls support / success / renewals roles from Remotive, RemoteOK, Jobicy, Himalayas, We Work Remotely, Greenhouse &amp; Lever into one scored inbox, and preps applications for one-click apply.</div>
+        <div class="lab">Live &amp; working</div>
+        <ul class="live-list">
+          <li>Multi-board fetch, keyword scoring, save/apply/hide pipeline</li>
+        </ul>
+        <div class="lab">Next actions</div>
+        <ul class="next">
+          <li><b>Actually run it daily</b> — fill the Profile tab once, then work the inbox</li>
+          <li>Add a few target-company Greenhouse/Lever slugs</li>
+          <li>Optional: add free Adzuna / Jooble keys for more coverage</li>
+          <li>Keep a LinkedIn saved-search alert for what the APIs miss</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- TRACK 2 PROJECTS -->
+  <section>
+    <div class="shead"><h2>Track 2 — MyDevKits, the company</h2><span class="tag">The product line</span></div>
+    <div class="cards">
+
+      <div class="card build">
+        <div class="ctitle">
+          <div><h3>Website AI Sales &amp; Support Engine</h3><div class="where">weblive/ (WebLive) · flagship · waitlist open</div></div>
+          <span class="badge b-build">Flagship · pre-launch</span>
+        </div>
+        <div class="desc">The live voice host that greets website visitors, answers questions, walks them through products, and captures leads. A working demo bot exists; JoeyLive is a fork of this same engine. This is your strongest, most differentiated product.</div>
+        <div class="lab">Live &amp; working</div>
+        <ul class="live-list">
+          <li>Full engine: speech-to-text, LLM brain, TTS, animated host, CRM, consent logging</li>
+          <li>Storage architecture already audited (STORAGE_AUDIT.md)</li>
+        </ul>
+        <div class="lab">Next actions — to make it sellable</div>
+        <ul class="next">
+          <li><b>Build the customer console</b> so a buyer can set it up without you (Setup / Brain / Host / Records tabs)</li>
+          <li>Split a clean "ship" folder (~80MB) from your dev assets (~280MB)</li>
+          <li>PII scrub on CRM summaries + voice-cache purge (the one real leak path)</li>
+          <li>engine.json + voice-adapter interface for universality</li>
+          <li>Line up <b>one</b> local business as a first pilot install</li>
+        </ul>
+      </div>
+
+      <div class="card build">
+        <div class="ctitle">
+          <div><h3>Social Media Presence Kit</h3><div class="where">social-hub-original/ · always-on service</div></div>
+          <span class="badge b-build">Built · launching soon</span>
+        </div>
+        <div class="desc">One dashboard for Facebook, Instagram, X &amp; YouTube: publish everywhere, one unified inbox, an AI studio that drafts posts and narrates video — all approval-gated. Positioned to replace $6–120/mo schedulers. Has a live demo on the site.</div>
+        <div class="lab">Live &amp; working</div>
+        <ul class="live-list">
+          <li>Full app: publisher, studio, 2FA, encrypted vault, always-on service, backups</li>
+          <li>Packaged as a kit with SETUP.bat + START_HERE guide</li>
+        </ul>
+        <div class="lab">Next actions</div>
+        <ul class="next">
+          <li>Decide: is this the product you take to first sale, or the flagship?</li>
+          <li>Note: two folders exist (social-hub is empty, social-hub-original has the code) — consolidate to avoid confusion</li>
+          <li>Verify each platform API connection end-to-end</li>
+          <li>Finish the installer / setup.exe for non-technical buyers</li>
+        </ul>
+      </div>
+
+      <div class="card run">
+        <div class="ctitle">
+          <div><h3>Trading Bot (Kalshi)</h3><div class="where">Kalshi_ShortV2/ · running &amp; recording</div></div>
+          <span class="badge b-run">Running · gathering data</span>
+        </div>
+        <div class="desc">A prediction-market bot on Kalshi (regulated exchange) trading tennis markets, with a neutral always-on recorder capturing every market's pricing start-to-finish as the strategy-agnostic data base layer. Sold as a "your rules, your risk rails" kit.</div>
+        <div class="lab">Live &amp; working</div>
+        <ul class="live-list">
+          <li>Fav-Set1 strategy bot + neutral Tennis Recorder (Windows service)</li>
+          <li>Demo dashboard on the site</li>
+        </ul>
+        <div class="lab">Next actions</div>
+        <ul class="next">
+          <li>Keep recording — let the data accumulate before claiming results</li>
+          <li><b>Be careful with the marketing</b>: keep it strictly demo/paper-first, risk-disclosed (your site already does this)</li>
+          <li>Treat as a "later" product — lowest priority of the three kits</li>
+        </ul>
+      </div>
+
+      <div class="card live">
+        <div class="ctitle">
+          <div><h3>MyDevKits storefront</h3><div class="where">mydevkits-site/ · mydevkits.com · GitHub Pages</div></div>
+          <span class="badge b-live">Live</span>
+        </div>
+        <div class="desc">Your company website: the story (own it or we run it), all four products with waitlist / notify-me forms, the local custom-build service for the Siouxland tri-state region, and "The Shelf" of what's next.</div>
+        <div class="lab">Live &amp; working</div>
+        <ul class="live-list">
+          <li>Full multi-panel site, live demos embedded, lead-capture worker</li>
+        </ul>
+        <div class="lab">Next actions</div>
+        <ul class="next">
+          <li><b>Check the waitlist inbox</b> — are notify-me emails landing somewhere you read?</li>
+          <li>Make sure one product has a real "buy / book" path, not just waitlist</li>
+          <li>Tighten to push whichever product you choose as the spearhead</li>
+        </ul>
+      </div>
+
+      <div class="card plan">
+        <div class="ctitle">
+          <div><h3>Customer Kits — done-for-you builds</h3><div class="where">service offering · Siouxland (IA · NE · SD)</div></div>
+          <span class="badge b-plan">Service · needs first client</span>
+        </div>
+        <div class="desc">The local, high-touch path: free phone consult → design the automation a business needs → audit the subscriptions you can replace → build on their hardware → hand over the keys. This is the fastest route to actual revenue because it's a service, not a product launch.</div>
+        <div class="lab">Next actions</div>
+        <ul class="next">
+          <li><b>This may be your quickest first dollar</b> — one local business, one custom build</li>
+          <li>Make a simple one-page offer + a list of 10 local businesses to call</li>
+          <li>Use a real build as the case study that sells the kits</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PHASED ROADMAP -->
+  <section>
+    <div class="shead"><h2>The roadmap — Now / Next / Later</h2><span class="tag">Order of operations</span></div>
+    <div class="phases">
+
+      <div class="phase now">
+        <div class="ph"><div class="when">Now · next 2 weeks</div><div class="goal">Close the income gap</div></div>
+        <ol>
+          <li><b>Fold your real work history + resume</b> into meetjoeygonzales.com and the agent's knowledge<span class="p income">income</span></li>
+          <li><b>Set API spend caps</b> so a live bot can't run up a bill<span class="p income">income</span></li>
+          <li><b>Run Job Hub daily</b> — profile filled, inbox worked, applications going out<span class="p income">income</span></li>
+          <li>Send meetjoeygonzales links with every application you submit<span class="p income">income</span></li>
+          <li>Check the mydevkits.com waitlist is actually capturing emails you can see<span class="p company">company</span></li>
+        </ol>
+      </div>
+
+      <div class="phase next">
+        <div class="ph"><div class="when">Next · 30–60 days</div><div class="goal">Pick one product, get one customer</div></div>
+        <ol>
+          <li><b>Choose the spearhead</b>: the AI Engine (highest value) or the Social Kit (most finished)<span class="p company">company</span></li>
+          <li>For the AI Engine: build the setup console + clean ship-folder so a buyer installs without you<span class="p company">company</span></li>
+          <li>Do the PII scrub + retention caps flagged in the storage audit<span class="p company">company</span></li>
+          <li><b>Land one Customer Kit build</b> for a local business — real revenue + case study<span class="p company">company</span></li>
+          <li>Keep the voice avatar / phase-two embed moving on JoeyLive if still job-hunting<span class="p income">income</span></li>
+        </ol>
+      </div>
+
+      <div class="phase later">
+        <div class="ph"><div class="when">Later · 90 days+</div><div class="goal">Turn one win into a repeatable offer</div></div>
+        <ol>
+          <li>Package the spearhead product from "it works" to "anyone can buy &amp; run it"<span class="p company">company</span></li>
+          <li>Use the first customer as the proof that sells the next five<span class="p company">company</span></li>
+          <li>Bring the second kit to launch once the first has a playbook<span class="p company">company</span></li>
+          <li>Let the Trading Bot's data mature; only market it with evidence<span class="p company">company</span></li>
+          <li>Decide the long game: is MyDevKits the job, or the thing alongside the job?<span class="p company">company</span></li>
+        </ol>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- TOP FOCUS -->
+  <section>
+    <div class="shead"><h2>If you do nothing else</h2><span class="tag">The five that matter most</span></div>
+    <div class="focus">
+      <div class="frow"><div class="frank">1</div><div class="fbody"><h4>Put your work history into the recruiter agent</h4><p>Everything else in the job hunt is ready. This one gap is what's holding back your income track. Do it first.</p></div></div>
+      <div class="frow"><div class="frank">2</div><div class="fbody"><h4>Work Job Hub every morning</h4><p>The tool is built and waiting. Consistent daily applications are what actually produce an offer.</p></div></div>
+      <div class="frow"><div class="frank">3</div><div class="fbody"><h4>Pick ONE MyDevKits product to push</h4><p>Four half-launched products is the trap. One product taken all the way to a paying customer changes everything.</p></div></div>
+      <div class="frow"><div class="frank">4</div><div class="fbody"><h4>Sell one local Customer Kit build</h4><p>A service sale is your fastest real dollar and becomes the case study that sells the products.</p></div></div>
+      <div class="frow"><div class="frank">5</div><div class="fbody"><h4>Make the flagship engine installable without you</h4><p>The console + clean ship-folder is the difference between a demo and a product you can actually sell.</p></div></div>
+    </div>
+  </section>
+
+  <div class="note">
+    <b>A note on this first pass.</b> I built this from the docs in your connected folders (READMEs, HANDOFF.md, the storage audit, and the site itself), so statuses reflect what those files say — I didn't run any of the apps or check live URLs. A few things I inferred and you should confirm: whether the waitlist emails are reaching an inbox you read, whether the resume made it into the console, and which product you actually want to lead with. Tell me any of that and I'll sharpen the map. I can also turn this into a live tracker you update, split any project into its own detailed plan, or draft the work-history content for the agent.
+  </div>
+
+  <footer>MyDevKits, LLC · Siouxland tri-state region · Roadmap v1 · built to be updated as you go</footer>
+
+</div>
+</body>
+</html>
