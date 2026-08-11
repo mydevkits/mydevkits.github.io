@@ -212,47 +212,47 @@ textarea{min-height:110px;resize:vertical}
 </head>
 <body>
 <div id="layout">
-  <div id="sidebar">
-    <h1>MYDEVKITS <span>&#9679;</span><br><span style="font-size:9px;letter-spacing:.24em;color:var(--muted)">SOCIAL MEDIA PRESENCE</span></h1>
-    <div class="navlabel">Rooms</div>
-    <button class="nav active" data-view="composer">Composer</button>
-    <button class="nav" data-view="studio">Studio</button>
-    <button class="nav" data-view="inbox">Inbox</button>
-    <button class="nav" data-view="numbers">Numbers</button>
-    <button class="nav" data-view="themes">Themes</button>
-    <button class="nav" data-view="library">Library</button>
-    <div class="navlabel">Platforms</div>
-    <button class="nav" data-view="facebook"><span class="dot" id="dot-facebook"></span>Facebook</button>
-    <button class="nav" data-view="instagram"><span class="dot" id="dot-instagram"></span>Instagram</button>
-    <button class="nav" data-view="x"><span class="dot" id="dot-x"></span>X</button>
-    <button class="nav" data-view="youtube"><span class="dot" id="dot-youtube"></span>YouTube</button>
-  </div>
-  <div id="main">
-    <div id="header">
-      <span class="crumb" id="crumb">Composer</span>
-      <span class="mono" style="border:1px solid var(--amber);color:var(--amber);font-size:10px;letter-spacing:.16em;padding:4px 10px;margin-left:12px">DEMO</span>
-      <span style="display:flex;gap:10px">
-      <span class="clickhint">try me &#8594;</span><button id="themebtn" onclick="toggleTheme()" style="background:none;border:1px solid var(--border);color:var(--muted);padding:7px 14px;font-size:13px;cursor:pointer;font-family:inherit">&#9728; work mode</button>
-      <button id="pausebtn" onclick="togglePause()">&#9646;&#9646; queue running</button>
-      </span>
-    </div>
-    <div id="content"></div>
-  </div>
+ <div id="sidebar">
+ <h1>MYDEVKITS <span>&#9679;</span><br><span style="font-size:9px;letter-spacing:.24em;color:var(--muted)">SOCIAL MEDIA PRESENCE</span></h1>
+ <div class="navlabel">Rooms</div>
+ <button class="nav active" data-view="composer">Composer</button>
+ <button class="nav" data-view="studio">Studio</button>
+ <button class="nav" data-view="inbox">Inbox</button>
+ <button class="nav" data-view="numbers">Numbers</button>
+ <button class="nav" data-view="themes">Themes</button>
+ <button class="nav" data-view="library">Library</button>
+ <div class="navlabel">Platforms</div>
+ <button class="nav" data-view="facebook"><span class="dot" id="dot-facebook"></span>Facebook</button>
+ <button class="nav" data-view="instagram"><span class="dot" id="dot-instagram"></span>Instagram</button>
+ <button class="nav" data-view="x"><span class="dot" id="dot-x"></span>X</button>
+ <button class="nav" data-view="youtube"><span class="dot" id="dot-youtube"></span>YouTube</button>
+ </div>
+ <div id="main">
+ <div id="header">
+ <span class="crumb" id="crumb">Composer</span>
+ <span class="mono" style="border:1px solid var(--amber);color:var(--amber);font-size:10px;letter-spacing:.16em;padding:4px 10px;margin-left:12px">DEMO</span>
+ <span style="display:flex;gap:10px">
+ <span class="clickhint">try me &#8594;</span><button id="themebtn" onclick="toggleTheme()" style="background:none;border:1px solid var(--border);color:var(--muted);padding:7px 14px;font-size:13px;cursor:pointer;font-family:inherit">&#9728; work mode</button>
+ <button id="pausebtn" onclick="togglePause()">&#9646;&#9646; queue running</button>
+ </span>
+ </div>
+ <div id="content"></div>
+ </div>
 </div>
 <div id="demotip"></div>
 <a id="leavedemo" href="index.html" style="display:none;position:fixed;right:16px;bottom:16px;z-index:500;background:#0d1726;border:1px solid #35d399;color:#dbe4f3;font-size:11px;letter-spacing:.1em;padding:10px 16px;text-decoration:none;font-family:ui-monospace,Consolas,monospace;box-shadow:0 10px 30px #000a">&#8592; LEAVE DEMO</a>
 <script>if(window.self===window.top)document.getElementById('leavedemo').style.display='block';</script>
 <div id="lightbox" onclick="closeLightbox()">
-  <button class="lbx" onclick="closeLightbox()">&#10005;</button>
-  <button class="lbarrow left" onclick="event.stopPropagation();lbNav(-1)">&#8249;</button>
-  <span id="lbslot"></span>
-  <button class="lbarrow right" onclick="event.stopPropagation();lbNav(1)">&#8250;</button>
-  <div id="lbedit" onclick="event.stopPropagation()">
-    <input id="lbprompt" placeholder="Describe an edit for THIS photo... 'make the sky golden hour', 'remove the car'"
+ <button class="lbx" onclick="closeLightbox()">&#10005;</button>
+ <button class="lbarrow left" onclick="event.stopPropagation();lbNav(-1)">&#8249;</button>
+ <span id="lbslot"></span>
+ <button class="lbarrow right" onclick="event.stopPropagation();lbNav(1)">&#8250;</button>
+ <div id="lbedit" onclick="event.stopPropagation()">
+ <input id="lbprompt" placeholder="Describe an edit for THIS photo... 'make the sky golden hour', 'remove the car'"
       oninput="LB_DRAFTS[(LB_LIST||media)[LB_IDX]]=this.value"
       onkeydown="if(event.key==='Enter')aiEditPhoto()">
-    <button id="lbeditbtn" onclick="aiEditPhoto()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72Z"/><path d="m14 7 3 3"/><path d="M5 6v4"/><path d="M19 14v4"/><path d="M10 2v2"/><path d="M7 8H3"/><path d="M21 16h-4"/><path d="M11 3H9"/></svg>Edit</button>
-  </div>
+ <button id="lbeditbtn" onclick="aiEditPhoto()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72Z"/><path d="m14 7 3 3"/><path d="M5 6v4"/><path d="M19 14v4"/><path d="M10 2v2"/><path d="M7 8H3"/><path d="M21 16h-4"/><path d="M11 3H9"/></svg>Edit</button>
+ </div>
 </div>
 <script>
 let LB_IDX=-1,LB_LIST=null,LB_DRAFTS={},LB_PREFIX='/uploads/',LIB_BG=[];
