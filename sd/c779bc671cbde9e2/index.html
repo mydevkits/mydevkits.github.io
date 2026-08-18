@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="theme-color" content="#ED1D24">
+<meta name="description" content="Private study tool.">
+<title>South Dakota Practice App - State Farm</title>
+<style>
+:root{
+  /* State Farm brand red - PMS 485 C */
+  --sf-red:#ED1D24;
+  --sf-red-dk:#C4161C;
+  --sf-red-soft:rgba(237,29,36,.10);
+  --sf-red-line:rgba(237,29,36,.30);
+
+  --bg:#F1F3F6;
+  --bg2:#FFFFFF;
+  --panel:#FFFFFF;
+  --panel2:#F6F7F9;
+  --line:#E3E6EB;
+  --line2:#D3D8E0;
+  --txt:#1D2126;
+  --mut:#5A6473;
+  --mut2:#8C95A3;
+  --good:#0E8C57;
+  --good-soft:rgba(14,140,87,.11);
+  --bad:#D42B2B;
+  --bad-soft:rgba(212,43,43,.10);
+  --warn:#B36A00;
+  --warn-soft:rgba(179,106,0,.12);
+  --side:#FFFFFF;
+  --side-line:#E3E6EB;
+  --topbar:rgba(255,255,255,.86);
+  --input:#FFFFFF;
+  --chip:#EEF0F4;
+  --track:#E7EAEF;
+  --choice:#FFFFFF;
+  --choice-h:#F7F8FA;
+  --r:12px;
+  --shadow:0 12px 28px -16px rgba(20,28,44,.34);
+  --shadow-sm:0 2px 6px -2px rgba(20,28,44,.14);
+}
+html[data-theme="dark"]{
+  --bg:#0A0D13;
+  --bg2:#0F141D;
+  --panel:#141A25;
+  --panel2:#1A2230;
+  --line:#232C3B;
+  --line2:#2E3A4D;
+  --txt:#E8EDF6;
+  --mut:#8996AB;
+  --mut2:#63708A;
+  --good:#25C685;
+  --good-soft:rgba(37,198,133,.14);
+  --bad:#FF4D5E;
+  --bad-soft:rgba(255,77,94,.14);
+  --warn:#FFB43D;
+  --warn-soft:rgba(255,180,61,.14);
+  --sf-red-soft:rgba(237,29,36,.16);
+  --sf-red-line:rgba(237,29,36,.45);
+  --side:#0E131C;
+  --side-line:#232C3B;
+  --topbar:rgba(12,16,23,.72);
+  --input:#0E141E;
+  --chip:#1E2634;
+  --track:#1D2534;
+  --choice:#111823;
+  --choice-h:#151E2B;
+  --shadow:0 18px 40px -18px rgba(0,0,0,.85);
+  --shadow-sm:0 2px 8px -2px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--bg);
+  color:var(--txt);
+  font:15px/1.55 "Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,sans-serif;
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+  user-select:none;
+}
+html[data-theme="dark"] body{
+  background:
+    radial-gradient(1200px 600px at 12% -10%, rgba(237,29,36,.10), transparent 60%),
+    radial-gradient(900px 500px at 100% 0%, rgba(60,110,255,.07), transparent 55%),
+    var(--bg);
+}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+::-webkit-scrollbar{width:11px;height:11px}
+::-webkit-scrollbar-thumb{background:var(--line2);border-radius:8px;border:3px solid transparent;background-clip:padding-box}
+::-webkit-scrollbar-thumb:hover{background:var(--mut2)}
+::-webkit-scrollbar-track{background:transparent}
+
+/* ---------- shell ---------- */
+#app{display:flex;height:100vh;width:100vw}
+#side{
+  width:248px;flex:0 0 248px;background:var(--side);
+  border-right:1px solid var(--side-line);display:flex;flex-direction:column;
+}
+.brand{padding:18px 18px 16px;border-bottom:1px solid var(--side-line)}
+.brand-row{display:flex;align-items:center;gap:11px}
+.brand-mark{
+  width:40px;height:40px;flex:0 0 40px;border-radius:10px;
+  background:linear-gradient(150deg,var(--sf-red),var(--sf-red-dk));
+  display:grid;place-items:center;box-shadow:0 6px 16px -7px rgba(237,29,36,.85)
+}
+.brand-mark svg{width:23px;height:23px;fill:#fff}
+.brand-t{font-weight:700;font-size:14.5px;letter-spacing:-.1px;line-height:1.2}
+.brand-s{font-size:10.5px;color:var(--sf-red);letter-spacing:1.3px;text-transform:uppercase;margin-top:4px;font-weight:750}
+#lineSel{padding:12px 12px 2px;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.lineb{
+  padding:8px 5px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);
+  text-align:center;transition:.14s;overflow:hidden
+}
+.lineb .lt{display:block;font-weight:750;font-size:12.5px;color:var(--txt);white-space:nowrap}
+.lineb .ln{display:block;font-size:9.5px;color:var(--mut2);margin-top:1px;white-space:nowrap;font-weight:600}
+.lineb:hover{border-color:var(--mut2)}
+.lineb.on{background:var(--sf-red-soft);border-color:var(--sf-red-line)}
+.lineb.on .lt{color:var(--sf-red)}
+.lineSelTop{display:none;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:16px}
+.lineSelTop .lineb{padding:11px 8px;background:var(--panel)}
+nav{padding:12px 10px;flex:1;overflow-y:auto}
+.nav-lbl{font-size:10.5px;letter-spacing:1.1px;text-transform:uppercase;color:var(--mut2);padding:12px 10px 6px;font-weight:700}
+.nav-i{
+  display:flex;align-items:center;gap:11px;width:100%;padding:9px 11px;border-radius:9px;
+  color:var(--mut);font-weight:600;font-size:14px;transition:.14s;text-align:left;margin-bottom:2px
+}
+.nav-i svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:0 0 17px}
+.nav-i{overflow:hidden;min-width:0}
+.nav-i:hover{background:var(--chip);color:var(--txt)}
+.nav-i.on{background:var(--sf-red-soft);color:var(--sf-red)}
+.nav-i.on svg{stroke:var(--sf-red)}
+.nav-i .sm{display:none}
+.side-foot{padding:14px 18px;border-top:1px solid var(--side-line);font-size:11.5px;color:var(--mut)}
+.side-foot .ag{font-weight:700;color:var(--txt);font-size:12.5px}
+.side-foot .ro{margin-top:2px}
+.side-foot .lo{margin-top:1px;color:var(--mut2)}
+.side-foot .vr{margin-top:9px;font-size:10.5px;color:var(--mut2)}
+
+#main{flex:1;display:flex;flex-direction:column;min-width:0;background:var(--bg)}
+#top{
+  height:58px;flex:0 0 58px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;padding:0 24px;
+  background:var(--topbar);backdrop-filter:blur(8px);
+}
+#top h1{font-size:16.5px;font-weight:700;letter-spacing:-.2px}
+#top .sub{font-size:12px;color:var(--mut2);margin-top:1px}
+.top-r{display:flex;align-items:center;gap:10px}
+#topr{display:flex;align-items:center;gap:10px}
+#themeBtn{
+  width:34px;height:34px;border-radius:9px;display:grid;place-items:center;
+  border:1px solid var(--line2);color:var(--mut);transition:.14s;background:var(--panel)
+}
+#themeBtn:hover{color:var(--sf-red);border-color:var(--sf-red-line)}
+#themeBtn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#view{flex:1;overflow-y:auto;padding:24px 26px 60px}
+.wrap{max-width:1120px;margin:0 auto}
+.wrap-n{max-width:840px;margin:0 auto}
+
+/* ---------- bits ---------- */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;padding:9px 17px;border-radius:8px;
+  background:var(--panel);border:1px solid var(--line2);font-weight:650;font-size:14px;transition:.14s;color:var(--txt);
+  white-space:nowrap;box-shadow:var(--shadow-sm)
+}
+.btn:hover{border-color:var(--mut2);background:var(--panel2)}
+.btn svg{width:16px;height:16px;flex:0 0 16px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.btn.red{background:var(--sf-red);border-color:var(--sf-red);color:#fff;box-shadow:0 6px 16px -8px rgba(237,29,36,.9)}
+.btn.red:hover{background:var(--sf-red-dk);border-color:var(--sf-red-dk)}
+.btn.ghost{background:transparent;border-color:var(--line2);color:var(--mut);box-shadow:none}
+.btn.ghost:hover{color:var(--txt);background:var(--chip)}
+.btn.sm{padding:6px 12px;font-size:13px;border-radius:7px}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow-sm)}
+.pill{display:inline-block;padding:3px 9px;border-radius:5px;font-size:11px;font-weight:700;letter-spacing:.3px}
+.pill.g{background:var(--good-soft);color:var(--good)}
+.pill.r{background:var(--bad-soft);color:var(--bad)}
+.pill.m{background:var(--chip);color:var(--mut)}
+.pill.y{background:var(--warn-soft);color:var(--warn)}
+h2.sec{font-size:12px;text-transform:uppercase;letter-spacing:1.2px;color:var(--mut2);font-weight:750;margin:26px 0 12px}
+h2.sec:first-child{margin-top:0}
+.grid{display:grid;gap:14px}
+.muted{color:var(--mut)}
+.tiny{font-size:12px}
+input[type=text],input[type=number],input[type=password],select{
+  background:var(--input);border:1px solid var(--line2);border-radius:8px;padding:9px 12px;width:100%;outline:none;transition:.14s
+}
+input:focus,select:focus{border-color:var(--sf-red);box-shadow:0 0 0 3px var(--sf-red-soft)}
+label.fld{display:block;font-size:12px;color:var(--mut);margin-bottom:6px;font-weight:650}
+.switch{display:flex;align-items:center;gap:9px;cursor:pointer;font-size:14px;color:var(--mut)}
+.switch input{appearance:none;width:38px;height:21px;border-radius:20px;background:var(--track);position:relative;transition:.16s;cursor:pointer;border:1px solid var(--line2)}
+.switch input:checked{background:var(--sf-red);border-color:var(--sf-red)}
+.switch input::after{content:"";position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:#fff;transition:.16s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.switch input:checked::after{transform:translateX(17px)}
+
+/* ---------- dashboard ---------- */
+.hero{
+  position:relative;overflow:hidden;border-radius:14px;padding:26px 28px;margin-bottom:22px;
+  background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow-sm)
+}
+.hero::before{content:"";position:absolute;inset:0 auto 0 0;width:5px;background:var(--sf-red)}
+.hero-sd{position:absolute;right:24px;top:24px;width:78px;opacity:.07;pointer-events:none}
+.hero-sd path{fill:var(--sf-red)}
+.hero h3{font-size:23px;font-weight:750;letter-spacing:-.4px}
+.hero p{color:var(--mut);margin-top:6px;font-size:14px;max-width:600px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:22px;position:relative}
+.stat{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:13px 15px}
+.stat .v{font-size:25px;font-weight:750;letter-spacing:-.6px}
+.stat .k{font-size:10.5px;text-transform:uppercase;letter-spacing:.9px;color:var(--mut2);margin-top:2px;font-weight:700}
+
+.gcards{grid-template-columns:repeat(auto-fill,minmax(256px,1fr))}
+.gcard{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px;
+  display:flex;flex-direction:column;gap:11px;transition:.16s;text-align:left;position:relative;overflow:hidden;
+  box-shadow:var(--shadow-sm)
+}
+.gcard:hover{border-color:var(--sf-red-line);transform:translateY(-2px);box-shadow:var(--shadow)}
+.gcard.locked{opacity:.55}
+.gcard.locked:hover{transform:none;border-color:var(--line);box-shadow:var(--shadow-sm)}
+.gcard-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.gnum{font-size:10.5px;font-weight:800;letter-spacing:.7px;color:var(--sf-red);background:var(--sf-red-soft);padding:3px 8px;border-radius:5px}
+.gcard h4{font-size:15px;font-weight:650;line-height:1.32;min-height:40px}
+.gmeta{display:flex;gap:12px;font-size:12px;color:var(--mut2)}
+.gmeta .cmp{color:var(--warn);font-weight:700}
+.bar{height:5px;border-radius:4px;background:var(--track);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:4px;background:var(--sf-red);transition:width .5s}
+.bar.g i{background:var(--good)}
+
+/* ---------- quiz ---------- */
+.qbar{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.qbar .bar{flex:1}
+.qcount{font-size:12.5px;color:var(--mut);font-weight:650;white-space:nowrap}
+.qcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:26px 28px;box-shadow:var(--shadow)}
+.qtags{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.qtext{font-size:18px;line-height:1.6;font-weight:550;white-space:pre-wrap}
+.qtext .lead{display:block;color:var(--mut);font-size:15.5px;margin-bottom:10px;font-weight:400}
+.choices{display:flex;flex-direction:column;gap:10px;margin-top:22px}
+.ch{
+  display:flex;align-items:flex-start;gap:13px;padding:14px 16px;border-radius:9px;
+  background:var(--choice);border:1.5px solid var(--line);transition:.13s;text-align:left;width:100%;line-height:1.5
+}
+.ch:hover:not(.dis){border-color:var(--mut2);background:var(--choice-h)}
+.ch .k{
+  width:25px;height:25px;flex:0 0 25px;border-radius:6px;background:var(--chip);display:grid;place-items:center;
+  font-size:12.5px;font-weight:800;color:var(--mut);margin-top:-1px;transition:.13s
+}
+.ch.sel{border-color:var(--sf-red);background:var(--sf-red-soft)}
+.ch.sel .k{background:var(--sf-red);color:#fff}
+.ch.ok{border-color:var(--good);background:var(--good-soft)}
+.ch.ok .k{background:var(--good);color:#fff}
+.ch.no{border-color:var(--bad);background:var(--bad-soft)}
+.ch.no .k{background:var(--bad);color:#fff}
+.ch.dis{cursor:default}
+.expl{
+  margin-top:20px;padding:16px 18px;border-radius:10px;border-left:3px solid var(--sf-red);
+  background:var(--panel2);font-size:14.5px;line-height:1.62;color:var(--txt)
+}
+.expl .hd{font-size:10.5px;text-transform:uppercase;letter-spacing:1px;color:var(--mut2);font-weight:800;margin-bottom:6px}
+.qfoot{display:flex;justify-content:space-between;align-items:center;margin-top:22px;gap:12px}
+.kbd{font-size:11.5px;color:var(--mut2)}
+.kbd b{background:var(--chip);border:1px solid var(--line2);border-radius:4px;padding:1px 6px;font-weight:700;color:var(--mut)}
+
+/* results */
+.res-hero{text-align:center;padding:34px 20px 28px}
+.ring{width:150px;height:150px;margin:0 auto 18px;position:relative}
+.ring svg{transform:rotate(-90deg)}
+.ring .n{position:absolute;inset:0;display:grid;place-items:center;font-size:38px;font-weight:750;letter-spacing:-1.5px}
+.res-hero h3{font-size:22px;font-weight:750}
+.res-hero p{color:var(--mut);margin-top:6px}
+.revrow{
+  display:flex;gap:13px;padding:14px 16px;border-radius:10px;background:var(--panel);
+  border:1px solid var(--line);margin-bottom:9px;align-items:flex-start;box-shadow:var(--shadow-sm)
+}
+.revrow .ix{width:26px;height:26px;flex:0 0 26px;border-radius:6px;display:grid;place-items:center;font-size:12px;font-weight:800}
+.revrow.ok .ix{background:var(--good-soft);color:var(--good)}
+.revrow.no .ix{background:var(--bad-soft);color:var(--bad)}
+.revrow .q{font-size:14px;line-height:1.5}
+.revrow .a{font-size:12.5px;margin-top:6px;color:var(--mut)}
+.revrow .a b{color:var(--good)}
+.revrow .a i{color:var(--bad);font-style:normal}
+
+/* exam */
+.exam-top{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px;
+  background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:11px 16px;box-shadow:var(--shadow-sm)
+}
+.timer{font-variant-numeric:tabular-nums;font-size:19px;font-weight:750;letter-spacing:.4px}
+.timer.warn{color:var(--warn)}
+.timer.crit{color:var(--bad);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.45}}
+.navgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:6px;margin-top:14px}
+.navg{height:34px;border-radius:7px;background:var(--panel2);border:1px solid var(--line);font-size:12px;font-weight:700;color:var(--mut);transition:.12s}
+.navg:hover{border-color:var(--mut2);color:var(--txt)}
+.navg.ans{background:var(--sf-red-soft);border-color:var(--sf-red-line);color:var(--sf-red)}
+.navg.flag{border-color:var(--warn);color:var(--warn)}
+.navg.cur{outline:2px solid var(--sf-red);outline-offset:1px}
+
+/* flashcards */
+.fc-wrap{perspective:1600px;margin:10px auto 0;max-width:640px}
+.fc{position:relative;width:100%;min-height:300px;transition:transform .55s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d;cursor:pointer}
+.fc.flip{transform:rotateY(180deg)}
+.fc-f,.fc-b{
+  position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;padding:34px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  border:1px solid var(--line);box-shadow:var(--shadow);background:var(--panel)
+}
+.fc-b{transform:rotateY(180deg);border-top:4px solid var(--sf-red)}
+.fc-f{border-top:4px solid var(--line2)}
+.fc-f .t{font-size:27px;font-weight:750;letter-spacing:-.5px;line-height:1.3}
+.fc-b .d{font-size:16.5px;line-height:1.66;color:var(--txt);max-height:230px;overflow-y:auto}
+.fc-hint{font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px;color:var(--mut2);margin-top:20px;font-weight:700}
+.fc-tag{font-size:10.5px;color:var(--sf-red);text-transform:uppercase;letter-spacing:1.1px;margin-bottom:14px;font-weight:750}
+
+/* glossary */
+.gl-row{padding:15px 18px;border-radius:10px;background:var(--panel);border:1px solid var(--line);margin-bottom:9px;box-shadow:var(--shadow-sm)}
+.gl-row .t{font-weight:700;font-size:15px}
+.gl-row .d{color:var(--mut);font-size:14px;margin-top:5px;line-height:1.6}
+.gl-row .g{font-size:10.5px;color:var(--mut2);margin-top:7px;text-transform:uppercase;letter-spacing:.7px;font-weight:700}
+mark{background:rgba(237,29,36,.16);color:var(--sf-red);border-radius:3px;padding:0 2px;font-weight:650}
+
+.empty{text-align:center;padding:60px 20px;color:var(--mut2)}
+.empty svg{width:44px;height:44px;stroke:currentColor;fill:none;stroke-width:1.4;opacity:.5;margin-bottom:14px}
+.empty h4{font-size:16px;color:var(--mut);font-weight:650;margin-bottom:6px}
+.empty p{font-size:13.5px;max-width:420px;margin:0 auto;line-height:1.6}
+
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.9px;color:var(--mut2);padding:10px 12px;border-bottom:1px solid var(--line);font-weight:750}
+.tbl td{padding:11px 12px;border-bottom:1px solid var(--line)}
+.tbl tr:last-child td{border-bottom:0}
+
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.sp{flex:1}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}#side{width:64px;flex:0 0 64px}.brand-t,.brand-s,.nav-i span,.side-foot,#lineSel{display:none}.nav-i{justify-content:center}.lineSelTop{display:grid}}
+</style>
+
+<style>
+/* ------------------------- phone + tablet layout ------------------------- */
+html{-webkit-text-size-adjust:100%}
+body{-webkit-tap-highlight-color:transparent}
+@media (max-width:820px){
+  #app{flex-direction:column}
+  #side{
+    position:fixed;bottom:0;left:0;right:0;width:100%;flex:none;height:62px;
+    flex-direction:row;border-right:0;border-top:1px solid var(--side-line);
+    z-index:60;box-shadow:0 -3px 14px rgba(16,24,40,.10);
+    padding-bottom:env(safe-area-inset-bottom)
+  }
+  .brand,.side-foot,.nav-lbl,#lineSel{display:none}
+  .lineSelTop{display:grid}
+  nav{display:flex;padding:0;width:100%;overflow:visible}
+  .nav-i{
+    flex:1;flex-direction:column;gap:3px;justify-content:center;align-items:center;
+    padding:9px 2px;border-radius:0;margin:0;text-align:center
+  }
+  .nav-i .lg{display:none}
+  .nav-i .sm{display:block;font-size:10px;line-height:1.1;letter-spacing:0;font-weight:650}
+  .nav-i svg{width:19px;height:19px;flex:0 0 19px}
+  .nav-i:hover{background:transparent}
+  .nav-i.on{background:transparent;color:var(--sf-red);box-shadow:inset 0 -3px 0 var(--sf-red)}
+  #main{height:100vh;min-height:0}
+  #top{height:54px;flex:0 0 54px;padding:0 14px}
+  #top h1{font-size:15.5px}
+  #top .sub{display:none}
+  #view{padding:16px 14px 90px}
+  .wrap,.wrap-n{max-width:100%}
+  .stats{grid-template-columns:repeat(2,1fr);gap:10px}
+  .stat .v{font-size:22px}
+  .hero{padding:20px 18px;margin-bottom:16px}
+  .hero h3{font-size:19px}
+  .hero p{font-size:13.5px}
+  .hero-sd{display:none}
+  .gcards{grid-template-columns:1fr}
+  .gcard h4{min-height:0}
+  .qcard{padding:18px 16px;border-radius:12px}
+  .qtext{font-size:16.5px;line-height:1.55}
+  .qtext .lead{font-size:14.5px}
+  .ch{padding:15px 14px;font-size:14.5px}
+  .qfoot{flex-direction:column-reverse;align-items:stretch;gap:10px}
+  .qfoot .btn{width:100%;justify-content:center;padding:13px}
+  .kbd{display:none}
+  .fc{min-height:330px}
+  .fc-f,.fc-b{padding:24px 20px}
+  .fc-f .t{font-size:23px}
+  .fc-b .d{font-size:15.5px;max-height:220px}
+  .navgrid{grid-template-columns:repeat(auto-fill,minmax(34px,1fr))}
+  .exam-top{flex-wrap:wrap;gap:10px;padding:10px 13px}
+  .exam-top .bar{max-width:none;order:3;width:100%;flex-basis:100%}
+  .res-hero{padding:26px 12px 22px}
+  .ring{width:124px;height:124px}
+  .ring .n{font-size:32px}
+  .row>div[style*="width:"]{width:100% !important}
+  .tbl th:nth-child(2),.tbl td:nth-child(2){display:none}
+  h2.sec{margin:20px 0 10px}
+}
+@media (max-width:420px){
+  .stats{grid-template-columns:1fr 1fr;gap:8px}
+  .nav-i span{font-size:8.8px}
+  #view{padding:14px 11px 90px}
+}
+/* ------------------------------ lock screen ------------------------------ */
+#lock{
+  position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;
+  padding:24px;background:var(--bg)
+}
+#lock.hide{opacity:0;pointer-events:none;transition:opacity .35s}
+.lockbox{
+  width:100%;max-width:390px;background:var(--panel);border:1px solid var(--line);
+  border-radius:14px;padding:34px 30px 30px;box-shadow:var(--shadow);text-align:center
+}
+.lockbox .mk{
+  width:58px;height:58px;margin:0 auto 18px;border-radius:14px;
+  background:linear-gradient(150deg,var(--sf-red),var(--sf-red-dk));
+  display:grid;place-items:center;box-shadow:0 8px 20px -9px rgba(237,29,36,.9)
+}
+.lockbox .mk svg{width:32px;height:32px;fill:#fff}
+.lockbox h1{font-size:19px;font-weight:750;letter-spacing:-.3px;line-height:1.25}
+.lockbox .sf{font-size:10.5px;color:var(--sf-red);letter-spacing:1.3px;text-transform:uppercase;font-weight:800;margin-top:6px}
+.lockbox .who{font-size:12.5px;color:var(--mut);margin-top:14px;line-height:1.5}
+.lockbox .who b{color:var(--txt);font-weight:700}
+.lockbox form{margin-top:22px;display:flex;flex-direction:column;gap:10px}
+.lockbox input{text-align:center;font-size:16px;padding:12px;letter-spacing:.4px}
+.lockbox .btn{justify-content:center;padding:12px}
+.lockbox .msg{font-size:12.5px;margin-top:12px;min-height:18px;color:var(--bad);font-weight:600}
+.lockbox .msg.work{color:var(--mut)}
+.lockbox .ft{font-size:11px;color:var(--mut2);margin-top:18px;line-height:1.5}
+</style>
+</head>
+<body>
+
+<div id="lock">
+  <div class="lockbox">
+    <div class="mk"><svg viewBox="0 0 24 24"><path d="M12 2 3 6v6c0 5 3.8 8.6 9 10 5.2-1.4 9-5 9-10V6l-9-4Zm0 4.2 2 3.9 4.3.6-3.1 3 .7 4.3L12 16l-3.9 2 .7-4.3-3.1-3 4.3-.6 2-3.9Z"/></svg></div>
+    <h1>South Dakota Practice App</h1>
+    <div class="sf">State Farm</div>
+    <div class="who"><b>Nick Hochstein</b><br>State Farm Insurance Agent<br>Yankton, South Dakota</div>
+    <form id="lockForm" autocomplete="off">
+      <input type="password" id="pass" placeholder="Passcode" autocomplete="off"
+             autocapitalize="off" autocorrect="off" spellcheck="false">
+      <button class="btn red" type="submit" id="lockGo">Open study app</button>
+    </form>
+    <div class="msg" id="lockMsg"></div>
+    <div class="ft">Property & Casualty: 936 questions across 13 guides<br>Life, Accident & Health: 936 questions across 13 guides</div>
+  </div>
+</div>
+
+<div id="app">
+  <aside id="side">
+    <div class="brand">
+      <div class="brand-row">
+        <div class="brand-mark">
+          <svg viewBox="0 0 24 24"><path d="M12 2 3 6v6c0 5 3.8 8.6 9 10 5.2-1.4 9-5 9-10V6l-9-4Zm0 4.2 2 3.9 4.3.6-3.1 3 .7 4.3L12 16l-3.9 2 .7-4.3-3.1-3 4.3-.6 2-3.9Z"/></svg>
+        </div>
+        <div>
+          <div class="brand-t">South Dakota<br>Practice App</div>
+          <div class="brand-s">State Farm</div>
+        </div>
+      </div>
+    </div>
+    <div id="lineSel"></div>
+    <nav id="nav"></nav>
+    <div class="side-foot">
+      <div class="ag">Nick Hochstein</div>
+      <div class="ro">State Farm Insurance Agent</div>
+      <div class="lo">Yankton, South Dakota</div>
+      <div class="vr"><span id="foot-line">Property &amp; Casualty</span> &middot; <span id="foot-v"></span></div>
+    </div>
+  </aside>
+  <main id="main">
+    <header id="top">
+      <div>
+        <h1 id="ttl">Dashboard</h1>
+        <div class="sub" id="tsub">South Dakota Property &amp; Casualty licensing prep</div>
+      </div>
+      <div class="top-r">
+        <div id="topr"></div>
+        <button id="themeBtn" title="Switch between light and dark"></button>
+      </div>
+    </header>
+    <div id="view"></div>
+  </main>
+</div>
+
+<script src="bank.js"></script>
+<script>
+/* =========================================================================
+   South Dakota Practice App - State Farm  |  Property & Casualty
+   ========================================================================= */
+const ICONS = {
+  dash:'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>',
+  practice:'<svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M9 8h6M9 12h4"/></svg>',
+  exam:'<svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg>',
+  cards:'<svg viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="14" rx="2"/><path d="M8 3h11a2 2 0 0 1 2 2v11"/></svg>',
+  gloss:'<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
+  prog:'<svg viewBox="0 0 24 24"><path d="M3 20h18M6 16v-5M11 16V7M16 16v-3M21 16V4"/></svg>',
+  empty:'<svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M9 9h6"/></svg>'
+};
+
+/* ---------- state ---------- */
+/* Two exam tracks live side by side. Older single-track data still loads.
+   initData() runs at boot, so the bank can arrive late (the hosted build
+   decrypts it only after the passcode is accepted). */
+let APP = {meta:{},lines:[]};
+let LINES = [];
+let LINE = 'pc';          // active track
+function initData(){
+  APP = window.APP_DATA || APP;
+  LINES = (APP.lines && APP.lines.length)
+    ? APP.lines
+    : [{id:'pc', name:'Property & Casualty', short:'P&C', guides:(APP.guides||[])}];
+  LINE = LINES[0].id;
+}
+let D = {meta:APP.meta||{}, guides:[]};   // active track's guides
+let PROG = null;          // everything that gets saved
+let P = null;             // active track's slice of it
+let S = {};               // transient screen state
+let route = 'dash';
+let timerId = null;
+
+const BLANK = () => ({answers:{},missed:[],guide:{},exams:[],cards:{},total:0,right:0});
+const lineById = id => LINES.find(l=>l.id===id) || LINES[0];
+function setLine(id){
+  LINE = lineById(id).id;
+  D = {meta:APP.meta||{}, guides:lineById(LINE).guides||[]};
+  P = PROG[LINE] || (PROG[LINE] = BLANK());
+  PROG.line = LINE;
+}
+
+/* ---------- persistence ---------- */
+function migrate(raw){
+  const out = {line:LINES[0].id};
+  LINES.forEach(l => out[l.id] = BLANK());
+  if(raw && typeof raw === 'object'){
+    if(raw.answers){                      // saved before the second track existed
+      out[LINES[0].id] = Object.assign(BLANK(), raw);
+    }else{
+      LINES.forEach(l => { if(raw[l.id]) out[l.id] = Object.assign(BLANK(), raw[l.id]); });
+      if(raw.line && LINES.some(l=>l.id===raw.line)) out.line = raw.line;
+    }
+  }
+  return out;
+}
+async function loadProgress(){
+  let raw = null;
+  try{
+    if(!/^(127\.0\.0\.1|localhost)$/.test(location.hostname)) throw 0;
+    const r = await fetch('api/progress',{cache:'no-store'});
+    if(r.ok){ const j = await r.json(); if(j && typeof j==='object') raw = j; }
+  }catch(e){}
+  if(!raw){
+    try{ const s = localStorage.getItem('sdpc_progress'); if(s) raw = JSON.parse(s); }catch(e){}
+  }
+  PROG = migrate(raw);
+  setLine(PROG.line);
+}
+let saveT=null;
+function save(){
+  clearTimeout(saveT);
+  saveT = setTimeout(()=>{
+    try{ localStorage.setItem('sdpc_progress', JSON.stringify(PROG)); }catch(e){}
+    fetch('api/progress',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(PROG)}).catch(()=>{});
+  },400);
+}
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const el = (h)=>{const t=document.createElement('template');t.innerHTML=h.trim();return t.content.firstElementChild;};
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pct = (a,b)=> b? Math.round(a/b*100):0;
+const loadedGuides = ()=> D.guides.filter(g=>g.questions && g.questions.length);
+const allQ = ()=>{const o=[];D.guides.forEach(g=>(g.questions||[]).forEach(q=>o.push(Object.assign({},q,{gid:g.id,gtitle:g.title}))));return o;};
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function guideById(id){return D.guides.find(g=>g.id===id);}
+function qById(id){ for(const g of D.guides){ const q=(g.questions||[]).find(x=>x.id===id); if(q) return Object.assign({},q,{gid:g.id,gtitle:g.title}); } return null; }
+function fmt(sec){const m=Math.floor(sec/60),s=sec%60;return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;}
+function fmtH(sec){const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;return h?`${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`:`${m}:${String(s).padStart(2,'0')}`;}
+
+/* ---------- nav ---------- */
+const NAV = [
+  {k:'dash', t:'Dashboard', s:'Home', i:'dash', lbl:'Overview'},
+  {k:'practice', t:'Practice by Guide', s:'Practice', i:'practice', lbl:'Study'},
+  {k:'exam', t:'Timed Mock Exam', s:'Exam', i:'exam'},
+  {k:'cards', t:'Flashcards', s:'Cards', i:'cards'},
+  {k:'gloss', t:'Term Glossary', s:'Glossary', i:'gloss'},
+  {k:'prog', t:'Progress & Missed', s:'Progress', i:'prog', lbl:'Track'}
+];
+function buildNav(){
+  const n = $('#nav'); n.innerHTML='';
+  NAV.forEach(x=>{
+    if(x.lbl) n.appendChild(el(`<div class="nav-lbl">${x.lbl}</div>`));
+    const b = el(`<button class="nav-i" data-k="${x.k}">${ICONS[x.i]}<span class="lg">${x.t}</span><span class="sm">${x.s}</span></button>`);
+    b.onclick = ()=>go(x.k);
+    n.appendChild(b);
+  });
+  $('#foot-v').textContent = 'v'+(D.meta.version||'1.0')+' \u00b7 '+(D.meta.updated||'');
+}
+
+/* ---------- exam track switcher ---------- */
+function lineCount(l){ return (l.guides||[]).reduce((a,g)=>a+((g.questions||[]).length),0); }
+function buildLines(sel){
+  const c = $(sel); if(!c) return;
+  if(LINES.length < 2){ c.style.display='none'; return; }
+  c.innerHTML='';
+  LINES.forEach(l=>{
+    const n = lineCount(l);
+    const b = el(`<button class="lineb ${l.id===LINE?'on':''}">
+      <span class="lt">${esc(l.short||l.name)}</span>
+      <span class="ln">${n? n+' questions' : 'not loaded'}</span></button>`);
+    b.title = l.name;
+    b.onclick = ()=>switchLine(l.id);
+    c.appendChild(b);
+  });
+}
+function paintLine(){
+  const f=$('#foot-line'); if(f) f.textContent = lineById(LINE).name;
+}
+function switchLine(id){
+  if(id===LINE) return;
+  setLine(id); save(); paintLine();
+  buildLines('#lineSel');
+  go('dash');
+  toast(lineById(LINE).name);
+}
+function go(k, st){
+  if(timerId){clearInterval(timerId);timerId=null;}
+  route = k; S = st || {};
+  document.querySelectorAll('.nav-i').forEach(b=>b.classList.toggle('on', b.dataset.k===k));
+  const meta = NAV.find(x=>x.k===k);
+  $('#ttl').textContent = meta? meta.t : 'South Dakota Practice App';
+  $('#topr').innerHTML='';
+  $('#view').scrollTop = 0;
+  ({dash:vDash, practice:vPractice, exam:vExam, cards:vCards, gloss:vGloss, prog:vProg, quiz:vQuiz, results:vResults, examrun:vExamRun})[k]();
+}
+
+/* =========================== DASHBOARD =========================== */
+function vDash(){
+  const qs = allQ(), lg = loadedGuides();
+  const answered = Object.keys(P.answers).length;
+  const mastered = Object.values(P.answers).filter(a=>a.ok).length;
+  const acc = pct(P.right, P.total);
+  const LN = lineById(LINE), total = D.guides.length;
+  $('#tsub').textContent = 'South Dakota ' + LN.name + ' licensing prep';
+  const v = $('#view');
+  v.innerHTML = `<div class="wrap">
+    <div id="lineSelTop" class="lineSelTop"></div>
+    <div class="hero">
+      <svg class="hero-sd" viewBox="0 0 24 24"><path d="M12 2 3 6v6c0 5 3.8 8.6 9 10 5.2-1.4 9-5 9-10V6l-9-4Zm0 4.2 2 3.9 4.3.6-3.1 3 .7 4.3L12 16l-3.9 2 .7-4.3-3.1-3 4.3-.6 2-3.9Z" fill="#fff"/></svg>
+      <h3>${lg.length? 'Welcome back' : esc(LN.name)}</h3>
+      <p>${lg.length
+        ? `You have <b>${qs.length}</b> practice questions across <b>${lg.length}</b> of ${total} study guide${total===1?'':'s'}. Keep drilling, consistency beats cramming.`
+        : `This track is set up and waiting on content. Send the ${esc(LN.name)} study guides to Claude and each one becomes terms, scenarios and multiple-choice questions right here.`}</p>
+      <div class="stats">
+        <div class="stat"><div class="v">${qs.length}</div><div class="k">Questions</div></div>
+        <div class="stat"><div class="v">${answered}</div><div class="k">Seen</div></div>
+        <div class="stat"><div class="v">${acc}%</div><div class="k">Accuracy</div></div>
+        <div class="stat"><div class="v" style="color:${P.missed.length?'var(--bad)':'var(--good)'}">${P.missed.length}</div><div class="k">To Review</div></div>
+      </div>
+    </div>
+    ${qs.length?`<div class="row" style="margin-bottom:20px">
+      <button class="btn red" id="qs-start">${ICONS.practice}Quick 20-question drill</button>
+      <button class="btn" id="qs-exam">Start timed mock exam</button>
+      ${P.missed.length?`<button class="btn ghost" id="qs-miss">Retry ${P.missed.length} missed</button>`:''}
+    </div>`:''}
+    ${total? `<h2 class="sec">The ${total} Study Guide${total===1?'':'s'}</h2>` : ''}
+    <div class="grid gcards" id="gc"></div>
+  </div>`;
+
+  const gc = $('#gc');
+  D.guides.forEach(g=>{
+    const n = (g.questions||[]).length;
+    const st = P.guide[g.id]||{};
+    const seen = (g.questions||[]).filter(q=>P.answers[q.id]).length;
+    const ok = (g.questions||[]).filter(q=>P.answers[q.id] && P.answers[q.id].ok).length;
+    const c = el(`<button class="gcard ${n?'':'locked'}">
+      <div class="gcard-top"><span class="gnum">GUIDE ${String(g.id).padStart(2,'0')}</span>
+        ${n? (st.best!=null?`<span class="pill ${st.best>=70?'g':'r'}">Best ${st.best}%</span>`:`<span class="pill m">New</span>`)
+           : `<span class="pill m">Not loaded</span>`}</div>
+      <h4>${esc(g.title)}</h4>
+      <div class="gmeta"><span>${n} questions</span><span>${(g.terms||[]).length} terms</span>${g.src==='compiled'?`<span class="cmp" title="Written to fill a gap in the source set">compiled</span>`:''}</div>
+      <div class="bar ${ok&&ok===n?'g':''}"><i style="width:${n?pct(ok,n):0}%"></i></div>
+      <div class="tiny muted">${n? `${seen}/${n} seen \u00b7 ${ok} correct` : 'Waiting on content'}</div>
+    </button>`);
+    if(n) c.onclick = ()=>startQuiz({gid:g.id, mode:'practice'});
+    gc.appendChild(c);
+  });
+  if(!D.guides.length){
+    gc.innerHTML = `<div class="empty" style="grid-column:1/-1">${ICONS.empty}
+      <h4>No guides in this track yet</h4>
+      <p>Once the ${esc(LN.name)} study guides are loaded, they show up here as cards, and every other screen fills in with them.</p></div>`;
+  }
+  buildLines('#lineSelTop');
+  const b1=$('#qs-start'), b2=$('#qs-exam'), b3=$('#qs-miss');
+  if(b1) b1.onclick=()=>{ if(!qs.length) return toast('No questions loaded yet.'); startQuiz({gid:'all',limit:20,mode:'practice'}); };
+  if(b2) b2.onclick=()=>go('exam');
+  if(b3) b3.onclick=()=>startQuiz({gid:'missed',mode:'practice'});
+}
+
+/* =========================== PRACTICE =========================== */
+function vPractice(){
+  const lg = loadedGuides();
+  $('#tsub').textContent='Drill one guide at a time with instant feedback';
+  if(!lg.length) return emptyState('No guides loaded yet','Paste a study guide to Claude and it will be converted into terms, scenarios and multiple-choice questions that appear right here.');
+  $('#view').innerHTML = `<div class="wrap">
+    <div class="card" style="margin-bottom:20px">
+      <div class="row">
+        <div style="flex:1;min-width:220px"><label class="fld">Study guide</label>
+          <select id="p-g"><option value="all">All loaded guides (${allQ().length} questions)</option>
+          ${lg.map(g=>`<option value="${g.id}">Guide ${String(g.id).padStart(2,'0')} \u2014 ${esc(g.title)} (${g.questions.length})</option>`).join('')}
+          ${P.missed.length?`<option value="missed">\u2605 My missed questions (${P.missed.length})</option>`:''}</select></div>
+        <div style="width:130px"><label class="fld">How many</label>
+          <select id="p-n"><option value="0">All</option><option>10</option><option selected>20</option><option>30</option><option>50</option></select></div>
+        <div style="width:150px"><label class="fld">Question type</label>
+          <select id="p-t"><option value="all">Terms + scenarios</option><option value="term">Terms only</option><option value="scenario">Scenarios only</option></select></div>
+      </div>
+      <div class="row" style="margin-top:16px">
+        <label class="switch"><input type="checkbox" id="p-sh" checked>Shuffle questions</label>
+        <label class="switch"><input type="checkbox" id="p-fb" checked>Show answer immediately</label>
+        <div class="sp"></div>
+        <button class="btn red" id="p-go">Start practice</button>
+      </div>
+    </div>
+    <h2 class="sec">Jump straight in</h2>
+    <div class="grid gcards" id="pg"></div>
+  </div>`;
+  const pg=$('#pg');
+  lg.forEach(g=>{
+    const st=P.guide[g.id]||{};
+    const ok=g.questions.filter(q=>P.answers[q.id]&&P.answers[q.id].ok).length;
+    const c=el(`<button class="gcard"><div class="gcard-top"><span class="gnum">GUIDE ${String(g.id).padStart(2,'0')}</span>
+      ${st.best!=null?`<span class="pill ${st.best>=70?'g':'r'}">Best ${st.best}%</span>`:'<span class="pill m">New</span>'}</div>
+      <h4>${esc(g.title)}</h4><div class="gmeta"><span>${g.questions.length} questions</span><span>${ok} correct</span></div>
+      <div class="bar ${ok===g.questions.length?'g':''}"><i style="width:${pct(ok,g.questions.length)}%"></i></div></button>`);
+    c.onclick=()=>startQuiz({gid:g.id,mode:'practice'});
+    pg.appendChild(c);
+  });
+  $('#p-go').onclick=()=>{
+    startQuiz({gid:$('#p-g').value, limit:+$('#p-n').value, type:$('#p-t').value,
+      shuffleQ:$('#p-sh').checked, feedback:$('#p-fb').checked, mode:'practice'});
+  };
+}
+
+function pickQuestions(o){
+  let pool;
+  if(o.gid==='all') pool = allQ();
+  else if(o.gid==='missed') pool = P.missed.map(qById).filter(Boolean);
+  else { const g=guideById(+o.gid); pool = (g.questions||[]).map(q=>Object.assign({},q,{gid:g.id,gtitle:g.title})); }
+  if(o.type && o.type!=='all') pool = pool.filter(q=>(q.type||'term')===o.type);
+  if(o.shuffleQ!==false) pool = shuffle(pool);
+  if(o.limit) pool = pool.slice(0,o.limit);
+  return pool;
+}
+
+function startQuiz(o){
+  const qs = pickQuestions(o);
+  if(!qs.length) return toast('No questions match that selection.');
+  go('quiz',{qs, i:0, picked:[], feedback:o.feedback!==false, gid:o.gid, started:Date.now(), locked:false});
+}
+
+/* =========================== QUIZ VIEW =========================== */
+function vQuiz(){
+  const q = S.qs[S.i];
+  $('#ttl').textContent = S.gid==='missed'?'Missed-Question Review': S.gid==='all'?'Mixed Practice':'Guide '+String(S.gid).padStart(2,'0');
+  $('#tsub').textContent = q.gtitle||'';
+  $('#topr').innerHTML='<button class="btn ghost sm" id="q-exit">End session</button>';
+  $('#q-exit').onclick=()=>finishQuiz(true);
+  const picked = S.picked[S.i];
+  const shown = picked!=null && S.feedback;
+  const v=$('#view');
+  v.innerHTML=`<div class="wrap-n">
+    <div class="qbar"><div class="bar"><i style="width:${(S.i)/S.qs.length*100}%"></i></div>
+      <div class="qcount">${S.i+1} / ${S.qs.length}</div></div>
+    <div class="qcard">
+      <div class="qtags">
+        <span class="pill m">Guide ${String(q.gid).padStart(2,'0')}</span>
+        <span class="pill ${q.type==='scenario'?'y':'m'}">${q.type==='scenario'?'Scenario':'Term'}</span>
+        ${q.topic?`<span class="pill m">${esc(q.topic)}</span>`:''}
+      </div>
+      <div class="qtext">${q.lead?`<span class="lead">${esc(q.lead)}</span>`:''}${esc(q.q)}</div>
+      <div class="choices" id="chs"></div>
+      <div id="ex"></div>
+      <div class="qfoot">
+        <span class="kbd"><b>1</b>-<b>4</b> answer &nbsp; <b>Enter</b> next</span>
+        <button class="btn ${shown||!S.feedback?'red':'ghost'}" id="nx" ${picked==null?'disabled':''}>${S.i+1===S.qs.length?'Finish':'Next question'}</button>
+      </div>
+    </div>
+  </div>`;
+  const chs=$('#chs');
+  q.choices.forEach((c,ix)=>{
+    let cls='ch';
+    if(shown){ cls+=' dis'; if(ix===q.answer) cls+=' ok'; else if(ix===picked) cls+=' no'; }
+    else if(ix===picked) cls+=' sel';
+    const b=el(`<button class="${cls}"><span class="k">${'ABCD'[ix]}</span><span>${esc(c)}</span></button>`);
+    if(!shown) b.onclick=()=>answer(ix);
+    chs.appendChild(b);
+  });
+  if(shown){
+    const ok = picked===q.answer;
+    $('#ex').innerHTML=`<div class="expl"><div class="hd">${ok?'\u2713 Correct':'\u2717 Incorrect \u2014 correct answer: '+'ABCD'[q.answer]}</div>${esc(q.explain||'')}</div>`;
+  }
+  $('#nx').onclick=next;
+}
+function answer(ix){
+  if(S.picked[S.i]!=null && S.feedback) return;
+  const first = S.picked[S.i]==null;
+  S.picked[S.i]=ix;
+  if(S.feedback && first){
+    const q=S.qs[S.i], ok=ix===q.answer;
+    const rec = P.answers[q.id] || {n:0,ok:false};
+    rec.n++; rec.ok = ok; P.answers[q.id]=rec;
+    P.total++; if(ok) P.right++;
+    const mi=P.missed.indexOf(q.id);
+    if(ok){ if(mi>=0) P.missed.splice(mi,1); } else if(mi<0) P.missed.push(q.id);
+    save();
+  }
+  vQuiz();
+}
+function next(){ if(S.picked[S.i]==null) return; if(S.i+1>=S.qs.length) return finishQuiz(); S.i++; vQuiz(); }
+function finishQuiz(early){
+  const qs=S.qs, picked=S.picked;
+  if(!S.feedback){ // grade at end
+    qs.forEach((q,i)=>{ if(picked[i]==null) return;
+      const ok=picked[i]===q.answer; const rec=P.answers[q.id]||{n:0,ok:false}; rec.n++;rec.ok=ok;P.answers[q.id]=rec;
+      P.total++; if(ok)P.right++;
+      const mi=P.missed.indexOf(q.id); if(ok){if(mi>=0)P.missed.splice(mi,1);} else if(mi<0)P.missed.push(q.id);
+    });
+  }
+  const done = picked.filter(x=>x!=null).length;
+  const right = qs.filter((q,i)=>picked[i]===q.answer).length;
+  const p = pct(right, early? (done||1) : qs.length);
+  if(typeof S.gid==='number' || /^\d+$/.test(S.gid)){
+    const gid=+S.gid, st=P.guide[gid]||{best:null,runs:0};
+    st.runs++; if(st.best==null||p>st.best) st.best=p; P.guide[gid]=st;
+  }
+  save();
+  go('results',{qs,picked,right,total:early?done:qs.length,p,src:'practice',secs:Math.round((Date.now()-S.started)/1000)});
+}
+
+/* =========================== RESULTS =========================== */
+function vResults(){
+  const {qs,picked,right,total,p,secs,byGuide}=S;
+  $('#ttl').textContent = S.src==='exam'?'Mock Exam Results':'Session Results';
+  $('#tsub').textContent = `${right} of ${total} correct \u00b7 ${fmtH(secs||0)}`;
+  const pass = p>=70;
+  const C=2*Math.PI*66;
+  $('#view').innerHTML=`<div class="wrap-n">
+    <div class="card res-hero">
+      <div class="ring"><svg width="150" height="150"><circle cx="75" cy="75" r="66" stroke="#1D2534" stroke-width="11" fill="none"/>
+        <circle cx="75" cy="75" r="66" stroke="${pass?'var(--good)':'var(--bad)'}" stroke-width="11" fill="none"
+          stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C-C*p/100}"/></svg>
+        <div class="n" style="color:${pass?'var(--good)':'var(--bad)'}">${p}%</div></div>
+      <h3>${pass?'Passing score':'Below passing'}</h3>
+      <p>${right} of ${total} correct${S.src==='exam'?' \u00b7 South Dakota requires 70% to pass':''}</p>
+      <div class="row" style="justify-content:center;margin-top:20px">
+        <button class="btn red" id="r-again">Practice again</button>
+        <button class="btn ghost" id="r-miss">Drill what I missed</button>
+        <button class="btn ghost" id="r-home">Dashboard</button>
+      </div>
+    </div>
+    ${byGuide?`<h2 class="sec">Breakdown by guide</h2><div class="card" style="padding:6px 8px"><table class="tbl"><thead><tr><th>Guide</th><th>Correct</th><th>Score</th></tr></thead><tbody>
+      ${byGuide.map(b=>`<tr><td>${esc(b.title)}</td><td class="muted">${b.r}/${b.n}</td><td><span class="pill ${b.p>=70?'g':'r'}">${b.p}%</span></td></tr>`).join('')}
+    </tbody></table></div>`:''}
+    <h2 class="sec">Review every question</h2><div id="rv"></div>
+  </div>`;
+  const rv=$('#rv');
+  qs.forEach((q,i)=>{
+    const ok=picked[i]===q.answer;
+    rv.appendChild(el(`<div class="revrow ${ok?'ok':'no'}">
+      <div class="ix">${ok?'\u2713':'\u2717'}</div>
+      <div><div class="q">${q.lead?esc(q.lead)+' ':''}${esc(q.q)}</div>
+      <div class="a">${ok?`<b>${'ABCD'[q.answer]}. ${esc(q.choices[q.answer])}</b>`
+        :`Correct: <b>${'ABCD'[q.answer]}. ${esc(q.choices[q.answer])}</b> &nbsp;\u00b7&nbsp; You: <i>${picked[i]==null?'skipped':'ABCD'[picked[i]]+'. '+esc(q.choices[picked[i]])}</i>`}</div>
+      ${q.explain?`<div class="a" style="margin-top:7px;color:#A9B5C7">${esc(q.explain)}</div>`:''}</div></div>`));
+  });
+  $('#r-again').onclick=()=>go(S.src==='exam'?'exam':'practice');
+  $('#r-miss').onclick=()=>P.missed.length?startQuiz({gid:'missed',mode:'practice'}):toast('Nothing missed \u2014 nice.');
+  $('#r-home').onclick=()=>go('dash');
+}
+
+/* =========================== MOCK EXAM =========================== */
+function vExam(){
+  const qs=allQ();
+  $('#tsub').textContent='Simulate the real exam \u2014 randomized, timed, graded at the end';
+  if(!qs.length) return emptyState('No questions loaded yet','Load your study guides first, then come back for a full timed simulation.');
+  const hist=P.exams.slice(-6).reverse();
+  $('#view').innerHTML=`<div class="wrap-n">
+    <div class="card">
+      <h3 style="font-size:18px;font-weight:700;margin-bottom:4px">Timed Mock Exam</h3>
+      <p class="muted tiny" style="margin-bottom:18px">Questions are pulled at random from every loaded guide. No feedback until you submit \u2014 just like the real thing.</p>
+      <div class="row">
+        <div style="width:170px"><label class="fld">Number of questions</label>
+          <select id="e-n"><option>50</option><option selected>100</option><option>150</option></select></div>
+        <div style="width:170px"><label class="fld">Time limit (minutes)</label>
+          <select id="e-t"><option>60</option><option selected>120</option><option>150</option><option value="0">No limit</option></select></div>
+        <div style="width:170px"><label class="fld">Pass mark</label>
+          <input type="text" value="70%" disabled style="opacity:.6"></div>
+      </div>
+      <div class="row" style="margin-top:18px"><div class="sp"></div>
+        <button class="btn red" id="e-go">Begin exam</button></div>
+      ${qs.length<50?`<p class="tiny" style="color:var(--warn);margin-top:14px">Only ${qs.length} questions are loaded, so some will repeat. Load more guides for a realistic simulation.</p>`:''}
+    </div>
+    ${hist.length?`<h2 class="sec">Recent attempts</h2><div class="card" style="padding:6px 8px"><table class="tbl">
+      <thead><tr><th>Date</th><th>Score</th><th>Correct</th><th>Time</th></tr></thead><tbody>
+      ${hist.map(h=>`<tr><td class="muted">${esc(h.d)}</td><td><span class="pill ${h.p>=70?'g':'r'}">${h.p}%</span></td><td class="muted">${h.r}/${h.n}</td><td class="muted">${fmtH(h.s||0)}</td></tr>`).join('')}
+    </tbody></table></div>`:''}
+  </div>`;
+  $('#e-go').onclick=()=>{
+    const n=+$('#e-n').value, mins=+$('#e-t').value;
+    let pool=shuffle(qs); while(pool.length<n) pool=pool.concat(shuffle(qs));
+    go('examrun',{qs:pool.slice(0,n),i:0,picked:[],flags:{},left:mins*60,limit:mins*60,started:Date.now()});
+  };
+}
+function vExamRun(){
+  const q=S.qs[S.i];
+  $('#ttl').textContent='Mock Exam';
+  $('#tsub').textContent=`Question ${S.i+1} of ${S.qs.length}`;
+  $('#topr').innerHTML='<button class="btn ghost sm" id="e-sub">Submit exam</button>';
+  $('#e-sub').onclick=submitExam;
+  const answered=S.picked.filter(x=>x!=null).length;
+  $('#view').innerHTML=`<div class="wrap-n">
+    <div class="exam-top">
+      <div><div class="tiny muted">Answered</div><div style="font-weight:700;font-size:17px">${answered} / ${S.qs.length}</div></div>
+      <div class="bar" style="flex:1;max-width:280px"><i style="width:${pct(answered,S.qs.length)}%"></i></div>
+      <div style="text-align:right"><div class="tiny muted">${S.limit?'Time remaining':'Elapsed'}</div>
+        <div class="timer ${S.limit&&S.left<300?'crit':S.limit&&S.left<900?'warn':''}" id="tm">${fmtH(S.limit?S.left:Math.round((Date.now()-S.started)/1000))}</div></div>
+    </div>
+    <div class="qcard">
+      <div class="qtags"><span class="pill m">Guide ${String(q.gid).padStart(2,'0')}</span>
+        <span class="pill ${q.type==='scenario'?'y':'m'}">${q.type==='scenario'?'Scenario':'Term'}</span>
+        <div class="sp"></div>
+        <button class="btn ghost sm" id="fl">${S.flags[S.i]?'\u2691 Flagged':'\u2690 Flag for review'}</button></div>
+      <div class="qtext">${q.lead?`<span class="lead">${esc(q.lead)}</span>`:''}${esc(q.q)}</div>
+      <div class="choices" id="chs"></div>
+      <div class="qfoot">
+        <button class="btn ghost" id="pv" ${S.i?'':'disabled'}>Previous</button>
+        <span class="kbd"><b>1</b>-<b>4</b> answer &nbsp; <b>F</b> flag &nbsp; <b>Enter</b> next</span>
+        <button class="btn red" id="nx">${S.i+1===S.qs.length?'Review & submit':'Next'}</button>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <div class="tiny muted" style="font-weight:650;letter-spacing:.6px;text-transform:uppercase">Question navigator</div>
+      <div class="navgrid" id="ng"></div>
+    </div>
+  </div>`;
+  const chs=$('#chs');
+  q.choices.forEach((c,ix)=>{
+    const b=el(`<button class="ch ${S.picked[S.i]===ix?'sel':''}"><span class="k">${'ABCD'[ix]}</span><span>${esc(c)}</span></button>`);
+    b.onclick=()=>{S.picked[S.i]=ix;vExamRun();};
+    chs.appendChild(b);
+  });
+  const ng=$('#ng');
+  S.qs.forEach((_,i)=>{
+    const b=el(`<button class="navg ${S.picked[i]!=null?'ans':''} ${S.flags[i]?'flag':''} ${i===S.i?'cur':''}">${i+1}</button>`);
+    b.onclick=()=>{S.i=i;vExamRun();};
+    ng.appendChild(b);
+  });
+  $('#fl').onclick=()=>{S.flags[S.i]=!S.flags[S.i];vExamRun();};
+  $('#pv').onclick=()=>{if(S.i){S.i--;vExamRun();}};
+  $('#nx').onclick=()=>{ if(S.i+1>=S.qs.length) submitExam(); else {S.i++;vExamRun();} };
+  if(timerId) clearInterval(timerId);
+  timerId=setInterval(()=>{
+    const t=$('#tm'); if(!t) return;
+    if(S.limit){ S.left--; t.textContent=fmtH(Math.max(0,S.left));
+      t.className='timer '+(S.left<300?'crit':S.left<900?'warn':'');
+      if(S.left<=0){clearInterval(timerId);submitExam();} }
+    else t.textContent=fmtH(Math.round((Date.now()-S.started)/1000));
+  },1000);
+}
+function submitExam(){
+  if(timerId){clearInterval(timerId);timerId=null;}
+  const {qs,picked}=S;
+  const right=qs.filter((q,i)=>picked[i]===q.answer).length;
+  const p=pct(right,qs.length);
+  const secs=S.limit? S.limit-S.left : Math.round((Date.now()-S.started)/1000);
+  const map={};
+  qs.forEach((q,i)=>{
+    const ok=picked[i]===q.answer;
+    const rec=P.answers[q.id]||{n:0,ok:false}; rec.n++;rec.ok=ok;P.answers[q.id]=rec;
+    P.total++; if(ok)P.right++;
+    const mi=P.missed.indexOf(q.id); if(ok){if(mi>=0)P.missed.splice(mi,1);} else if(mi<0)P.missed.push(q.id);
+    map[q.gid]=map[q.gid]||{n:0,r:0,title:q.gtitle}; map[q.gid].n++; if(ok)map[q.gid].r++;
+  });
+  const byGuide=Object.keys(map).map(k=>({title:`Guide ${String(k).padStart(2,'0')} \u2014 ${map[k].title}`,n:map[k].n,r:map[k].r,p:pct(map[k].r,map[k].n)}));
+  P.exams.push({d:new Date().toLocaleDateString(),p,r:right,n:qs.length,s:secs});
+  save();
+  go('results',{qs,picked,right,total:qs.length,p,src:'exam',secs,byGuide});
+}
+
+/* =========================== FLASHCARDS =========================== */
+function allTerms(){const o=[];D.guides.forEach(g=>(g.terms||[]).forEach(t=>o.push(Object.assign({},t,{gid:g.id,gtitle:g.title}))));return o;}
+function vCards(){
+  const t=allTerms();
+  $('#tsub').textContent='Flip through every term until they stick';
+  if(!t.length) return emptyState('No terms loaded yet','Once your guides are loaded, every defined term becomes a flashcard here.');
+  if(!S.deck){
+    const lg=D.guides.filter(g=>(g.terms||[]).length);
+    $('#view').innerHTML=`<div class="wrap-n"><div class="card">
+      <h3 style="font-size:18px;font-weight:700;margin-bottom:14px">Flashcards</h3>
+      <div class="row">
+        <div style="flex:1;min-width:220px"><label class="fld">Deck</label>
+          <select id="c-g"><option value="all">All terms (${t.length})</option>
+          ${lg.map(g=>`<option value="${g.id}">Guide ${String(g.id).padStart(2,'0')} \u2014 ${esc(g.title)} (${g.terms.length})</option>`).join('')}</select></div>
+        <div style="width:170px"><label class="fld">Show first</label>
+          <select id="c-s"><option value="t">Term \u2192 definition</option><option value="d">Definition \u2192 term</option></select></div>
+      </div>
+      <div class="row" style="margin-top:16px"><label class="switch"><input type="checkbox" id="c-sh" checked>Shuffle</label>
+        <div class="sp"></div><button class="btn red" id="c-go">Start</button></div>
+    </div></div>`;
+    $('#c-go').onclick=()=>{
+      const g=$('#c-g').value;
+      let deck = g==='all'? allTerms() : (guideById(+g).terms||[]).map(x=>Object.assign({},x,{gid:+g}));
+      if($('#c-sh').checked) deck=shuffle(deck);
+      go('cards',{deck,i:0,flip:false,rev:$('#c-s').value==='d',known:0});
+    };
+    return;
+  }
+  const c=S.deck[S.i];
+  const front = S.rev? c.definition : c.term;
+  const back  = S.rev? c.term : c.definition;
+  $('#topr').innerHTML='<button class="btn ghost sm" id="c-end">End deck</button>';
+  $('#c-end').onclick=()=>go('cards');
+  $('#view').innerHTML=`<div class="wrap-n">
+    <div class="qbar"><div class="bar"><i style="width:${S.i/S.deck.length*100}%"></i></div>
+      <div class="qcount">${S.i+1} / ${S.deck.length} \u00b7 ${S.known} known</div></div>
+    <div class="fc-wrap"><div class="fc ${S.flip?'flip':''}" id="fc">
+      <div class="fc-f"><div class="fc-tag">Guide ${String(c.gid).padStart(2,'0')}</div><div class="t">${esc(front)}</div><div class="fc-hint">Click or press Space to flip</div></div>
+      <div class="fc-b"><div class="fc-tag">${S.rev?'Term':'Definition'}</div><div class="d">${esc(back)}</div><div class="fc-hint">Click to flip back</div></div>
+    </div></div>
+    <div class="row" style="justify-content:center;margin-top:24px">
+      <button class="btn ghost" id="c-again">Needs work</button>
+      <button class="btn red" id="c-know">I know this</button>
+    </div>
+    <p class="tiny muted" style="text-align:center;margin-top:14px"><b>Space</b> flip &nbsp;\u00b7&nbsp; <b>\u2192</b> know it &nbsp;\u00b7&nbsp; <b>\u2190</b> needs work</p>
+  </div>`;
+  $('#fc').onclick=()=>{S.flip=!S.flip;vCards();};
+  $('#c-know').onclick=()=>cardNext(true);
+  $('#c-again').onclick=()=>cardNext(false);
+}
+function cardNext(known){
+  const c=S.deck[S.i];
+  const k='g'+c.gid+'|'+c.term;
+  P.cards[k]=P.cards[k]||{y:0,n:0}; P.cards[k][known?'y':'n']++; save();
+  if(known) S.known++;
+  if(!known) S.deck.push(c);
+  if(S.i+1>=S.deck.length){
+    $('#view').innerHTML=`<div class="wrap-n"><div class="card res-hero">
+      <h3 style="font-size:22px">Deck complete</h3><p>You marked ${S.known} of ${S.deck.length} cards as known.</p>
+      <div class="row" style="justify-content:center;margin-top:20px">
+        <button class="btn red" onclick="go('cards')">New deck</button>
+        <button class="btn ghost" onclick="go('dash')">Dashboard</button></div></div></div>`;
+    return;
+  }
+  S.i++; S.flip=false; vCards();
+}
+
+/* =========================== GLOSSARY =========================== */
+function vGloss(){
+  const t=allTerms();
+  $('#tsub').textContent='Every defined term across all 13 guides';
+  if(!t.length) return emptyState('Glossary is empty','Terms are pulled automatically from each study guide as it is loaded.');
+  const lg=D.guides.filter(g=>(g.terms||[]).length);
+  $('#view').innerHTML=`<div class="wrap-n">
+    <div class="row" style="margin-bottom:18px">
+      <div style="flex:1;min-width:240px"><input type="text" id="gl-q" placeholder="Search terms and definitions..."></div>
+      <div style="width:230px"><select id="gl-g"><option value="all">All guides</option>
+        ${lg.map(g=>`<option value="${g.id}">Guide ${String(g.id).padStart(2,'0')} \u2014 ${esc(g.title)}</option>`).join('')}</select></div>
+      <div style="width:140px"><select id="gl-s"><option value="az">A \u2192 Z</option><option value="guide">By guide</option></select></div>
+    </div>
+    <div class="tiny muted" id="gl-n" style="margin-bottom:12px"></div>
+    <div id="gl-l"></div></div>`;
+  const draw=()=>{
+    const q=$('#gl-q').value.trim().toLowerCase(), g=$('#gl-g').value, s=$('#gl-s').value;
+    let list=t.slice();
+    if(g!=='all') list=list.filter(x=>x.gid===+g);
+    if(q) list=list.filter(x=>(x.term+' '+x.definition).toLowerCase().includes(q));
+    list.sort(s==='az'? (a,b)=>a.term.localeCompare(b.term) : (a,b)=>a.gid-b.gid||a.term.localeCompare(b.term));
+    $('#gl-n').textContent=`${list.length} term${list.length===1?'':'s'}`;
+    const hl=v=>{ v=esc(v); if(!q) return v;
+      return v.replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig'),'<mark>$1</mark>'); };
+    $('#gl-l').innerHTML = list.length? list.map(x=>`<div class="gl-row"><div class="t">${hl(x.term)}</div>
+      <div class="d">${hl(x.definition)}</div><div class="g">Guide ${String(x.gid).padStart(2,'0')} \u00b7 ${esc(x.gtitle)}</div></div>`).join('')
+      : `<div class="empty"><h4>No matches</h4><p>Try a different search.</p></div>`;
+  };
+  $('#gl-q').oninput=draw; $('#gl-g').onchange=draw; $('#gl-s').onchange=draw; draw();
+}
+
+/* =========================== PROGRESS =========================== */
+function vProg(){
+  $('#tsub').textContent='Where you stand and what still needs work';
+  const qs=allQ();
+  const rows=D.guides.filter(g=>(g.questions||[]).length).map(g=>{
+    const seen=g.questions.filter(q=>P.answers[q.id]).length;
+    const ok=g.questions.filter(q=>P.answers[q.id]&&P.answers[q.id].ok).length;
+    const st=P.guide[g.id]||{};
+    return {g,seen,ok,n:g.questions.length,best:st.best,runs:st.runs||0,p:pct(ok,g.questions.length)};
+  });
+  const weak=rows.filter(r=>r.seen>0).sort((a,b)=>a.p-b.p).slice(0,3);
+  $('#view').innerHTML=`<div class="wrap">
+    <div class="stats" style="margin-bottom:24px">
+      <div class="stat"><div class="v">${pct(P.right,P.total)}%</div><div class="k">Lifetime accuracy</div></div>
+      <div class="stat"><div class="v">${P.total}</div><div class="k">Questions answered</div></div>
+      <div class="stat"><div class="v">${P.exams.length}</div><div class="k">Mock exams taken</div></div>
+      <div class="stat"><div class="v" style="color:${P.missed.length?'var(--bad)':'var(--good)'}">${P.missed.length}</div><div class="k">In review deck</div></div>
+    </div>
+    ${P.missed.length?`<div class="card" style="display:flex;align-items:center;gap:16px;border-color:#3A2530;background:linear-gradient(120deg,#1A1219,var(--panel))">
+      <div style="flex:1"><div style="font-weight:650;font-size:16px">Missed-question review deck</div>
+      <div class="tiny muted" style="margin-top:4px">${P.missed.length} question${P.missed.length===1?'':'s'} you got wrong. Answer one correctly and it leaves the deck.</div></div>
+      <button class="btn red" id="pm-go">Start review</button>
+      <button class="btn ghost sm" id="pm-clr">Clear</button></div>`:''}
+    ${weak.length?`<h2 class="sec">Weakest areas</h2><div class="grid gcards">
+      ${weak.map(r=>`<div class="gcard" style="cursor:default"><div class="gcard-top"><span class="gnum">GUIDE ${String(r.g.id).padStart(2,'0')}</span>
+        <span class="pill ${r.p>=70?'g':'r'}">${r.p}%</span></div><h4>${esc(r.g.title)}</h4>
+        <div class="bar ${r.p>=70?'g':''}"><i style="width:${r.p}%"></i></div>
+        <div class="tiny muted">${r.ok} of ${r.n} answered correctly</div></div>`).join('')}</div>`:''}
+    <h2 class="sec">All guides</h2>
+    <div class="card" style="padding:6px 8px">
+      <table class="tbl"><thead><tr><th>Guide</th><th>Seen</th><th>Correct</th><th>Mastery</th><th>Best run</th><th></th></tr></thead><tbody id="pt"></tbody></table>
+    </div>
+    ${P.exams.length?`<h2 class="sec">Mock exam history</h2><div class="card" style="padding:6px 8px"><table class="tbl">
+      <thead><tr><th>Date</th><th>Score</th><th>Correct</th><th>Time</th></tr></thead><tbody>
+      ${P.exams.slice().reverse().map(h=>`<tr><td class="muted">${esc(h.d)}</td><td><span class="pill ${h.p>=70?'g':'r'}">${h.p}%</span></td><td class="muted">${h.r}/${h.n}</td><td class="muted">${fmtH(h.s||0)}</td></tr>`).join('')}</tbody></table></div>`:''}
+    <h2 class="sec">Data</h2>
+    <div class="card row"><div style="flex:1"><div style="font-weight:600">Reset ${esc(lineById(LINE).short||lineById(LINE).name)} progress</div>
+      <div class="tiny muted">Clears scores, review deck and exam history for this track only. The other track and all questions stay.</div></div>
+      <button class="btn ghost" id="p-reset">Reset</button></div>
+  </div>`;
+  const tb=$('#pt');
+  if(!rows.length) tb.innerHTML=`<tr><td colspan="6" class="muted" style="padding:24px;text-align:center">No guides loaded yet.</td></tr>`;
+  rows.forEach(r=>{
+    const tr=el(`<tr><td><b>${String(r.g.id).padStart(2,'0')}</b> &nbsp;${esc(r.g.title)}</td>
+      <td class="muted">${r.seen}/${r.n}</td><td class="muted">${r.ok}</td>
+      <td style="width:150px"><div class="bar ${r.p>=70?'g':''}"><i style="width:${r.p}%"></i></div></td>
+      <td>${r.best!=null?`<span class="pill ${r.best>=70?'g':'r'}">${r.best}%</span>`:'<span class="muted tiny">\u2014</span>'}</td>
+      <td style="text-align:right"><button class="btn sm ghost">Practice</button></td></tr>`);
+    tr.querySelector('button').onclick=()=>startQuiz({gid:r.g.id,mode:'practice'});
+    tb.appendChild(tr);
+  });
+  const a=$('#pm-go'),b=$('#pm-clr');
+  if(a) a.onclick=()=>startQuiz({gid:'missed',mode:'practice'});
+  if(b) b.onclick=()=>{P.missed=[];save();vProg();toast('Review deck cleared.');};
+  $('#p-reset').onclick=()=>{
+    if(confirmBox()){ PROG[LINE]=BLANK(); P=PROG[LINE]; save(); vProg(); toast('Progress reset for this track.'); }
+  };
+}
+function confirmBox(){ return window.confirm('Reset progress for '+lineById(LINE).name+'? This cannot be undone.'); }
+
+/* =========================== misc ui =========================== */
+function emptyState(h,p){
+  $('#view').innerHTML=`<div class="wrap-n"><div class="empty">${ICONS.empty}<h4>${esc(h)}</h4><p>${esc(p)}</p></div></div>`;
+}
+let toastT=null;
+function toast(m){
+  let t=$('#toast');
+  if(!t){ t=el(`<div id="toast" style="position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:#1B2432;border:1px solid var(--line2);padding:11px 20px;border-radius:11px;box-shadow:var(--shadow);z-index:99;font-size:14px;font-weight:550"></div>`); document.body.appendChild(t); }
+  t.textContent=m; t.style.opacity='1';
+  clearTimeout(toastT); toastT=setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';},2200);
+}
+
+/* ---------- keyboard ---------- */
+document.addEventListener('keydown',e=>{
+  if(/input|select|textarea/i.test((e.target.tagName||''))) return;
+  if(route==='quiz'){
+    if(['1','2','3','4'].includes(e.key)){const i=+e.key-1;if(S.qs[S.i].choices[i]!=null)answer(i);}
+    else if(e.key==='Enter'||e.key===' '){e.preventDefault();next();}
+  } else if(route==='examrun'){
+    if(['1','2','3','4'].includes(e.key)){S.picked[S.i]=+e.key-1;vExamRun();}
+    else if(e.key.toLowerCase()==='f'){S.flags[S.i]=!S.flags[S.i];vExamRun();}
+    else if(e.key==='Enter'){e.preventDefault();S.i+1>=S.qs.length?submitExam():(S.i++,vExamRun());}
+    else if(e.key==='ArrowLeft'&&S.i){S.i--;vExamRun();}
+    else if(e.key==='ArrowRight'&&S.i+1<S.qs.length){S.i++;vExamRun();}
+  } else if(route==='cards'&&S.deck){
+    if(e.key===' '){e.preventDefault();S.flip=!S.flip;vCards();}
+    else if(e.key==='ArrowRight')cardNext(true);
+    else if(e.key==='ArrowLeft')cardNext(false);
+  }
+});
+
+/* ---------- theme ---------- */
+const SUN='<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M18.7 5.3l-1.4 1.4M6.7 17.3l-1.4 1.4"/></svg>';
+const MOON='<svg viewBox="0 0 24 24"><path d="M20 14.2A8.2 8.2 0 0 1 9.8 4 8.5 8.5 0 1 0 20 14.2Z"/></svg>';
+function applyTheme(t){
+  document.documentElement.dataset.theme = t;
+  const b=$('#themeBtn'); if(b) b.innerHTML = t==='dark'? SUN : MOON;
+  try{ localStorage.setItem('sdpc_theme', t); }catch(e){}
+}
+function initTheme(){
+  let t='light';
+  try{ t = localStorage.getItem('sdpc_theme') || 'light'; }catch(e){}
+  applyTheme(t);
+  $('#themeBtn').onclick = ()=> applyTheme(document.documentElement.dataset.theme==='dark'?'light':'dark');
+}
+
+/* ---------- boot ---------- */
+window.__boot = async function(){
+  initData();
+  await loadProgress();
+  initTheme();
+  buildLines('#lineSel');
+  buildNav();
+  paintLine();
+  go('dash');
+};
+</script>
+
+<script>
+/* ---------------- passcode gate: decrypts the question bank ---------------- */
+(function(){
+  var b64 = function(s){ var r=atob(s), a=new Uint8Array(r.length);
+    for(var i=0;i<r.length;i++) a[i]=r.charCodeAt(i); return a; };
+  var msg = document.getElementById('lockMsg');
+  var input = document.getElementById('pass');
+  var btn = document.getElementById('lockGo');
+
+  function say(t, working){ msg.textContent=t; msg.className='msg'+(working?' work':''); }
+
+  async function unlock(pass){
+    if(!pass){ say('Enter the passcode'); return; }
+    btn.disabled = true; say('Unlocking...', true);
+    try{
+      var B = window.BANK;
+      var base = await crypto.subtle.importKey('raw', new TextEncoder().encode(pass),
+                    'PBKDF2', false, ['deriveKey']);
+      var key = await crypto.subtle.deriveKey(
+        {name:'PBKDF2', salt:b64(B.s), iterations:B.n, hash:'SHA-256'},
+        base, {name:'AES-GCM', length:256}, false, ['decrypt']);
+      var plain = await crypto.subtle.decrypt({name:'AES-GCM', iv:b64(B.i)}, key, b64(B.c));
+
+      var text;
+      if (typeof DecompressionStream === 'function'){
+        var ds = new DecompressionStream('gzip');
+        var stream = new Blob([plain]).stream().pipeThrough(ds);
+        text = await new Response(stream).text();
+      } else {
+        throw new Error('This browser is too old to open the study app. Please use Edge, Chrome, Safari or Firefox.');
+      }
+
+      window.APP_DATA = JSON.parse(text);
+      try{ sessionStorage.setItem('sdpc_pass', pass); }catch(e){}
+      var lock = document.getElementById('lock');
+      lock.classList.add('hide');
+      setTimeout(function(){ lock.remove(); }, 400);
+      window.__boot();
+    }catch(err){
+      btn.disabled = false;
+      var m = String(err && err.message || '');
+      say(m.indexOf('too old')>-1 ? m : 'That passcode is not right. Try again.');
+      input.select();
+    }
+  }
+
+  document.getElementById('lockForm').addEventListener('submit', function(e){
+    e.preventDefault(); unlock(input.value.trim());
+  });
+
+  /* stay unlocked while the tab session lasts */
+  var saved = null;
+  try{ saved = sessionStorage.getItem('sdpc_pass'); }catch(e){}
+  if(saved){ unlock(saved); } else { setTimeout(function(){ input.focus(); }, 120); }
+})();
+</script>
+</body>
+</html>
