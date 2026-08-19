@@ -474,7 +474,7 @@ body{-webkit-tap-highlight-color:transparent}
           <div class="lo">Yankton, South Dakota</div>
         </div>
       </div>
-      <div class="vr"><span id="foot-line">Property &amp; Casualty</span> &middot; <span id="foot-v"></span></div>
+      <div class="vr"><span id="foot-line">Property &amp; Casualty</span></div>
     </div>
   </aside>
   <main id="main">
@@ -581,6 +581,15 @@ const pct = (a,b)=> b? Math.round(a/b*100):0;
 const loadedGuides = ()=> D.guides.filter(g=>g.questions && g.questions.length);
 const allQ = ()=>{const o=[];D.guides.forEach(g=>(g.questions||[]).forEach(q=>o.push(Object.assign({},q,{gid:g.id,gtitle:g.title}))));return o;};
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+/* Choices are reordered every time a question is served, so repeat drilling
+   tests the concept rather than the position of the right answer. */
+function shuffleChoices(q){
+  const order = shuffle(q.choices.map((_,i)=>i));
+  return Object.assign({}, q, {
+    choices: order.map(i=>q.choices[i]),
+    answer:  order.indexOf(q.answer)
+  });
+}
 function guideById(id){return D.guides.find(g=>g.id===id);}
 function qById(id){ for(const g of D.guides){ const q=(g.questions||[]).find(x=>x.id===id); if(q) return Object.assign({},q,{gid:g.id,gtitle:g.title}); } return null; }
 function fmt(sec){const m=Math.floor(sec/60),s=sec%60;return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;}
@@ -603,7 +612,6 @@ function buildNav(){
     b.onclick = ()=>go(x.k);
     n.appendChild(b);
   });
-  $('#foot-v').textContent = 'v'+(D.meta.version||'1.0')+' \u00b7 '+(D.meta.updated||'');
 }
 
 /* ---------- exam track switcher ---------- */
@@ -659,7 +667,7 @@ function vDash(){
       <h3>${lg.length? 'Welcome back' : esc(LN.name)}</h3>
       <p>${lg.length
         ? `You have <b>${qs.length}</b> practice questions across <b>${lg.length}</b> of ${total} study guide${total===1?'':'s'}. Keep drilling, consistency beats cramming.`
-        : `This track is set up and waiting on content. Send the ${esc(LN.name)} study guides to Claude and each one becomes terms, scenarios and multiple-choice questions right here.`}</p>
+        : `This track is set up and waiting on content. Send the ${esc(LN.name)} study guides to Claude and each one becomes terms, scenarios and multiple choice questions right here.`}</p>
       <div class="stats">
         <div class="stat"><div class="v">${qs.length}</div><div class="k">Questions</div></div>
         <div class="stat"><div class="v">${answered}</div><div class="k">Seen</div></div>
@@ -716,7 +724,7 @@ function vPractice(){
       <div class="row">
         <div style="flex:1;min-width:220px"><label class="fld">Study guide</label>
           <select id="p-g"><option value="all">All loaded guides (${allQ().length} questions)</option>
-          ${lg.map(g=>`<option value="${g.id}">Guide ${String(g.id).padStart(2,'0')} \u2014 ${esc(g.title)} (${g.questions.length})</option>`).join('')}
+          ${lg.map(g=>`<option value="${g.id}">Guide ${String(g.id).padStart(2,'0')}: ${esc(g.title)} (${g.questions.length})</option>`).join('')}
           ${P.missed.length?`<option value="missed">\u2605 My missed questions (${P.missed.length})</option>`:''}</select></div>
         <div style="width:130px"><label class="fld">How many</label>
           <select id="p-n"><option value="0">All</option><option>10</option><option selected>20</option><option>30</option><option>50</option></select></div>
@@ -758,7 +766,7 @@ function pickQuestions(o){
   if(o.type && o.type!=='all') pool = pool.filter(q=>(q.type||'term')===o.type);
   if(o.shuffleQ!==false) pool = shuffle(pool);
   if(o.limit) pool = pool.slice(0,o.limit);
-  return pool;
+  return pool.map(shuffleChoices);
 }
 
 function startQuiz(o){
@@ -806,7 +814,7 @@ function vQuiz(){
   });
   if(shown){
     const ok = picked===q.answer;
-    $('#ex').innerHTML=`<div class="expl"><div class="hd">${ok?'\u2713 Correct':'\u2717 Incorrect \u2014 correct answer: '+'ABCD'[q.answer]}</div>${esc(q.explain||'')}</div>`;
+    $('#ex').innerHTML=`<div class="expl"><div class="hd">${ok?'\u2713 Correct':'\u2717 Incorrect. Correct answer: '+'ABCD'[q.answer]}</div>${esc(q.explain||'')}</div>`;
   }
   $('#nx').onclick=next;
 }
@@ -883,20 +891,20 @@ function vResults(){
       ${q.explain?`<div class="a" style="margin-top:7px;color:#A9B5C7">${esc(q.explain)}</div>`:''}</div></div>`));
   });
   $('#r-again').onclick=()=>go(S.src==='exam'?'exam':'practice');
-  $('#r-miss').onclick=()=>P.missed.length?startQuiz({gid:'missed',mode:'practice'}):toast('Nothing missed \u2014 nice.');
+  $('#r-miss').onclick=()=>P.missed.length?startQuiz({gid:'missed',mode:'practice'}):toast('Nothing missed. Nice work.');
   $('#r-home').onclick=()=>go('dash');
 }
 
 /* =========================== MOCK EXAM =========================== */
 function vExam(){
   const qs=allQ();
-  $('#tsub').textContent='Simulate the real exam \u2014 randomized, timed, graded at the end';
+  $('#tsub').textContent='Simulate the real exam. Randomized, timed, and graded at the end';
   if(!qs.length) return emptyState('No questions loaded yet','Load your study guides first, then come back for a full timed simulation.');
   const hist=P.exams.slice(-6).reverse();
   $('#view').innerHTML=`<div class="wrap-n">
     <div class="card">
       <h3 style="font-size:18px;font-weight:700;margin-bottom:4px">Timed Mock Exam</h3>
-      <p class="muted tiny" style="margin-bottom:18px">Questions are pulled at random from every loaded guide. No feedback until you submit \u2014 just like the real thing.</p>
+      <p class="muted tiny" style="margin-bottom:18px">Questions are pulled at random from every loaded guide. No feedback until you submit, just like the real thing.</p>
       <div class="row">
         <div style="width:170px"><label class="fld">Number of questions</label>
           <select id="e-n"><option>50</option><option selected>100</option><option>150</option></select></div>
@@ -917,7 +925,7 @@ function vExam(){
   $('#e-go').onclick=()=>{
     const n=+$('#e-n').value, mins=+$('#e-t').value;
     let pool=shuffle(qs); while(pool.length<n) pool=pool.concat(shuffle(qs));
-    go('examrun',{qs:pool.slice(0,n),i:0,picked:[],flags:{},left:mins*60,limit:mins*60,started:Date.now()});
+    go('examrun',{qs:pool.slice(0,n).map(shuffleChoices),i:0,picked:[],flags:{},left:mins*60,limit:mins*60,started:Date.now()});
   };
 }
 function vExamRun(){
@@ -990,7 +998,7 @@ function submitExam(){
     const mi=P.missed.indexOf(q.id); if(ok){if(mi>=0)P.missed.splice(mi,1);} else if(mi<0)P.missed.push(q.id);
     map[q.gid]=map[q.gid]||{n:0,r:0,title:q.gtitle}; map[q.gid].n++; if(ok)map[q.gid].r++;
   });
-  const byGuide=Object.keys(map).map(k=>({title:`Guide ${String(k).padStart(2,'0')} \u2014 ${map[k].title}`,n:map[k].n,r:map[k].r,p:pct(map[k].r,map[k].n)}));
+  const byGuide=Object.keys(map).map(k=>({title:`Guide ${String(k).padStart(2,'0')}: ${map[k].title}`,n:map[k].n,r:map[k].r,p:pct(map[k].r,map[k].n)}));
   P.exams.push({d:new Date().toLocaleDateString(),p,r:right,n:qs.length,s:secs});
   save();
   go('results',{qs,picked,right,total:qs.length,p,src:'exam',secs,byGuide});
@@ -1009,7 +1017,7 @@ function vCards(){
       <div class="row">
         <div style="flex:1;min-width:220px"><label class="fld">Deck</label>
           <select id="c-g"><option value="all">All terms (${t.length})</option>
-          ${lg.map(g=>`<option value="${g.id}">Guide ${String(g.id).padStart(2,'0')} \u2014 ${esc(g.title)} (${g.terms.length})</option>`).join('')}</select></div>
+          ${lg.map(g=>`<option value="${g.id}">Guide ${String(g.id).padStart(2,'0')}: ${esc(g.title)} (${g.terms.length})</option>`).join('')}</select></div>
         <div style="width:170px"><label class="fld">Show first</label>
           <select id="c-s"><option value="t">Term \u2192 definition</option><option value="d">Definition \u2192 term</option></select></div>
       </div>
@@ -1073,7 +1081,7 @@ function vGloss(){
     <div class="row" style="margin-bottom:18px">
       <div style="flex:1;min-width:240px"><input type="text" id="gl-q" placeholder="Search terms and definitions..."></div>
       <div style="width:230px"><select id="gl-g"><option value="all">All guides</option>
-        ${lg.map(g=>`<option value="${g.id}">Guide ${String(g.id).padStart(2,'0')} \u2014 ${esc(g.title)}</option>`).join('')}</select></div>
+        ${lg.map(g=>`<option value="${g.id}">Guide ${String(g.id).padStart(2,'0')}: ${esc(g.title)}</option>`).join('')}</select></div>
       <div style="width:140px"><select id="gl-s"><option value="az">A \u2192 Z</option><option value="guide">By guide</option></select></div>
     </div>
     <div class="tiny muted" id="gl-n" style="margin-bottom:12px"></div>
@@ -1113,7 +1121,7 @@ function vProg(){
       <div class="stat"><div class="v" style="color:${P.missed.length?'var(--bad)':'var(--good)'}">${P.missed.length}</div><div class="k">In review deck</div></div>
     </div>
     ${P.missed.length?`<div class="card" style="display:flex;align-items:center;gap:16px;border-color:#3A2530;background:linear-gradient(120deg,#1A1219,var(--panel))">
-      <div style="flex:1"><div style="font-weight:650;font-size:16px">Missed-question review deck</div>
+      <div style="flex:1"><div style="font-weight:650;font-size:16px">Missed question review deck</div>
       <div class="tiny muted" style="margin-top:4px">${P.missed.length} question${P.missed.length===1?'':'s'} you got wrong. Answer one correctly and it leaves the deck.</div></div>
       <button class="btn red" id="pm-go">Start review</button>
       <button class="btn ghost sm" id="pm-clr">Clear</button></div>`:''}
@@ -1140,7 +1148,7 @@ function vProg(){
     const tr=el(`<tr><td><b>${String(r.g.id).padStart(2,'0')}</b> &nbsp;${esc(r.g.title)}</td>
       <td class="muted">${r.seen}/${r.n}</td><td class="muted">${r.ok}</td>
       <td style="width:150px"><div class="bar ${r.p>=70?'g':''}"><i style="width:${r.p}%"></i></div></td>
-      <td>${r.best!=null?`<span class="pill ${r.best>=70?'g':'r'}">${r.best}%</span>`:'<span class="muted tiny">\u2014</span>'}</td>
+      <td>${r.best!=null?`<span class="pill ${r.best>=70?'g':'r'}">${r.best}%</span>`:'<span class="muted tiny">Not yet</span>'}</td>
       <td style="text-align:right"><button class="btn sm ghost">Practice</button></td></tr>`);
     tr.querySelector('button').onclick=()=>startQuiz({gid:r.g.id,mode:'practice'});
     tb.appendChild(tr);
