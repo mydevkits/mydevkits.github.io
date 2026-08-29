@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Training Manual</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+ --bg:#f6f7f9; --panel:#fff; --ink:#131c25; --mid:#5a6572; --soft:#8b96a2; --line:#e2e6ea;
+ --accent:#0b5cab; --accentbg:#eaf2fb;
+ --ok:#1a7f4b; --okbg:#e7f5ed;
+ --warn:#9a6a00; --warnbg:#fdf3dd;
+ --bad:#a52929; --badbg:#fbeaea;
+ --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+body{font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+ background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+header{background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30}
+.hw{max-width:1080px;margin:0 auto;padding:13px 20px}
+.htop{display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap}
+h1{font-size:18px;font-weight:660;letter-spacing:-.2px}
+.sub{color:var(--mid);font-size:13px;margin-top:2px}
+.home{font-size:13.5px;color:var(--accent);text-decoration:none;font-weight:600;white-space:nowrap}
+#q{width:100%;margin-top:11px;padding:9px 13px;font-size:15px;border:1px solid var(--line);
+ border-radius:8px;background:#fafbfc;font-family:inherit}
+#q:focus{outline:none;border-color:var(--accent);background:#fff}
+.main{max-width:1080px;margin:0 auto;padding:20px;display:grid;grid-template-columns:262px 1fr;gap:26px;align-items:start}
+@media(max-width:880px){.main{grid-template-columns:1fr;padding:15px}}
+nav{position:sticky;top:132px;max-height:calc(100vh - 152px);overflow-y:auto}
+@media(max-width:880px){nav{position:static;max-height:none}}
+.nb{display:block;width:100%;text-align:left;background:none;border:none;font:inherit;cursor:pointer;
+ padding:9px 12px;border-radius:8px;color:var(--mid);line-height:1.35;margin-bottom:1px;font-size:14.5px}
+.nb:hover{background:#edf0f3;color:var(--ink)}
+.nb.on{background:var(--accentbg);color:var(--accent);font-weight:640}
+.nb i{font-style:normal;font:11.5px var(--mono);opacity:.6;margin-right:8px}
+.navlbl{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--soft);padding:0 12px;margin:16px 0 6px}
+.navlbl:first-child{margin-top:0}
+article{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:30px 34px 36px}
+@media(max-width:880px){article{padding:20px 18px 26px}}
+.mod{font:12px var(--mono);color:var(--accent);font-weight:700;letter-spacing:.5px}
+article>h2{font-size:26px;line-height:1.28;font-weight:670;letter-spacing:-.4px;margin-top:6px}
+@media(max-width:880px){article>h2{font-size:22px}}
+.snote{color:var(--mid);font-size:15.5px;margin-top:9px}
+.body{margin-top:26px}
+.body h3{font-size:18.5px;font-weight:650;line-height:1.35;margin:30px 0 12px}
+.body h3:first-child{margin-top:0}
+.body p{font-size:16.5px;color:#2c3843;margin-bottom:14px}
+.body p:last-child{margin-bottom:0}
+.key{background:var(--accentbg);border-left:3px solid var(--accent);padding:14px 18px;border-radius:0 9px 9px 0;
+ font-size:16.5px;margin-bottom:16px;line-height:1.6}
+.warn{background:var(--warnbg);border-left:3px solid var(--warn);padding:14px 18px;border-radius:0 9px 9px 0;
+ font-size:16.5px;margin-bottom:16px;color:#5c4400;line-height:1.6}
+.bad{background:var(--badbg);border-left:3px solid var(--bad);padding:14px 18px;border-radius:0 9px 9px 0;
+ font-size:16.5px;margin-bottom:16px;color:#6d1f1f;line-height:1.6}
+.say{background:#fffdf5;border:1px solid #ecdfb8;border-radius:9px;padding:14px 18px;font-size:16.5px;
+ font-style:italic;color:#4a3f22;margin-bottom:16px;line-height:1.6}
+ul.b,ol.n{margin:0 0 16px 0;padding-left:0;list-style:none}
+ul.b li{position:relative;padding-left:24px;margin-bottom:9px;font-size:16.5px;color:#2c3843}
+ul.b li:before{content:"";position:absolute;left:6px;top:11px;width:6px;height:6px;border-radius:50%;background:#b6c0ca}
+ol.n{counter-reset:nn}
+ol.n li{counter-increment:nn;position:relative;padding-left:34px;margin-bottom:11px;font-size:16.5px;color:#2c3843}
+ol.n li:before{content:counter(nn);position:absolute;left:0;top:2px;width:23px;height:23px;border-radius:50%;
+ background:var(--accentbg);color:var(--accent);font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center}
+ul.chk{list-style:none;margin-bottom:16px}
+ul.chk li{position:relative;padding-left:28px;margin-bottom:9px;font-size:16.5px;color:#2c3843}
+ul.chk li:before{content:"";position:absolute;left:0;top:5px;width:15px;height:15px;border:1.6px solid #b6c0ca;border-radius:4px}
+.steps{list-style:none;counter-reset:st;margin-bottom:16px}
+.steps>li{counter-increment:st;position:relative;padding:0 0 18px 42px;margin-bottom:18px;border-bottom:1px solid var(--line)}
+.steps>li:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.steps>li:before{content:counter(st);position:absolute;left:0;top:0;width:28px;height:28px;border-radius:50%;
+ background:var(--accentbg);color:var(--accent);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.steps h4{font-size:16.5px;font-weight:650;line-height:1.4}
+.steps p{font-size:16px;color:#33414f;margin-top:5px;margin-bottom:0}
+.scroll{overflow-x:auto;margin-bottom:16px;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:15.5px;min-width:440px}
+th,td{text-align:left;padding:11px 13px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--soft);font-weight:700;background:#fafbfc}
+tr:last-child td{border-bottom:none}
+.done{background:var(--okbg);border:1px solid #bfe3ce;border-radius:10px;padding:15px 18px;margin-bottom:16px}
+.done h4{font-size:11.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--ok);margin-bottom:9px}
+.done ul.chk li{color:#1c5a3a}.done ul.chk li:before{border-color:#7cbf9b}
+.done ul.chk{margin-bottom:0}
+.nav2{display:flex;gap:10px;margin-top:32px;padding-top:22px;border-top:1px solid var(--line)}
+.nav2 button{flex:1;font:inherit;font-size:14.5px;padding:12px;border-radius:9px;border:1px solid var(--line);
+ background:#fafbfc;color:var(--ink);cursor:pointer;line-height:1.35}
+.nav2 button:disabled{opacity:.35;cursor:default}
+.nav2 button b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--soft);font-weight:700;margin-bottom:3px}
+mark{background:#ffe9a8;color:inherit;border-radius:2px}
+.hits{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px;margin-bottom:12px}
+.hit{padding:11px 14px;border-radius:8px;cursor:pointer}
+.hit:hover{background:#f4f7fa}
+.hit b{font-size:15.5px;font-weight:640;display:block}
+.hit span{font-size:14px;color:var(--mid);display:block;margin-top:2px}
+@media print{header,nav,.nav2{display:none}.main{display:block;max-width:none;padding:0}
+ article{border:none;padding:0}body{background:#fff}}
+</style>
+</head>
+<body>
+<header><div class="hw">
+ <div class="htop"><div><h1>Training Manual</h1><div class="sub">VoIP Support &middot; what a new specialist learns</div></div>
+ <a class="home" href="index.html">&larr; Back to the index</a></div>
+ <input id="q" type="search" placeholder="Search this manual" autocomplete="off">
+</div></header>
+<div class="main"><nav id="nav"></nav><div id="view"></div></div>
+
+<script>var DOC={id:"trn",secs:[
+
+{no:"How to use this",n:"Before you start",g:"Orientation",
+ note:"Read this page once. It takes three minutes and it will save you a lot of confusion later.",
+ blocks:[
+ {t:"p",x:"This manual is the written half of your training. The other half is the practice tools: flash cards, order of operations drills and scenario tests. Read a module here, then drill it there. Reading alone does not stick."},
+ {t:"h",x:"How it is structured"},
+ {t:"p",x:"Fourteen modules, in the order you will need them. Each one opens with why it matters, then the content, then the mistakes people actually make, then a short list of what you should be able to do before moving on."},
+ {t:"key",x:"The test for every module is the same. Can you explain this to a dental practice, in words they would use, without reading from anything? If not, go back."},
+ {t:"h",x:"Who our customers are, and why this job is not ordinary support"},
+ {t:"p",x:"We support dental practices. For a practice, the phone is not a convenience, it is how patients reach them. A practice with no working phone is a practice losing patients in real time, and losing the ones who will not call twice."},
+ {t:"p",x:"That single fact should change how you handle everything. Urgency is real here. A practice that cannot take calls at nine in the morning is having the worst day of their month, and they will remember how we handled it long after they have forgotten what went wrong."},
+ {t:"h",x:"Three things you will hear a lot"},
+ {t:"ul",items:[
+  "A practice is a dental office. One location, usually with a front desk, several treatment rooms, and a small back office.",
+  "A DSO is a dental service organization, a group that owns many practices. Bigger, slower, more numbers, more paperwork.",
+  "A cutover is the moment a practice's phone numbers actually move to us. It is the highest risk hour in this job."]},
+ {t:"done",x:"Before moving on",items:[
+  "I understand why a phone outage at a dental practice is more serious than it sounds",
+  "I know what a practice, a DSO and a cutover are"]}
+]},
+
+{no:"Module 1",n:"What does this practice actually have with us?",g:"Foundations",
+ note:"The most important thirty seconds in any ticket, and the one people skip. Get this wrong and everything after it is wasted.",
+ blocks:[
+ {t:"bad",x:"Do not assume a practice has their phones with us. Most of them historically do not. Dental Intelligence's own help material states plainly that it does not provide phone service directly and supports any VoIP provider. That is changing, but it changes gradually, so for a long time you will be looking at a mixed estate where every practice has a different combination."},
+ {t:"h",x:"Three things a practice can have, independently"},
+ {t:"tbl",head:["","With us","Or somewhere else"],rows:[
+  ["The practice software","Always us. Scheduling, patient records, reminders, reporting.","Never elsewhere. If they are a customer, they have this."],
+  ["Text messaging","We can handle messaging on a number even when the voice stays elsewhere. That is hosted messaging.","Their own messaging vendor, or none at all."],
+  ["Phone service, the actual calls","Our platform, through DialStack.","Their own VoIP provider. Historically this is the common case."]]},
+ {t:"key",x:"Those three are independent. A practice can have messaging with us and voice with somebody else, or voice with us and messaging with somebody else, or neither, or both. There is no single arrangement you can assume."},
+ {t:"h",x:"The four shapes you will actually meet"},
+ {t:"ol",items:[
+  "Software only. They use the product, their phones are entirely their own provider's. Historically the largest group.",
+  "Software and messaging. We handle texting on their number, their voice stays with their own carrier.",
+  "Software and phones. Their phone service is ours. This is the newer arrangement and the one this team is being built for.",
+  "Mid migration. Some numbers moved to us, some have not. This is the most confusing one for everybody including the practice, and it is where most wrong answers come from."]},
+ {t:"h",x:"The fourth relationship, which is not a system at all"},
+ {t:"p",x:"Even when the phone service is entirely theirs, we are still connected to it. Features like Screen Pops work by the practice's own provider ringing us at the same time it rings their phones. Their provider has to support simultaneous ringing for this to work at all."},
+ {t:"key",x:"That matters because it creates a whole class of ticket that is not about our phone service and is not about the software either. Screen Pops stopped working is very often the simultaneous ring configuration at their provider, or a change they made to it. Their calls are fine. Ours is the thing that stopped being told about them."},
+ {t:"h",x:"So the order of questions is"},
+ {t:"steps",items:[
+  {t:"What do they have with us?",d:"Ask for the specific number and check it. Not the practice name, the number, because a practice mid migration has some with us and some not. If the number is not ours, we are not going to fix a call on it, and saying otherwise sends them down the wrong path."},
+  {t:"If it is not ours, what are they actually asking?",d:"It may still be ours. A Screen Pop problem on a number we do not host is our integration, not their carrier. A messaging problem on a number we do not host may be our hosted messaging. Do not stop at the number check, use it to narrow rather than to dismiss."},
+  {t:"Then, which of the three broke?",d:"Calls, texts, or the software doing something it should. Only now is that question useful, because now you know which of them we are even responsible for."}]},
+ {t:"h",x:"Saying it to the customer"},
+ {t:"say",x:"Let me check what we have on that number. It looks like your calls are still with your own provider, and what we handle for you is the texting and the software. So for the ringing problem you would need to speak to them, but let me make sure the texting side is healthy while I have you."},
+ {t:"h",x:"Mistakes people make"},
+ {t:"ul",items:[
+  "Assuming the phones are ours because the practice is a customer. Most of the time historically they are not.",
+  "Checking the practice rather than the specific number, which misses the mid migration case entirely.",
+  "Treating a Screen Pop failure as a phone problem, when it is usually the simultaneous ring setup at their provider.",
+  "Telling a practice we cannot help because the number is not ours, when the thing they are actually describing is our integration or our messaging.",
+  "Hearing the word text and immediately assuming it is ours."]},
+ {t:"done",items:[
+  "I never assume a practice has their phones with us",
+  "I check the specific number, not the practice",
+  "I can name the four shapes and say which one a practice is in",
+  "I know Screen Pops depend on the practice's own provider supporting simultaneous ringing",
+  "I can tell a customer what we do and do not handle for them without it sounding like a brush off"]}
+]},
+
+{no:"Module 2",n:"How a phone call actually works",g:"Foundations",
+ note:"You do not need to be an engineer. You do need to know why a call can connect perfectly and have no sound.",
+ blocks:[
+ {t:"p",x:"When a call happens over the internet, two completely separate things are going on at once, and they travel by different routes."},
+ {t:"steps",items:[
+  {t:"Setting the call up",d:"The phone and the platform exchange messages: I want to call this number, here is who I am, that number is ringing, they answered, the call has ended. This is called signaling."},
+  {t:"Carrying the voice",d:"Once the call connects, the actual audio flows as a completely separate stream of packets, on different ports, often over a different path through the network."}]},
+ {t:"key",x:"This is why a call can ring, connect, show a timer counting up, and have no sound at all. The setup worked. The audio did not. They are two different things and they fail separately."},
+ {t:"h",x:"What that tells you when something is wrong"},
+ {t:"ul",items:[
+  "The phone will not register and shows No Service. That is a setup problem. Credentials, network, or the account.",
+  "The call connects but one side cannot hear. That is an audio path problem. Almost always the practice's router or firewall.",
+  "The audio is choppy or robotic. The audio is arriving but late or incomplete. That is bandwidth or prioritization."]},
+ {t:"h",x:"Two words you will hear and should understand"},
+ {t:"p",x:"SIP is the language phones and platforms use to set up calls. When somebody says the phone is not registering, they mean this conversation is failing."},
+ {t:"p",x:"RTP is the stream that carries the actual voice. When somebody says one way audio, they mean this stream is only traveling in one direction."},
+ {t:"done",items:[
+  "I can explain why a call can connect with no audio",
+  "I can tell a registration problem from an audio problem by the symptom alone"]}
+]},
+
+{no:"Module 3",n:"Numbers, and who actually owns them",g:"Numbers and porting",
+ note:"Most of the hard problems in this job come down to somebody not knowing who owns a number.",
+ blocks:[
+ {t:"p",x:"A phone number is not owned by the business that uses it in the way people assume. It sits on an account with a carrier, and it is that account, and the person named on it, that controls what happens to the number."},
+ {t:"h",x:"Why that matters constantly"},
+ {t:"ul",items:[
+  "A practice may not be the account holder. Sometimes an office manager who left set it up. Sometimes a marketing agency owns the number that appears on their adverts.",
+  "Moving a number requires the account holder's authorization, and the losing carrier decides whether the authorization is valid.",
+  "If the account is closed, the number goes into a holding period and is eventually reassigned to somebody else. At that point it is gone permanently."]},
+ {t:"key",x:"Ask early who the phone bill comes to and whose name is on it. That question prevents more rejections than any other single thing you can do."},
+ {t:"h",x:"Types of number you will meet"},
+ {t:"tbl",head:["Type","What it is","What to watch"],rows:[
+  ["Local","A normal number with a local area code.","The most common, and usually the most important to the practice because it is on their signage."],
+  ["Toll free","800, 833, 844, 855, 866, 877, 888.","Works differently from local numbers. The business pays for inbound minutes, and moving one follows a different process."],
+  ["Fax","Often on the same account and often forgotten.","Practices forget they have one until it stops. Always ask."],
+  ["Agency owned","A tracking number on adverts, owned by a marketing company.","Outside the practice's control and outside ours. Never put one in a cutover date."]]},
+ {t:"h",x:"Mistakes people make"},
+ {t:"ul",items:[
+  "Only asking about the main number. Practices routinely have three or four published numbers and mention one.",
+  "Assuming the person you are talking to is authorized. They frequently are not.",
+  "Not asking about the fax line until the week of the cutover."]},
+ {t:"done",items:[
+  "I always ask for every published number, not just the main one",
+  "I ask whose name is on the phone bill early in every conversation",
+  "I know why an agency owned number is a problem"]}
+]},
+
+{no:"Module 4",n:"Porting, start to finish",g:"Numbers and porting",
+ note:"The core of this job. Learn the order, because the order is what prevents rejections.",
+ blocks:[
+ {t:"p",x:"Porting is moving a phone number from one carrier to another while keeping the number itself. The practice keeps the number on their sign, their website and in their patients' phones, and calls start arriving through us instead."},
+ {t:"h",x:"The order, and why each step comes where it does"},
+ {t:"steps",items:[
+  {t:"Check the number can actually move",d:"Before anything is promised. Some numbers cannot move to us at all, and finding that out after a deal has closed is the single most expensive failure in this job."},
+  {t:"Collect what the losing carrier will ask for",d:"The account number, the main billing number on the account, the service address exactly as they hold it, and the passcode or PIN if one is set. Get these from a recent bill or from the carrier's own account record, not from memory."},
+  {t:"Get the authorization signed",d:"A letter of authorization is the customer's written permission to move their numbers. It has to be signed by somebody the losing carrier recognizes as authorized, and it has to match the account details exactly."},
+  {t:"Submit the order",d:"The platform generates the request to the losing carrier. From this point the losing carrier is in control of the timeline."},
+  {t:"Wait for the date",d:"The losing carrier returns a firm order commitment date. That is a date, not a document. Until it arrives, you do not have a date, and you should not give the practice one."},
+  {t:"Schedule and prepare",d:"Build the phone system, register emergency addresses on every handset, ship and set up the phones, train the staff."},
+  {t:"Cut over",d:"On the date, the numbers move. Test everything."},
+  {t:"Leave the old service running",d:"About three days. It is the only real rollback available. Nobody cancels anything until we send written confirmation."}]},
+ {t:"key",x:"Nothing gets submitted until the account record, the passcode and the signed authorization are all in hand. Nothing gets scheduled until the date comes back from the losing carrier."},
+ {t:"h",x:"Getting the names right"},
+ {t:"p",x:"These get confused constantly, and saying the wrong one to a carrier gets you the wrong answer and costs a day."},
+ {t:"tbl",head:["Name","What it actually is"],rows:[
+  ["Letter of authorization, or LOA","A signed document. The customer's written permission."],
+  ["Customer service record, or CSR","The losing carrier's own record of the account. Data, not a document we create."],
+  ["Port order","A record in a portal. It has a status, not a signature."],
+  ["Firm order commitment, or FOC","A date the losing carrier commits to. It is a date, not a document."]]},
+ {t:"done",items:[
+  "I can list the eight steps in order without looking",
+  "I know what has to be in hand before an order is submitted",
+  "I can explain the difference between an authorization letter, an account record, a port order and a commitment date"]}
+]},
+
+{no:"Module 5",n:"Why ports get rejected",g:"Numbers and porting",
+ note:"Almost every rejection is one of six things, and almost all of them are preventable.",
+ blocks:[
+ {t:"p",x:"A rejection means the losing carrier looked at our request and refused it. The number does not move, the date is gone, and the practice has to be told. Rejections are the main measure of whether this function is working."},
+ {t:"tbl",head:["Cause","What actually happened","How it gets prevented"],rows:[
+  ["Wrong account number","We sent a number that does not match their records, often taken from the wrong part of a bill.","Read it off the carrier's own account record rather than the bill layout."],
+  ["Wrong main billing number","Accounts have a primary number and it is not always the one being moved.","Ask specifically which number the account is billed under."],
+  ["Name mismatch","The business name on the authorization does not match the carrier's records exactly. Even a missing LLC does it.","Copy the name character for character from the account record."],
+  ["Address mismatch","Same problem with the service address. Suite numbers and abbreviations both cause it.","Copy it exactly, including the parts that look wrong."],
+  ["Missing or wrong passcode","Many carriers set a port out PIN and will refuse without it.","Ask for it early. The customer usually has to call their carrier to get it, and that takes days."],
+  ["The number genuinely cannot move","It is outside the coverage we can reach, or it is a type that does not port.","Check before anything is promised."]]},
+ {t:"key",x:"Two rejections in a row on the same order is a process failure, not bad luck. Escalate rather than submitting a third time."},
+ {t:"h",x:"The trap after a rejection"},
+ {t:"warn",x:"Do not resubmit the same paperwork that just failed. Get fresh account details first. This is the most common cause of a second rejection immediately after the first."},
+ {t:"h",x:"What to tell the practice"},
+ {t:"p",x:"Same day, by phone, not by email. Lead with the fact, then the reason, then what it means for them practically: your old phones keep working, nothing changes today, here is the new date or here is when I will have one."},
+ {t:"done",items:[
+  "I can name the six causes of rejection",
+  "I know the rule about two rejections in a row",
+  "I know why we get fresh details before resubmitting",
+  "I know how and when to tell a practice a port was rejected"]}
+]},
+
+{no:"Module 6",n:"When a number goes dead",g:"Numbers and porting",
+ note:"The worst thing that happens in this job. Read this module twice.",
+ blocks:[
+ {t:"bad",x:"A disconnected number cannot be forwarded. The account that owned it is gone, so there is no setting anywhere that redirects those calls. Only the old carrier can help, and only by switching the number back on."},
+ {t:"p",x:"This happens when a practice cancels their old service before the port completes, usually to save a month of billing. It is the reason we say do not cancel anything, in writing, at every stage."},
+ {t:"h",x:"What to do, in order"},
+ {t:"steps",items:[
+  {t:"Get the customer on the phone with their old carrier, today",d:"A canceled number is not deleted straight away. The carrier holds it for a period before it goes back into the pool and can be given to somebody else. While it is in that hold it can usually be switched back on. After it is reassigned it is gone permanently. Nobody will tell you how long the hold is, so treat it as days."},
+  {t:"The customer has to make the call, not us",d:"The carrier will not discuss a closed account with us. Stay on the line so you hear the answer yourself rather than getting it secondhand tomorrow."},
+  {t:"Ask for the number to be reinstated on the same account",d:"Not a new number. Ask whether it has already been released. Ask what reconnection costs and whether it starts a new contract term, and push for month to month if it does."},
+  {t:"If the front line says no, ask for retention or porting by name",d:"They handle this regularly and have authority the first person does not."},
+  {t:"Give the practice a working phone in parallel",d:"A new number so staff can call people back. Be clear this is a working phone, not a rescue of their inbound calls."},
+  {t:"If it comes back on, do not let them cancel again",d:"This is where the recovery gets thrown away. Say it out loud and put it in writing: the port itself ends the old service, so leave the account open until we confirm."}]},
+ {t:"warn",x:"After a reconnection the account number often changes, and sometimes the main billing number does too. Everything collected before the cancellation is now stale and resubmitting it is a guaranteed rejection. Fresh bill, fresh details, new authorization dated today."},
+ {t:"h",x:"What genuinely cannot be fixed"},
+ {t:"p",x:"Printed signage, business cards, referral pads, and the number already saved in patients' phones. Say this out loud on day one rather than letting them discover it in week three."},
+ {t:"done",items:[
+  "I know a disconnected number cannot be forwarded and I can explain why",
+  "I know the customer must place the carrier call and I stay on the line",
+  "I know the two ways a recovery gets thrown away"]}
+]},
+
+{no:"Module 7",n:"Emergency calling",g:"Compliance",
+ note:"The one that cannot be got wrong. If you only properly learn one module, make it this one.",
+ blocks:[
+ {t:"bad",x:"On a traditional phone line the address is tied to the physical wire. On a phone service that runs over the internet, the address is whatever somebody typed in. If nobody typed it in, an emergency call can reach a dispatcher with no idea where to send anybody."},
+ {t:"h",x:"What a correct address actually is"},
+ {t:"p",x:"Not just a street address. A dispatchable location is the validated street address plus the detail that gets somebody to the actual room. Suite number, floor, treatment room. A large building with one address on file means paramedics arrive at the lobby."},
+ {t:"h",x:"The rules"},
+ {t:"ol",items:[
+  "Every single handset gets its own address, not one address for the practice. Phones move, and a phone carried into a different suite keeps the address registered to it.",
+  "Submitted and provisioned are different states. Submitted means we asked. Provisioned means the emergency network accepted it. An address that failed validation looks fine on our side and does nothing in a real emergency.",
+  "Recheck whenever anything physical changes. A practice adds a room, moves a phone, opens a second location, renumbers their suites. None of those generate a ticket on their own.",
+  "Tell the practice in writing that they must notify us when a phone moves. They will not know that unless somebody says it."]},
+ {t:"key",x:"If you find a live practice with phones that have no address, that is an incident, not a task. Tell them to use mobiles for emergencies until it is fixed, and fix it the same day."},
+ {t:"h",x:"On any call where a practice cannot make calls"},
+ {t:"p",x:"Before diagnosis, before apologies, before anything: tell them to use mobiles for emergencies until the line is confirmed working. It takes ten seconds and it comes first."},{t:"h",x:"How to test emergency calling, and how not to"},{t:"bad",x:"Never test by dialing 911, and never ask a customer to. It ties up a dispatcher who is there for real emergencies."},{t:"p",x:"Dial 933 instead. It is the emergency address test line. An automated voice reads back the address and callback number currently registered against that phone, which is exactly the thing you need to verify. Dial it from the handset itself rather than a softphone, because the point is to confirm what that specific device would send."},{t:"p",x:"Listen to what it reads back, not just that it answered. A different address, an old address, or the street without the suite are all failures, whatever the platform screen says."},
+ {t:"done",items:[
+  "I can explain why an internet phone service needs an address registered manually",
+  "I know an address goes on every handset, not on the practice",
+  "I know the difference between submitted and provisioned",
+  "I know what to say in the first ten seconds when a practice cannot make calls",
+  "I test emergency calling with 933 and never with 911"]}
+]},
+
+{no:"Module 8",n:"Texting, and why it is separate",g:"Texting",
+ note:"Calling and texting are different services on the same number, and they fail independently.",
+ blocks:[
+ {t:"p",x:"People assume that if a number can make calls it can send texts. It cannot. Voice and messaging are handled through completely separate registries, which is why a practice can have perfect phone service and no texting at all."},
+ {t:"h",x:"The three routes to a practice being able to text"},
+ {t:"tbl",head:["Route","What it means","Speed"],rows:[
+  ["A new toll free number","We give them a toll free number for messages. Their phone line is not touched at all.","Fastest, usually days, if their website is in order."],
+  ["Their own number, text enabled","Their existing number keeps its voice service wherever it is and we handle the messaging. This is called hosted messaging.","Slower, and it is a separate order from a port."],
+  ["Full move","Both voice and messaging come to us.","Longest, because it includes a port."]]},
+ {t:"h",x:"Registration, and why it holds everything up"},
+ {t:"p",x:"Before a number can send messages to patients it has to be registered and approved. What gets checked is largely the practice's own website: it has to be live, secure, and carry the right privacy wording. A practice with an old website is the most common reason texting is delayed."},
+ {t:"key",x:"Check the website before submitting a registration, not after. Submitting first and discovering the site is not secure costs the entire cycle."},
+ {t:"h",x:"Mistakes people make"},
+ {t:"ul",items:[
+  "Promising texting on a timeline that assumes registration is instant.",
+  "Not telling the practice that patients will see a toll free number rather than their own, when that is the route chosen.",
+  "Assuming that because a number ported successfully, its texting came with it. It does not. Messaging permission is separate and does not follow a port."]},
+ {t:"done",items:[
+  "I can explain why calling and texting are separate",
+  "I know the three routes and roughly how long each takes",
+  "I know to check the practice website before submitting a registration"]}
+]},
+
+{no:"Module 9",n:"Phones and provisioning",g:"Hardware",
+ note:"How a phone goes from a box to a working extension, and the one thing that ruins install days.",
+ blocks:[
+ {t:"p",x:"A desk phone arrives from the factory knowing nothing. It has no number, no extension, no idea what company it belongs to. Provisioning is how it finds out."},
+ {t:"h",x:"The MAC address"},
+ {t:"p",x:"Twelve characters, letters A to F and numbers. It is the phone's permanent hardware identity, it never changes, and a factory reset does not clear it. It is printed on a label on the shipping box, which means a whole order can be set up before a single box is opened."},
+ {t:"warn",x:"On a cordless system the address that matters belongs to the base station, not the handset. Provisioning a handset address is a wasted afternoon and it is a very common mistake."},
+ {t:"h",x:"How zero touch works"},
+ {t:"steps",items:[
+  {t:"The device is created on our platform first",d:"With the hardware address entered exactly. This order is not optional. A phone that redirects perfectly and then finds no record just sits there showing No Service while the logs say delivered."},
+  {t:"The address goes into the manufacturer's redirect service",d:"Yealink calls theirs RPS, Poly calls theirs ZTP. They hold no settings and no passwords. They answer exactly one question: for this hardware address, which server should this phone go to?"},
+  {t:"The phone is plugged in and left alone",d:"It gets an address, asks the redirect service where to go, downloads its settings, applies them, and reboots. It may reboot several times over half an hour while it steps through firmware versions. That is normal."},
+  {t:"It is tested properly before anybody leaves",d:"A phone showing an extension number is not a working phone. Call out, call in, check audio both ways, and confirm the emergency address is provisioned."}]},
+ {t:"bad",x:"The single most common reason a new deployment silently fails: the phone is still registered to a previous provider. Every boot it asks the redirect service, gets the old provider's answer, and goes back there. A factory reset does not fix this, because the claim lives on a server at the manufacturer, not on the phone. It needs a release ticket with the hardware address, the serial number and a photo of the sticker, and it takes days rather than hours."},
+ {t:"h",x:"Two things that cost money"},
+ {t:"ul",items:[
+  "Almost no business desk phone includes a power adapter. The same model is sold with and without, under different part numbers.",
+  "Power over the network cable is reserved by class, not by what the phone draws. A phone using four watts can make a switch hold back fifteen. Enough of them and the switch starts refusing power, often to a phone in a completely different room."]},
+ {t:"done",items:[
+  "I can find a hardware address three ways",
+  "I know the platform record comes before the redirect entry",
+  "I can recognize a phone that is claimed by a previous provider from the symptoms alone"]}
+]},
+
+{no:"Module 10",n:"Networks, in the parts that matter",g:"Troubleshooting",
+ note:"You are not a network engineer. You do need to recognize four things.",
+ blocks:[
+ {t:"h",x:"The router feature that causes the most trouble"},
+ {t:"p",x:"Many small business routers have a feature that tries to be helpful with phone calls. It opens the call setup messages as they pass through and rewrites the addresses inside them. It was a reasonable idea twenty years ago. It is now actively harmful, because modern phones already handle this themselves and the two fixes conflict."},
+ {t:"key",x:"It goes by several names: SIP ALG, SIP transformations, VoIP passthrough, SIP helper. Turning it off is the single highest yield fix for one way audio, and it should be one of the first things you check."},
+ {t:"h",x:"Upload, not download"},
+ {t:"p",x:"Business broadband is usually much faster downloading than uploading. A practice with a very fast connection can still have terrible calls if the upload is congested. Budget about 100 kilobits per second per simultaneous call, in each direction, and never plan to use more than eighty percent of what is available."},
+ {t:"p",x:"Dental imaging is upload heavy and bursty. One workstation sending a large image can ruin every call in the building if voice traffic is not prioritized."},
+ {t:"h",x:"Wired beats wireless, every time"},
+ {t:"p",x:"Wi-Fi adds timing variation and packet loss. Every provider gives the same advice and it is correct: use a cable for desk phones."},
+ {t:"h",x:"The fault that only breaks incoming calls"},
+ {t:"p",x:"If a practice can call out fine but nobody can call in after a while, that is almost always the router closing the path back in. The phone registers, the router opens a temporary route for replies, and it times out long before the phone re registers. Shortening the registration interval or switching the connection type usually fixes it."},
+ {t:"done",items:[
+  "I know what SIP ALG is and why to turn it off",
+  "I know to size a connection on upload rather than download",
+  "I recognize the outbound works but inbound fails pattern"]}
+]},
+
+{no:"Module 11",n:"Symptom to cause",g:"Troubleshooting",
+ note:"What the front desk says, what it usually means, and what to check first.",
+ blocks:[
+ {t:"tbl",head:["What they say","What it usually is","First check"],rows:[
+  ["The phone says No Service","Read the exact message. Network Unavailable means no address at all, a cable or switch problem. No Service means it has an address but cannot register.","Press OK on the phone and read the address. Blank or all zeros means no address."],
+  ["I can hear them but they cannot hear me","The call connected so setup is fine. This is purely audio path, and almost always the router.","Turn off SIP ALG on the router and retest."],
+  ["They sound like a robot","Audio arriving late or incomplete. Bandwidth, prioritization or Wi-Fi.","Is the phone on a cable? Test the connection during business hours, not at seven in the morning."],
+  ["The phone keeps restarting","Very often power. Ask whether it started after something else was plugged in.","Move it to a known good port on a different switch."],
+  ["It works first thing and then stops","Outgoing fine, incoming fails. The path back in has timed out.","Registration interval and keep alive settings."],
+  ["It never finishes setting itself up","It has an address but the settings never arrive.","Is the hardware address claimed by a previous provider? Is the device record on our platform?"]]},
+ {t:"key",x:"Two questions narrow almost everything. Does it happen on one phone or all of them? One phone is the phone, the cable or the port. All phones is the router, the firewall or the connection. And does it happen on internal calls too? Internal working means the fault is at the internet edge."},
+ {t:"h",x:"When to stop and escalate"},
+ {t:"p",x:"There is no minute count that means escalate, and escalating everything early is its own failure. As a rough guide, if you have genuinely been working a problem for about an hour and are not closing in on it, ask somebody to look with you. That is a second opinion, not a handover."},{t:"p",x:"The exception is scale. A single user with a broken handset can sit with you for a while. A whole practice with no phones cannot, so get help there as soon as you have covered the basics and confirmed emergency calling."},
+ {t:"done",items:[
+  "I can match the six common complaints to their likely cause",
+  "I know the two narrowing questions",
+  "I know that escalation is judged on the situation rather than on a stopwatch"]}
+]},
+
+{no:"Module 12",n:"Talking to a practice",g:"Working with customers",
+ note:"How you say it matters as much as what you do. Most complaints are about communication, not competence.",
+ blocks:[
+ {t:"h",x:"During an outage, update every thirty minutes"},
+ {t:"p",x:"Whether or not there is news. Still working on it, here is what we have ruled out, next update at half past. That is a complete and acceptable update. Silence is what turns a bad morning into a lost customer."},
+ {t:"h",x:"Always give them something to do"},
+ {t:"p",x:"Use mobiles for emergency calls. Forward a line that still works. Anything actionable beats sit and wait."},
+ {t:"h",x:"Never give a fix time you are not sure of"},
+ {t:"p",x:"A missed estimate costs more trust than no estimate. Say what you are doing next and when you will next speak, which are both things you control."},
+ {t:"h",x:"Delivering bad news"},
+ {t:"p",x:"The moment you know, by phone, not when you have a solution. The instinct to wait until you can deliver the problem and the answer together costs the customer the time they needed to make their own arrangements."},
+ {t:"say",x:"Your port has been rejected and the date has moved. The reason is a mismatch on the account name, which we are fixing today. Your old phones keep working and nothing changes for you today. I will have a new date by Thursday and I will call you then."},
+ {t:"h",x:"When somebody is angry"},
+ {t:"p",x:"An angry practice is usually an accurate practice. Let them finish. Acknowledge the actual impact rather than the emotion. You have been unable to take patient calls for two days is a fact you can agree with. I understand you are frustrated reliably makes it worse."},
+ {t:"h",x:"Do not blame the carrier, even when it is the carrier"},
+ {t:"p",x:"To the practice, we chose the carrier. Explaining the cause is useful. Distancing yourself from it is not."},
+ {t:"done",items:[
+  "I update every thirty minutes during an outage without being asked",
+  "I give a next contact time rather than a fix time",
+  "I can deliver bad news in the first sentence"]}
+]},
+
+{no:"Module 13",n:"Writing a ticket somebody else can pick up",g:"Working with customers",
+ note:"Every ticket will eventually be read by somebody who was not there.",
+ blocks:[
+ {t:"h",x:"Specifics, never descriptions"},
+ {t:"p",x:"Not calls are failing. The call from this number to that number at 9:42 Mountain time failed with this behavior. Every system anybody escalates to will ask for exactly that, so capturing it first time saves a round trip."},
+ {t:"h",x:"Write what you ruled out"},
+ {t:"p",x:"Ruling something out is real work and it is invisible unless you write it down. Otherwise the next person redoes it in front of the same customer."},
+ {t:"h",x:"Say who is waiting on whom"},
+ {t:"p",x:"Waiting on the carrier is a completely different situation from waiting on us or waiting on the customer. This one line is what makes a queue reviewable at a glance."},
+ {t:"h",x:"Put dates on promises"},
+ {t:"p",x:"Called and left a message is not a next action. Called and left a message, will try again Thursday morning, is."},
+ {t:"key",x:"Write it as you go, not from memory at the end of the day. Detail decays within the hour, and the details that decay first are exactly the ones an escalation needs."},
+ {t:"done",items:[
+  "My tickets carry exact numbers and times with time zones",
+  "I write down what I ruled out",
+  "My next action always names who is waiting on whom"]}
+]},
+
+{no:"Module 14",n:"Patient information and card payments",g:"Compliance",
+ note:"HIPAA and PCI, in the parts this job actually touches. Named in the job description as something this team upholds.",
+ blocks:[
+ {t:"p",x:"Two sets of rules sit over this work, and both of them arrive through the phone system rather than through the software. Patient information, which is the HIPAA side, and card payment details, which is the PCI side. You do not need to know either framework in depth. You need to recognize the handful of moments where this job creates exposure, and route rather than improvise."},
+ {t:"h",x:"Why this lands on a phone team at all"},
+ {t:"p",x:"A dental practice's phone system carries patient information constantly. A voicemail where a patient says their name and why they are calling. A recording of that call. A text to a patient about an appointment. A fax that has been moved to email. A call log showing a patient's number next to a time. None of that is in the software. All of it is in the phone system, which is ours."},
+ {t:"key",x:"Dental Intelligence signs a business associate agreement with each practice, published at dentalintel.com/terms/baa. That is the document that turns all of this from good practice into an obligation. It commits the company to safeguarding patient information, to reporting anything that goes wrong within a set window, and to holding anyone it subcontracts to the same standard."},
+ {t:"h",x:"The HIPAA side, in three habits"},
+ {t:"ol",items:[
+  "Ask for the least you need. Almost every voice fault is diagnosable from the calling number, the called number, and the time with the time zone. You very rarely need to know who the patient was.",
+  "Never paste it into a ticket, a chat or an email. If a practice already sent you a screenshot or a recording, note that it was received and work from it. Do not reproduce it.",
+  "Be most careful at the vendor escalation. Sending audio to DialStack or Bandwidth to prove a fault is the moment patient information leaves the company. Send the call records, not the recording."]},
+ {t:"h",x:"The PCI side, and the one trap worth memorizing"},
+ {t:"p",x:"Practices take card payments over the phone. Dental Intelligence sells a payments product and text to pay, so card details are in this environment by design rather than by accident."},
+ {t:"bad",x:"The trap: a recorded call plus a card number read aloud. Taking a card over the phone is ordinary and allowed. Keeping a recording of it is the part that creates the obligation, because a recording is storage. The sharpest rule concerns the short security code on the back of the card, which must not be kept once the payment has gone through. A saved recording keeps it."},
+ {t:"p",x:"So recording and phone card payments is a combination somebody has to decide about before the feature is switched on, never after. A recording made today does not become allowed later."},
+ {t:"tbl",head:["Situation","What it creates","What you do"],rows:[
+  ["Practice wants call recording and takes cards on the phone","The combination above","Do not enable it and close the ticket. Raise it as the compliance question it is."],
+  ["Patient leaves a card number on a voicemail","Nobody chose this and it happens anyway","Flag it to the practice and to compliance. Do not download or forward it."],
+  ["Voicemail is transcribed and emailed","Card and patient details land in email automatically","Worth knowing whether this is on. It is one of our open questions."],
+  ["Practice asks how to take card payments safely","An easy win","Text to pay. The patient types the card into a payment page on their own phone, so the number is never spoken and never recorded."]]},
+ {t:"key",x:"Text to pay is the answer that removes the problem rather than managing it, and the company already sells it. It is the single most useful thing you can tell a practice on this subject."},
+ {t:"h",x:"Verify who you are talking to"},
+ {t:"p",x:"Before discussing an account or making a change. Changing where a phone number rings is one of the most damaging things that can be done to a practice, and it can be requested by anybody who knows the practice name. Getting this wrong on a healthcare customer is a much bigger problem than a slow answer."},
+ {t:"h",x:"Emergency address accuracy is a compliance matter too"},
+ {t:"p",x:"See module seven. It is the obligation in this job with the most serious consequences attached, and it is named in the same breath as these two in the job description."},
+ {t:"h",x:"If something has been exposed"},
+ {t:"bad",x:"Stop and change nothing. Do not delete the ticket, the message, the recording or the email, because deleting it removes the evidence of what went where. Tell the lead the same hour. The failure is almost never the original mistake, it is the delay between somebody noticing and somebody senior being told, and there is a reporting clock that starts when the company knows."},
+ {t:"key",x:"When a question turns legal rather than technical, hand it over. Being helpful with an answer you are not qualified to give is the worst outcome available."},
+ {t:"done",items:[
+  "I never paste patient details or card numbers into a ticket",
+  "I send call records to vendors, never audio",
+  "I can explain why a recorded call plus a card payment is a problem",
+  "I know text to pay is the safe answer for card payments",
+  "I verify the caller before making changes",
+  "I know to report an exposure the same hour, and to delete nothing"]}
+]},
+
+{no:"Finish",n:"What happens next",g:"Orientation",
+ note:"Reading is stage one of three.",
+ blocks:[
+ {t:"p",x:"Working through this manual is the first stage. It gives you the vocabulary and the map. It does not make you competent, and nobody expects it to."},
+ {t:"steps",items:[
+  {t:"Read and drill",d:"This manual plus the practice tools. Flash cards for recall, order of operations drills for sequence, scenario tests for judgement."},
+  {t:"Listen, then work with somebody listening",d:"Real calls and real tickets, first observing, then handling them with somebody available."},
+  {t:"Work independently, with somebody available",d:"You handle it. Somebody is there when you need them, and increasingly you do not."}]},
+ {t:"key",x:"The measure is not how much of this you can recite. It is whether you can do the work without interrupting somebody. If a procedure makes you stop and ask a question, that is a defect in the document, not in you. Say so and it gets fixed."},
+ {t:"p",x:"One last thing. You will find things in here that are wrong, because this was written before the team had done the work at scale. When you find one, say so the same day. That is not criticism of anybody, it is how the manual stays worth reading."}
+]}
+
+]};
+</script>
+<script>
+var CUR=0, QRY="";
+try{var s=+localStorage.getItem(DOC.id+'-sec'); if(s>=0&&s<DOC.secs.length) CUR=s;}catch(e){}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function hi(s){s=esc(s);if(!QRY)return s;
+ try{return s.replace(new RegExp('('+QRY.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig'),'<mark>$1</mark>');}catch(e){return s;}}
+function txt(sec){var p=[sec.n,sec.note||''];
+ (sec.blocks||[]).forEach(function(b){
+  if(b.x)p.push(b.x);
+  (b.items||[]).forEach(function(i){p.push(typeof i==='string'?i:(i.t+' '+(i.d||'')));});
+  (b.head||[]).forEach(function(h){p.push(h);});
+  (b.rows||[]).forEach(function(r){r.forEach(function(c){p.push(c);});});});
+ return p.join(' ').toLowerCase();}
+DOC.secs.forEach(function(s){s._t=txt(s);});
+
+function block(b){
+ if(b.t==='h') return '<h3>'+hi(b.x)+'</h3>';
+ if(b.t==='p') return '<p>'+hi(b.x)+'</p>';
+ if(b.t==='key') return '<div class="key">'+hi(b.x)+'</div>';
+ if(b.t==='warn') return '<div class="warn">'+hi(b.x)+'</div>';
+ if(b.t==='bad') return '<div class="bad">'+hi(b.x)+'</div>';
+ if(b.t==='say') return '<div class="say">'+hi(b.x)+'</div>';
+ if(b.t==='ul') return '<ul class="b">'+b.items.map(function(i){return '<li>'+hi(i)+'</li>';}).join('')+'</ul>';
+ if(b.t==='ol') return '<ol class="n">'+b.items.map(function(i){return '<li>'+hi(i)+'</li>';}).join('')+'</ol>';
+ if(b.t==='chk') return '<ul class="chk">'+b.items.map(function(i){return '<li>'+hi(i)+'</li>';}).join('')+'</ul>';
+ if(b.t==='done') return '<div class="done"><h4>'+esc(b.x||'You are ready when')+'</h4><ul class="chk">'+
+   b.items.map(function(i){return '<li>'+hi(i)+'</li>';}).join('')+'</ul></div>';
+ if(b.t==='steps') return '<ol class="steps">'+b.items.map(function(i){
+   return '<li><h4>'+hi(i.t)+'</h4>'+(i.d?'<p>'+hi(i.d)+'</p>':'')+'</li>';}).join('')+'</ol>';
+ if(b.t==='tbl') return '<div class="scroll"><table><tr>'+b.head.map(function(h){return '<th>'+esc(h)+'</th>';}).join('')+'</tr>'+
+   b.rows.map(function(r){return '<tr>'+r.map(function(c){return '<td>'+hi(c)+'</td>';}).join('')+'</tr>';}).join('')+'</table></div>';
+ return '';
+}
+function drawNav(){
+ var h='',lastg=null;
+ DOC.secs.forEach(function(s,i){
+  if(s.g&&s.g!==lastg){h+='<div class="navlbl">'+esc(s.g)+'</div>';lastg=s.g;}
+  h+='<button class="nb'+(i===CUR&&!QRY?' on':'')+'" data-i="'+i+'">'+
+     (s.no?'<i>'+esc(s.no)+'</i>':'')+esc(s.n)+'</button>';});
+ var n=document.getElementById('nav');n.innerHTML=h;
+ n.querySelectorAll('.nb').forEach(function(b){
+  b.onclick=function(){CUR=+b.dataset.i;QRY='';document.getElementById('q').value='';
+   try{localStorage.setItem(DOC.id+'-sec',CUR);}catch(e){}draw();window.scrollTo(0,0);};});
+}
+function draw(){
+ drawNav();
+ var v=document.getElementById('view');
+ if(QRY){
+  var hits=DOC.secs.map(function(s,i){return {s:s,i:i};}).filter(function(o){return o.s._t.indexOf(QRY.toLowerCase())>-1;});
+  v.innerHTML='<div class="hits">'+(hits.length?hits.map(function(o){
+    return '<div class="hit" data-i="'+o.i+'"><b>'+hi(o.s.n)+'</b><span>'+esc(o.s.note||'')+'</span></div>';}).join('')
+    :'<div class="hit"><b>Nothing matches that.</b></div>')+'</div>';
+  v.querySelectorAll('.hit[data-i]').forEach(function(el){
+   el.onclick=function(){CUR=+el.dataset.i;QRY='';document.getElementById('q').value='';draw();window.scrollTo(0,0);};});
+  return;
+ }
+ var s=DOC.secs[CUR];
+ var h='<article>'+(s.no?'<div class="mod">'+esc(s.no)+'</div>':'')+
+   '<h2>'+hi(s.n)+'</h2>'+(s.note?'<div class="snote">'+hi(s.note)+'</div>':'')+
+   '<div class="body">'+(s.blocks||[]).map(block).join('')+'</div>';
+ var pv=DOC.secs[CUR-1],nx=DOC.secs[CUR+1];
+ h+='<div class="nav2">'+
+   '<button id="pv"'+(pv?'':' disabled')+'><b>Previous</b>'+esc(pv?pv.n:'Start of the manual')+'</button>'+
+   '<button id="nx"'+(nx?'':' disabled')+'><b>Next</b>'+esc(nx?nx.n:'End of the manual')+'</button></div>';
+ h+='</article>';
+ v.innerHTML=h;
+ var a=document.getElementById('pv'),b=document.getElementById('nx');
+ if(a&&pv)a.onclick=function(){CUR--;try{localStorage.setItem(DOC.id+'-sec',CUR);}catch(e){}draw();window.scrollTo(0,0);};
+ if(b&&nx)b.onclick=function(){CUR++;try{localStorage.setItem(DOC.id+'-sec',CUR);}catch(e){}draw();window.scrollTo(0,0);};
+}
+document.getElementById('q').addEventListener('input',function(e){QRY=e.target.value.trim();draw();});
+draw();
+</script>
+</body>
+</html>

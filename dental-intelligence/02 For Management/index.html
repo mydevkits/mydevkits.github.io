@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VoIP Support, the first ninety days</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--bg:#fbfbfc;--panel:#fff;--ink:#111a23;--mid:#5c6773;--soft:#8b96a2;--line:#e6e9ed;
+ --accent:#0b5cab;--accentbg:#eef4fb;--ok:#1a7f4b;--okbg:#e9f6ef;--warn:#9a6a00;--warnbg:#fdf4de;--bad:#a52929;--badbg:#fbeaea;
+ --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+body{font:17px/1.68 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+.wrap{max-width:830px;margin:0 auto;padding:0 22px}
+@media(max-width:600px){.wrap{padding:0 17px}body{font-size:16px}}
+.hero{padding:66px 0 44px;border-bottom:1px solid var(--line)}
+@media(max-width:600px){.hero{padding:40px 0 32px}}
+.kicker{font-size:13px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--accent)}
+h1{font-size:38px;line-height:1.16;font-weight:680;letter-spacing:-.8px;margin-top:14px}
+@media(max-width:600px){h1{font-size:28px}}
+.who{font-size:16.5px;color:var(--mid);margin-top:15px}
+.lede{font-size:19.5px;line-height:1.6;margin-top:26px;color:#26313c}
+.lede b{font-weight:660;color:var(--ink)}
+@media(max-width:600px){.lede{font-size:17.5px}}
+section{padding:52px 0;border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:none}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--soft);margin-bottom:12px}
+h2{font-size:26px;line-height:1.28;font-weight:670;letter-spacing:-.4px}
+@media(max-width:600px){h2{font-size:22px}}
+section>p{margin-top:16px;color:#2c3843}
+section>p+p{margin-top:14px}
+.crit{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin-top:18px;overflow:hidden}
+.crit .ch{padding:19px 24px 17px;border-bottom:1px solid var(--line)}
+@media(max-width:600px){.crit .ch{padding:16px 17px}}
+.crit .quo{font-size:17.5px;line-height:1.55;font-weight:640}
+.crit .quo:before{content:"\201C"}.crit .quo:after{content:"\201D"}
+.crit .src{font-size:12.5px;color:var(--soft);margin-top:6px}
+.crit .cb{padding:19px 24px 21px}
+@media(max-width:600px){.crit .cb{padding:16px 17px}}
+.crit .cb p{font-size:16.5px;color:#2c3843;margin-bottom:13px}
+.crit .cb p:last-child{margin-bottom:0}
+.crit .cb a,section a.lk{color:var(--accent);text-decoration:none;font-weight:600;border-bottom:1px solid rgba(11,92,171,.3)}
+.crit .cb a:hover,section a.lk:hover{border-bottom-color:var(--accent)}
+.jd{margin-top:20px}
+.jr{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin-bottom:13px;overflow:hidden}
+.jr .jq{padding:16px 22px 14px;background:var(--accentbg);border-bottom:1px solid var(--line)}
+.jr .jq .t{font-size:11.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent);margin-bottom:7px}
+.jr .jq .q{font-size:16.5px;line-height:1.55;font-weight:620;color:#16324f}
+.jr .jq .q:before{content:"\201C"}.jr .jq .q:after{content:"\201D"}
+.jr .jb{padding:16px 22px 18px}
+.jr .jb p{font-size:16px;color:#2c3843;line-height:1.62}
+.jr .jl{margin-top:12px;font-size:14.5px}
+.jr .jl a{color:var(--accent);text-decoration:none;font-weight:600;border-bottom:1px solid rgba(11,92,171,.3)}
+.jr .jl a:hover{border-bottom-color:var(--accent)}
+.jr .jl span{color:var(--soft);margin:0 7px}
+@media(max-width:600px){.jr .jq,.jr .jb{padding-left:17px;padding-right:17px}}
+.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+ padding:3px 9px;border-radius:5px;margin-bottom:10px;background:var(--okbg);color:var(--ok)}
+.tag.w{background:var(--warnbg);color:var(--warn)}
+.badge{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+ padding:4px 10px;border-radius:6px;margin-bottom:12px;background:var(--okbg);color:var(--ok)}
+.badge.p{background:var(--warnbg);color:var(--warn)}
+.map{margin-top:20px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel)}
+.mr{display:grid;grid-template-columns:215px 1fr;border-bottom:1px solid var(--line)}
+.mr:last-child{border-bottom:none}
+@media(max-width:640px){.mr{grid-template-columns:1fr}}
+.mr .ml{padding:17px 20px;background:#fafbfc;border-right:1px solid var(--line);font-weight:640;font-size:16px;line-height:1.4}
+@media(max-width:640px){.mr .ml{border-right:none;border-bottom:1px solid var(--line);padding:13px 17px}}
+.mr .mv{padding:17px 20px;font-size:16px;color:#2c3843;line-height:1.6}
+@media(max-width:640px){.mr .mv{padding:14px 17px}}
+.mr .mv a{color:var(--accent);text-decoration:none;font-weight:600;border-bottom:1px solid rgba(11,92,171,.28)}
+.wk{margin-top:20px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel)}
+.wr{display:grid;grid-template-columns:112px 1fr;border-bottom:1px solid var(--line)}
+.wr:last-child{border-bottom:none}
+@media(max-width:600px){.wr{grid-template-columns:1fr}}
+.wr .wl{padding:15px 18px;background:#fafbfc;border-right:1px solid var(--line);font:12px var(--mono);
+ font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.6px}
+@media(max-width:600px){.wr .wl{border-right:none;border-bottom:1px solid var(--line);padding:11px 16px}}
+.wr .wv{padding:15px 18px;font-size:16px;color:#2c3843;line-height:1.55}
+.wr .wv b{font-weight:640;color:var(--ink)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
+@media(max-width:680px){.grid{grid-template-columns:1fr}}
+a.w{display:block;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px;
+ text-decoration:none;color:inherit;transition:border-color .15s,transform .15s,box-shadow .15s}
+a.w:hover{border-color:#c4d3e4;transform:translateY(-2px);box-shadow:0 6px 20px rgba(17,26,35,.06)}
+a.w h3{font-size:18px;font-weight:650;line-height:1.35}
+a.w .st{font-size:13px;color:var(--accent);font-weight:600;margin-top:5px}
+a.w p{font-size:15.5px;color:var(--mid);margin-top:10px;line-height:1.55}
+a.w .go{font-size:14px;color:var(--accent);font-weight:600;margin-top:12px}
+.need{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin-top:20px;overflow:hidden}
+.need .ni{padding:17px 22px;border-bottom:1px solid var(--line);display:flex;gap:15px;align-items:flex-start}
+.need .ni:last-child{border-bottom:none}
+@media(max-width:600px){.need .ni{padding:14px 17px;gap:12px}}
+.need .nn{width:25px;height:25px;border-radius:50%;background:var(--accentbg);color:var(--accent);flex:none;
+ font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.need .nt b{display:block;font-weight:640;font-size:16.5px;line-height:1.4}
+.need .nt span{display:block;font-size:15.5px;color:var(--mid);margin-top:4px;line-height:1.55}
+.pull{border-left:3px solid var(--accent);padding:4px 0 4px 20px;margin-top:22px;font-size:18px;line-height:1.6;color:#26313c}
+.pull b{font-weight:660;color:var(--ink)}
+.foot{padding:44px 0 66px;color:var(--soft);font-size:14.5px;line-height:1.65}
+.inv{margin-top:20px}
+.iv{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin-bottom:10px}
+@media(max-width:600px){.iv{padding:14px 16px}}
+.iv .ivt{font-size:17px;font-weight:650;line-height:1.4}
+.iv .ivc{font-size:13px;color:var(--accent);font-weight:600;margin-top:3px}
+.iv .ivd{font-size:16px;color:var(--mid);line-height:1.6;margin-top:7px}
+.iv .ivl{margin-top:10px;font-size:14.5px}
+.iv .ivl a{color:var(--accent);text-decoration:none;font-weight:600;border-bottom:1px solid rgba(11,92,171,.3)}
+.iv .ivl a:hover{border-bottom-color:var(--accent)}
+.iv .ivl span{color:var(--soft);margin:0 6px}
+.blk2{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin-top:18px;overflow:hidden}
+.blk2 .bh{padding:16px 22px 14px;border-bottom:1px solid var(--line);background:#fafbfc}
+.blk2 .bh .bt{font-size:17.5px;font-weight:650;line-height:1.45}
+.blk2 .bh .bs{font-size:12.5px;color:var(--soft);margin-top:5px;text-transform:uppercase;letter-spacing:.6px;font-weight:700}
+.blk2 .bb{padding:15px 22px 18px}
+@media(max-width:600px){.blk2 .bh,.blk2 .bb{padding-left:16px;padding-right:16px}}
+.blk2 ul{list-style:none;margin:0}
+.blk2 li{font-size:16px;color:#2c3843;line-height:1.6;padding-left:20px;position:relative;margin-bottom:9px}
+.blk2 li:last-child{margin-bottom:0}
+.blk2 li:before{content:"";position:absolute;left:2px;top:10px;width:6px;height:6px;border-radius:50%;background:#b9c4d0}
+.blk2 .bl{margin-top:13px;font-size:14.5px}
+.blk2 .bl a{color:var(--accent);text-decoration:none;font-weight:600;border-bottom:1px solid rgba(11,92,171,.3)}
+.blk2 .bl span{color:var(--soft);margin:0 6px}
+.stat{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+ padding:4px 10px;border-radius:6px;background:var(--okbg);color:var(--ok);margin-bottom:11px}
+.stat.p{background:var(--warnbg);color:var(--warn)}
+</style>
+</head>
+<body><div class="wrap">
+
+<div class="hero">
+ <div class="kicker">Customer Support VoIP Team Lead</div>
+ <h1>VoIP Support: the first ninety days</h1>
+ <p class="lede">Joey Gonzales &middot; prepared for Dental Intelligence</p>
+ <p class="lede">This sets out how I plan to run VoIP onboarding and support, and what I have prepared so far.
+ Everything listed here is built and linked. It is all a first draft written from outside, and I expect parts
+ of it to change once I have seen the systems and spoken to the team.</p>
+</div>
+
+<section>
+ <div class="eyebrow">What is ready</div>
+ <h2>The material, and where to find it</h2>
+ <p>Each item below is complete and linked. The counts are exact.</p>
+ <div class="inv">
+<div class="iv"><div class="ivt">Standard operating procedures</div><div class="ivc">Process and documentation</div><div class="ivd">39 procedures across 14 areas. Each has a named owner, a version, the event that starts it, a definition of done and a failure path.</div><div class="ivl"><a href="../04%20For%20Team/SOP-Manual.html">Open the procedures</a></div></div>
+<div class="iv"><div class="ivt">Number and porting walkthroughs</div><div class="ivc">Onboarding oversight</div><div class="ivd">22 scenarios written one step per screen, from the first qualifying call through cutover and the checks afterwards, with the forms needed at each stage.</div><div class="ivl"><a href="../04%20For%20Team/Step-By-Step.html">Open the walkthroughs</a></div></div>
+<div class="iv"><div class="ivt">Training manual</div><div class="ivc">Team ramp</div><div class="ivd">14 modules taking somebody with no VoIP background through what a dental practice needs, porting, emergency calling, texting, hardware, networks, troubleshooting, and patient and card information.</div><div class="ivl"><a href="../04%20For%20Team/Training-Manual.html">Open the manual</a></div></div>
+<div class="iv"><div class="ivt">Practice material</div><div class="ivc">Team ramp</div><div class="ivd">101 flash cards, 6 order of operations drills and 9 scenario tests, built from situations that actually occur.</div><div class="ivl"><a href="../04%20For%20Team/Training.html">Open the drills</a></div></div>
+<div class="iv"><div class="ivt">Training program</div><div class="ivc">Team ramp</div><div class="ivd">Two weeks to independent on Level 1, with the assessment gate written in advance, then a widening period into porting and cutovers. Counted from a new starter first day rather than from mine.</div><div class="ivl"><a href="../03%20For%20Trainer/Training-Program.html">Open the program</a></div></div>
+<div class="iv"><div class="ivt">Field manual</div><div class="ivc">Day to day reference</div><div class="ivd">1,091 searchable entries, for looking something up while a customer is still on the line.</div><div class="ivl"><a href="../04%20For%20Team/Field-Manual.html">Open the field manual</a></div></div>
+<div class="iv"><div class="ivt">Phones and hardware</div><div class="ivc">Onboarding oversight</div><div class="ivd">22 phone models with the specifications that matter, provisioning steps, and the handoffs with logistics and sales.</div><div class="ivl"><a href="../04%20For%20Team/Phones-And-Logistics.html">Open phones and hardware</a></div></div>
+<div class="iv"><div class="ivt">Rules of engagement</div><div class="ivc">How the team operates</div><div class="ivd">What this team owns and what it does not, severity levels with response targets, decision rights, and the working terms with sales, onboarding, application support, logistics, compliance and the vendors.</div><div class="ivl"><a href="../04%20For%20Team/Rules-Of-Engagement.html">Open the rules of engagement</a></div></div>
+<div class="iv"><div class="ivt">Two applications</div><div class="ivc">Tooling</div><div class="ivd">A portability check for sales, and a reader for carrier account records. Both are built and working.</div><div class="ivl"><a href="../05%20Applications/Number-Check.html">Portability check</a> <span>&middot;</span> <a href="../05%20Applications/CSR-Reader.html">Record reader</a> <span>&middot;</span> <a href="Applications.html">Why these two</a></div></div>
+<div class="iv"><div class="ivt">Ninety day plan</div><div class="ivc">Sequencing</div><div class="ivd">Thirteen weeks in three phases, each week with what gets done and what finished looks like. Written to run whether or not the team is hired.</div><div class="ivl"><a href="Ninety-Days.html">Open the ninety day plan</a></div></div>
+ </div>
+</section>
+
+<section>
+ <div class="eyebrow">The three success measures</div>
+ <h2>Where each one stands</h2>
+<div class="blk2">
+ <div class="bh"><div class="bt">SOPs and escalation workflow with DialStack, established and documented</div><div class="bs">Success measure one</div></div>
+ <div class="bb"><div class="stat">Procedures written</div><ul><li>39 procedures covering access and accounts, shift operations, ticket handling and escalation, customer communication, 22 number and porting scenarios, phones and hardware, emergency calling, patient and card information, incidents, and the handoffs with other teams.</li><li>Each procedure has an owner, a version, a trigger, a definition of done and a failure path.</li><li>A document control procedure sets who may change a procedure and how.</li><li>The escalation standard is written. What leaves this team is the failing call, both numbers, the time with the time zone, what has been ruled out, and what is being asked for.</li><li>The workflow with DialStack I will establish in weeks eleven and twelve, since it needs a named contact and response expectations agreed with them.</li></ul><div class="bl"><a href="../04%20For%20Team/SOP-Manual.html">Open the procedures</a></div></div>
+</div>
+<div class="blk2">
+ <div class="bh"><div class="bt">Both support specialists ramped and handling Level 1 tickets independently</div><div class="bs">Success measure two</div></div>
+ <div class="bb"><div class="stat">Material and program ready</div><ul><li>14 training modules, each ending with what the person must be able to do before moving on.</li><li>101 flash cards, 6 order of operations drills and 9 scenario tests alongside the reading.</li><li>Two weeks to independent on Level 1, which is the target, with the gate written in advance.</li><li>Porting takes until about week six, because a port runs ten to fifteen business days and a new starter cannot watch one complete faster than the carrier allows. That is a calendar constraint rather than a capability one.</li><li>The program starts on a new starter first day, so it is ready whenever the seats are filled.</li><li>I have run training across three offices in two countries and delivered company wide sessions to over a hundred people. The trainer will own this program rather than deliver mine.</li></ul><div class="bl"><a href="../04%20For%20Team/Training-Manual.html">Training manual</a> <span>&middot;</span> <a href="../03%20For%20Trainer/Training-Program.html">The program</a> <span>&middot;</span> <a href="../04%20For%20Team/Training.html">The drills</a></div></div>
+</div>
+<div class="blk2">
+ <div class="bh"><div class="bt">A working onboarding KPI and support metrics dashboard delivered to leadership</div><div class="bs">Success measure three</div></div>
+ <div class="bb"><div class="stat p">Defined, instrumented from week four</div><ul><li>Time to activation and health check completion, reporting to the Director of Onboarding.</li><li>Ticket volume, resolution time and satisfaction, reporting to the Director of Onboarding.</li><li>Underneath both, port success on first submission with rejection reasons by category.</li><li>Instrumented in week four, before there is enough volume to be interesting, since this function has no baseline and one cannot be reconstructed later.</li><li>Every speed measure is reported with a quality measure beside it. Resolution time goes with repeat contact rate.</li></ul><div class="bl"><a href="Ninety-Days.html">The ninety day plan</a></div></div>
+</div>
+</section>
+
+<section>
+ <div class="eyebrow">The role</div>
+ <h2>Each area of the role, and what exists for it</h2>
+<div class="blk2">
+ <div class="bh"><div class="bt">Team leadership</div><div class="bs">Responsibility</div></div>
+ <div class="bb"><div class="stat">Ready</div><ul><li>Coaching in three stages, with the gate between each written in advance.</li><li>Six procedures covering shift operations, coverage, handoff and calling out.</li><li>Those are written in two versions, one for a scheduled and clocked team and one for a salaried team working flexibly, so the version that matches this team can be kept and the other removed.</li><li>Four further procedures covering one to ones, quality review and workload balancing.</li></ul><div class="bl"><a href="../03%20For%20Trainer/Training-Program.html">The program</a> <span>&middot;</span> <a href="../04%20For%20Team/SOP-Manual.html">The procedures</a></div></div>
+</div>
+<div class="blk2">
+ <div class="bh"><div class="bt">Onboarding oversight</div><div class="bs">Responsibility</div></div>
+ <div class="bb"><div class="stat">Ready</div><ul><li>22 scenarios written one step per screen, from first qualifying call through cutover and the checks afterwards.</li><li>A staging procedure that builds and proves the system on temporary numbers before the real ones move.</li><li>Go or no go on a cutover is a named decision with written criteria.</li></ul><div class="bl"><a href="../04%20For%20Team/Step-By-Step.html">The walkthroughs</a> <span>&middot;</span> <a href="../04%20For%20Team/SOP-Manual.html">The procedures</a> <span>&middot;</span> <a href="../04%20For%20Team/Rules-Of-Engagement.html">Decision rights</a></div></div>
+</div>
+<div class="blk2">
+ <div class="bh"><div class="bt">Escalation ownership</div><div class="bs">Responsibility</div></div>
+ <div class="bb"><div class="stat p">Ready, vendor terms to agree</div><ul><li>Queue handling, prioritization and escalation procedures.</li><li>Severity levels with an update cadence for each.</li><li>A written escalation standard covering what we send and what we ask for.</li><li>The agreement with DialStack itself needs a named contact and response expectations from them, which is weeks eleven and twelve.</li></ul><div class="bl"><a href="../04%20For%20Team/SOP-Manual.html">The procedures</a> <span>&middot;</span> <a href="../04%20For%20Team/Rules-Of-Engagement.html">Severity and vendors</a></div></div>
+</div>
+<div class="blk2">
+ <div class="bh"><div class="bt">Process and documentation</div><div class="bs">Responsibility</div></div>
+ <div class="bb"><div class="stat p">Ready, dial plan standards in week five</div><ul><li>39 procedures, each with an owner, a version, a trigger, a definition of done and a failure path.</li><li>A document control procedure covering how any of them is changed and who publishes it.</li><li>Open questions are flagged in place, with the person who can answer each one named.</li><li>Dial plan standards are not written yet. They describe how a phone system should be built on a platform I have not seen, so I would rather set them in week five than invent them now.</li></ul><div class="bl"><a href="../04%20For%20Team/SOP-Manual.html">The procedures</a></div></div>
+</div>
+<div class="blk2">
+ <div class="bh"><div class="bt">Reporting</div><div class="bs">Responsibility</div></div>
+ <div class="bb"><div class="stat p">Defined, instrumented week four</div><ul><li>Time to activation and health check completion.</li><li>Ticket volume, resolution time and satisfaction.</li><li>Port success on first submission, with rejection reasons by category.</li><li>Instrumented in week four, and recorded as it is, including where it is unflattering.</li></ul><div class="bl"><a href="Ninety-Days.html">The ninety day plan</a></div></div>
+</div>
+<div class="blk2">
+ <div class="bh"><div class="bt">Quality and compliance</div><div class="bs">Responsibility</div></div>
+ <div class="bb"><div class="stat">Ready</div><ul><li>Emergency calling has its own procedure and its own training module. Tested by dialing 933 rather than 911, and verified by listening to the address read back rather than trusting a submitted status.</li><li>Five procedures covering patient information and card payments, plus a training module.</li><li>The two moments this work creates exposure are covered directly. Sending audio to a vendor, and a recorded call that captures a card number.</li><li>Seven questions I cannot answer from outside are written down for Security and Compliance in week one.</li></ul><div class="bl"><a href="../04%20For%20Team/SOP-Manual.html">The procedures</a> <span>&middot;</span> <a href="../04%20For%20Team/Training-Manual.html">The training module</a> <span>&middot;</span> <a href="../04%20For%20Team/Rules-Of-Engagement.html">What we own</a></div></div>
+</div>
+</section>
+
+<section>
+ <div class="eyebrow">Week one</div>
+ <h2>What I need from you</h2>
+ <p>These are the answers that unblock the most work. Most take a minute to give.</p>
+ <div class="need">
+<div class="ni"><div class="nn">1</div><div class="nt"><b>Accounts provisioned before my start date</b><span>DialStack, Bandwidth, the ticketing system, the customer relationship system and the product itself, each with the permission level confirmed rather than just the login. Salesforce matters beyond day one, because the portability check should sit in the tool sales already use.</span></div></div>
+<div class="ni"><div class="nn">2</div><div class="nt"><b>One walkthrough of DialStack, screen by screen</b><span>An hour with whoever uses it most, recorded if possible. Every porting procedure names an exact step, and that hour turns those screen paths from described to specified.</span></div></div>
+<div class="ni"><div class="nn">3</div><div class="nt"><b>The ticketing system, and reporting access to it</b><span>The ticket procedures are currently written without naming a system. Knowing which one it is sharpens them and unblocks the dashboard.</span></div></div>
+<div class="ni"><div class="nn">4</div><div class="nt"><b>The DialStack contact and current escalation path</b><span>Whatever exists today, even if it is an email address. That is the starting point for agreeing response expectations.</span></div></div>
+<div class="ni"><div class="nn">5</div><div class="nt"><b>How many practices are on the phone system today</b><span>As distinct from the nine thousand on the platform. That number decides whether the first ninety days is a rollout or a pilot, and it changes the sequencing.</span></div></div>
+<div class="ni"><div class="nn">6</div><div class="nt"><b>Whether the three roles are filled</b><span>If they are, week one is one to ones. If not, it is role briefs and interview criteria. Either is fine, and the plan is written to work both ways.</span></div></div>
+<div class="ni"><div class="nn">7</div><div class="nt"><b>Any existing SOP template or documentation system</b><span>If one exists, mine should conform to it rather than run alongside it.</span></div></div>
+<div class="ni"><div class="nn">8</div><div class="nt"><b>The boundary with application support</b><span>Specifically, when a practice reports that patient reminders are not going out, whose ticket is that. My working rule is to route on the symptom rather than the topic, and I would want to agree that with my counterpart rather than assume it.</span></div></div>
+ </div>
+</section>
+
+<section>
+ <div class="eyebrow">Beyond the ninety days</div>
+ <h2>Two changes I would like to look into</h2>
+ <p>Separate from everything above, and not written as though they were mine to decide. Two places where the
+ process asks a person to do work that repeats identically every time.</p>
+ <div class="blk2">
+  <div class="bh"><div class="bt">Letting a practice start their own migration</div><div class="bs">Idea, to be checked first</div></div>
+  <div class="bb"><ul>
+   <li>The practice uploads their account record, selects the numbers they want moved, chooses a date, and submits.</li>
+   <li>We make first contact already holding the record and already knowing which numbers can move.</li>
+   <li>Phone counts, emergency addresses and the website check still need a conversation, which is intended.</li>
+  </ul></div>
+ </div>
+ <div class="blk2">
+  <div class="bh"><div class="bt">Letting a practice manage their own devices and emergency addresses</div><div class="bs">Idea, to be checked first</div></div>
+  <div class="bb"><ul>
+   <li>The practice sees their devices, changes an address, and submits it into the platform.</li>
+   <li>The flow then asks them to dial 933 and confirm what it read back, so it is not finished until it is verified.</li>
+   <li>This matters most for practices that move often, where a handset can be relocated without anyone telling us.</li>
+  </ul></div>
+ </div>
+ <p style="margin-top:18px">The first step on both is finding out whether the capability already exists. I am
+ writing from outside and do not know what DialStack already offers or what is already planned. If either
+ exists, that is a better answer than building anything.</p>
+ <p style="margin-top:14px"><a class="lk" href="Improvements.html">Both in full</a></p>
+</section>
+
+<section>
+ <div class="eyebrow">Standing</div>
+ <h2>How this department will operate</h2>
+ <p>The charter is written and covers:</p>
+ <div class="blk2"><div class="bb"><ul>
+  <li>What this team owns, and what it does not.</li>
+  <li>Severity levels with response and update targets.</li>
+  <li>Decision rights, including who commits a date and who calls a cutover off.</li>
+  <li>The working terms with sales, onboarding, application support, logistics, compliance and the vendors, each written as what we need from them and what they can expect from us.</li>
+ </ul>
+ <div class="bl"><a href="../04%20For%20Team/Rules-Of-Engagement.html">The rules of engagement in full</a></div>
+ </div></div>
+ <p style="margin-top:18px">The measure I would hold this work to is not how many documents exist. It is
+ whether a new hire on day three can do the work without interrupting somebody.</p>
+</section>
+
+<div class="foot">
+ Built from public sources: the role description, Dental Intelligence's help center and product pages,
+ DialStack's and Bandwidth's published documentation, and manufacturer documentation from Yealink, Poly and
+ Snom. Nothing draws on confidential material from any current or previous employer. These are first drafts
+ written before meeting the environment, and the parts that are wrong will be wrong for reasons I cannot see
+ from outside.
+</div>
+
+</div></body></html>

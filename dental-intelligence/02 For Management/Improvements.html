@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Two changes to the system worth making</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--bg:#fbfbfc;--panel:#fff;--ink:#111a23;--mid:#5c6773;--soft:#8b96a2;--line:#e6e9ed;
+ --accent:#0b5cab;--accentbg:#eef4fb;--ok:#1a7f4b;--okbg:#e9f6ef;--warn:#9a6a00;--warnbg:#fdf4de;--bad:#a52929;--badbg:#fbeaea;
+ --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+body{font:17px/1.68 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+.wrap{max-width:830px;margin:0 auto;padding:0 22px}
+@media(max-width:600px){.wrap{padding:0 17px}body{font-size:16px}}
+.hero{padding:66px 0 44px;border-bottom:1px solid var(--line)}
+@media(max-width:600px){.hero{padding:40px 0 32px}}
+.kicker{font-size:13px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--accent)}
+h1{font-size:38px;line-height:1.16;font-weight:680;letter-spacing:-.8px;margin-top:14px}
+@media(max-width:600px){h1{font-size:28px}}
+.who{font-size:16.5px;color:var(--mid);margin-top:15px}
+.lede{font-size:19.5px;line-height:1.6;margin-top:26px;color:#26313c}
+.lede b{font-weight:660;color:var(--ink)}
+@media(max-width:600px){.lede{font-size:17.5px}}
+section{padding:52px 0;border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:none}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--soft);margin-bottom:12px}
+h2{font-size:26px;line-height:1.28;font-weight:670;letter-spacing:-.4px}
+@media(max-width:600px){h2{font-size:22px}}
+section>p{margin-top:16px;color:#2c3843}
+section>p+p{margin-top:14px}
+.crit{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin-top:18px;overflow:hidden}
+.crit .ch{padding:19px 24px 17px;border-bottom:1px solid var(--line)}
+@media(max-width:600px){.crit .ch{padding:16px 17px}}
+.crit .quo{font-size:17.5px;line-height:1.55;font-weight:640}
+.crit .quo:before{content:"\201C"}.crit .quo:after{content:"\201D"}
+.crit .src{font-size:12.5px;color:var(--soft);margin-top:6px}
+.crit .cb{padding:19px 24px 21px}
+@media(max-width:600px){.crit .cb{padding:16px 17px}}
+.crit .cb p{font-size:16.5px;color:#2c3843;margin-bottom:13px}
+.crit .cb p:last-child{margin-bottom:0}
+.crit .cb a,section a.lk{color:var(--accent);text-decoration:none;font-weight:600;border-bottom:1px solid rgba(11,92,171,.3)}
+.crit .cb a:hover,section a.lk:hover{border-bottom-color:var(--accent)}
+.badge{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+ padding:4px 10px;border-radius:6px;margin-bottom:12px;background:var(--okbg);color:var(--ok)}
+.badge.p{background:var(--warnbg);color:var(--warn)}
+.map{margin-top:20px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel)}
+.mr{display:grid;grid-template-columns:215px 1fr;border-bottom:1px solid var(--line)}
+.mr:last-child{border-bottom:none}
+@media(max-width:640px){.mr{grid-template-columns:1fr}}
+.mr .ml{padding:17px 20px;background:#fafbfc;border-right:1px solid var(--line);font-weight:640;font-size:16px;line-height:1.4}
+@media(max-width:640px){.mr .ml{border-right:none;border-bottom:1px solid var(--line);padding:13px 17px}}
+.mr .mv{padding:17px 20px;font-size:16px;color:#2c3843;line-height:1.6}
+@media(max-width:640px){.mr .mv{padding:14px 17px}}
+.mr .mv a{color:var(--accent);text-decoration:none;font-weight:600;border-bottom:1px solid rgba(11,92,171,.28)}
+.wk{margin-top:20px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel)}
+.wr{display:grid;grid-template-columns:112px 1fr;border-bottom:1px solid var(--line)}
+.wr:last-child{border-bottom:none}
+@media(max-width:600px){.wr{grid-template-columns:1fr}}
+.wr .wl{padding:15px 18px;background:#fafbfc;border-right:1px solid var(--line);font:12px var(--mono);
+ font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.6px}
+@media(max-width:600px){.wr .wl{border-right:none;border-bottom:1px solid var(--line);padding:11px 16px}}
+.wr .wv{padding:15px 18px;font-size:16px;color:#2c3843;line-height:1.55}
+.wr .wv b{font-weight:640;color:var(--ink)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
+@media(max-width:680px){.grid{grid-template-columns:1fr}}
+a.w{display:block;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px;
+ text-decoration:none;color:inherit;transition:border-color .15s,transform .15s,box-shadow .15s}
+a.w:hover{border-color:#c4d3e4;transform:translateY(-2px);box-shadow:0 6px 20px rgba(17,26,35,.06)}
+a.w h3{font-size:18px;font-weight:650;line-height:1.35}
+a.w .st{font-size:13px;color:var(--accent);font-weight:600;margin-top:5px}
+a.w p{font-size:15.5px;color:var(--mid);margin-top:10px;line-height:1.55}
+a.w .go{font-size:14px;color:var(--accent);font-weight:600;margin-top:12px}
+.need{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin-top:20px;overflow:hidden}
+.need .ni{padding:17px 22px;border-bottom:1px solid var(--line);display:flex;gap:15px;align-items:flex-start}
+.need .ni:last-child{border-bottom:none}
+@media(max-width:600px){.need .ni{padding:14px 17px;gap:12px}}
+.need .nn{width:25px;height:25px;border-radius:50%;background:var(--accentbg);color:var(--accent);flex:none;
+ font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.need .nt b{display:block;font-weight:640;font-size:16.5px;line-height:1.4}
+.need .nt span{display:block;font-size:15.5px;color:var(--mid);margin-top:4px;line-height:1.55}
+.pull{border-left:3px solid var(--accent);padding:4px 0 4px 20px;margin-top:22px;font-size:18px;line-height:1.6;color:#26313c}
+.pull b{font-weight:660;color:var(--ink)}
+.foot{padding:44px 0 66px;color:var(--soft);font-size:14.5px;line-height:1.65}
+.rule{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin-top:20px;overflow:hidden}
+.rule .ri{padding:17px 22px;border-bottom:1px solid var(--line)}
+.rule .ri:last-child{border-bottom:none}
+@media(max-width:600px){.rule .ri{padding:15px 17px}}
+.rule b{display:block;font-weight:650;font-size:17px;line-height:1.4}
+.rule span{display:block;font-size:16px;color:var(--mid);margin-top:5px;line-height:1.6}
+.pull.red{border-left-color:var(--bad)}
+</style>
+</head>
+<body><div class="wrap">
+
+<div class="hero">
+ <div class="kicker">Process improvement</div>
+ <h1>Two changes to the system worth making</h1>
+ <p class="lede">These are not procedures and they are not things I can build on my own. They are two places
+ where the current process asks a person to do work that a system could do instead, and where the work is
+ repetitive enough that a system would do it more reliably. Both start with the same first step, which is finding out whether the capability already exists before proposing that anybody build it.</p>
+</div>
+
+<section>
+ <div class="eyebrow">How to read these</div>
+ <h2>Verify first, then propose</h2>
+ <p>I am writing these from outside, which means I do not yet know what DialStack already offers, what the
+ customer facing side of Dental Intelligence can already do, or what is already on somebody's roadmap. So the
+ first action on each of these is not to build anything. It is to ask.</p>
+ <p>If the capability exists and we are simply not using it, that is a much better outcome than a build, and it
+ is a week one discovery rather than a quarter long project. If it partly exists, the proposal shrinks to the
+ missing piece. Only if none of it exists does this become a request for engineering time, and by then it comes
+ with a number attached rather than an opinion.</p>
+ <div class="pull">I would rather find out that something already exists and I did not know about it than propose building something the company already owns.</div>
+</section>
+
+<section>
+ <div class="eyebrow">Improvement one</div>
+ <h2>Let the customer start the migration themselves</h2>
+
+ <p><b>What happens today.</b> When a practice decides to move to us, the information we need arrives through
+ back and forth. We email asking for their account record from their current provider. We wait. It comes back,
+ often as a photograph of a bill rather than the record we asked for. We read it by hand. We ask which numbers
+ they actually want moved, because the record lists numbers nobody mentioned. We ask when they want to move. Each
+ of those is a separate exchange, and each exchange is a day.</p>
+
+ <p><b>What I would propose instead.</b> A page the customer reaches when they decide to move, where they do
+ four things in one sitting.</p>
+
+ <div class="rule">
+  <div class="ri"><b>Upload their account record, or their bill</b>
+   <span>The document we currently have to ask for twice. Uploaded once, at the moment they are motivated,
+   rather than chased later when they have moved on to something else.</span></div>
+  <div class="ri"><b>Select which numbers they actually want to move</b>
+   <span>Presented from what the record shows rather than typed from memory. This is where practices forget the
+   fax line, the second location and the number on their referral pads, and forgetting one is what turns a clean
+   migration into a partial one.</span></div>
+  <div class="ri"><b>Choose the date they would like</b>
+   <span>Stated by them, up front, rather than negotiated after we have already started. A date we cannot meet is
+   much cheaper to correct at this moment than three weeks later.</span></div>
+  <div class="ri"><b>Submit, which tells us to pick it up</b>
+   <span>The submission is the trigger. We reach out already holding the record, the number list and the
+   requested date.</span></div>
+ </div>
+
+ <p style="margin-top:20px"><b>What it changes for us.</b> By the time we make first contact we have already run
+ the portability check on every number they selected and we already know the answer. So the first conversation is
+ not a request for information, it is a set of answers: here is what can move, here is what cannot and what your
+ options are for those, here is whether your date is realistic. That is a different call entirely, and it happens
+ days earlier.</p>
+
+ <p><b>What still needs a human, deliberately.</b> Not everything should move to a form. After the submission we
+ still contact the practice to establish how many phones they need and where those phones go, the emergency
+ address for every handset, and the website check that texting registration depends on. Those need a conversation,
+ because they involve judgement about a physical building and a business rather than data entry. The point of the
+ intake page is not to remove the conversation. It is to make sure the conversation is about the things that
+ actually need one.</p>
+
+ <div class="pull">This does not remove a mistake anybody is making. It removes elapsed time spent waiting for information we could have collected at the one moment the customer was most willing to give it.</div>
+
+ <p style="margin-top:20px"><b>What to verify before proposing it.</b> Whether Dental Intelligence already has a
+ customer facing onboarding flow this could attach to. Whether DialStack exposes a portability check we could run
+ against a submitted list automatically rather than by hand. Who owns the customer facing side of onboarding, and
+ whether anything like this is already planned.</p>
+</section>
+
+<section>
+ <div class="eyebrow">Improvement two</div>
+ <h2>Let a practice manage their own devices and emergency addresses</h2>
+
+ <p><b>What happens today.</b> A practice moves a phone from one room to another, opens a second location, or
+ relocates the whole office. Every one of those changes the emergency address attached to a handset, and every one
+ of them currently requires us to make the change by hand in the platform. The practice tells us, we update it, we
+ confirm it reached provisioned rather than merely submitted, and we hope the next move gets reported to us as
+ well.</p>
+
+ <p><b>Why this one matters more than it looks.</b> The risk is not the administrative work. It is that the
+ practice is the only party who knows a phone moved, and telling us is an optional step in their day. A handset
+ that moved to a different suite and never got reported has a wrong address attached to it, and that address is
+ what a dispatcher receives. This is the one failure in this job with a genuinely serious consequence, and the
+ current process depends on somebody remembering to send us an email.</p>
+
+ <p><b>What I would propose instead.</b> A place in the customer portal where the practice manages this
+ themselves, with the confirmation built into the flow rather than left to us.</p>
+
+ <div class="rule">
+  <div class="ri"><b>They see their own devices, listed by where they are</b>
+   <span>Room, user, location. A practice can only keep this right if they can see what we think is true.</span></div>
+  <div class="ri"><b>They enter or change the address for a handset and submit it</b>
+   <span>Fed into DialStack rather than into an email to us.</span></div>
+  <div class="ri"><b>The flow then asks them to dial 933 and confirm what it read back</b>
+   <span>This is the part that matters most. A submitted address is not a working address, and the only way to
+   know the difference is to dial the test line and listen. Building that step into the flow makes verification
+   the default rather than an instruction we hope was followed.</span></div>
+  <div class="ri"><b>It is not finished until they confirm</b>
+   <span>An address that was submitted but never verified should be visibly incomplete, to them and to us, rather
+   than silently sitting there looking fine.</span></div>
+ </div>
+
+ <p style="margin-top:20px"><b>Who this helps most.</b> Practices that move often, and multi location groups.
+ Those are also the customers where the manual process breaks down most reliably, because the volume of small
+ changes is high enough that some of them will not get reported.</p>
+
+ <div class="pull red">One version of this would be worse than the manual process: self service that lets a practice submit an address and walk away believing it is live. That moves the work without moving the verification. The 933 confirmation step is the part that makes the idea worth doing.</div>
+
+ <p style="margin-top:20px"><b>What to verify before proposing it.</b> Whether DialStack already has a customer
+ facing portal, and whether emergency addresses can be exposed through it safely. Whether there is an interface
+ that would let a submitted address flow into the platform without us keying it. What our actual accountability is
+ for address accuracy if a practice enters it themselves, which is a question for Security and Compliance before it
+ is a question for engineering.</p>
+</section>
+
+<section>
+ <div class="eyebrow">Why raise these at all</div>
+ <h2>Both remove work rather than redistributing it</h2>
+ <p>A support function scales in one of two ways. It hires proportionally to the customer base, or it removes
+ categories of work. The first is the default and it is what happens when nobody is looking at the process. These
+ two are the second kind, and both were chosen for the same reason: they attack work that repeats identically
+ every time, where a system would not only be faster but more reliable than a person doing it carefully at pace.</p>
+ <p>Neither is my decision to make and neither is written as though it were. What I would bring is the evidence
+ for whether they are worth doing: how much elapsed time actually goes into information collection, and how many
+ emergency addresses are found to be wrong when somebody audits them. Both of those are things I intend to
+ measure early precisely because they are the arguments these proposals would stand or fall on.</p>
+ <div class="pull">If either already exists, or is already planned, that is a good outcome and I would rather learn it in week one than propose it in month three.</div>
+</section>
+
+<div class="foot"><a href="index.html">Back to the overview</a></div>
+
+</div></body></html>

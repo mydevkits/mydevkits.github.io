@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Training Program</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+ --bg:#f6f7f9; --panel:#fff; --ink:#131c25; --mid:#5a6572; --soft:#8b96a2; --line:#e2e6ea;
+ --accent:#0b5cab; --accentbg:#eaf2fb;
+ --ok:#1a7f4b; --okbg:#e7f5ed;
+ --warn:#9a6a00; --warnbg:#fdf3dd;
+ --bad:#a52929; --badbg:#fbeaea;
+ --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+body{font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+ background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+header{background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30}
+.hw{max-width:1080px;margin:0 auto;padding:13px 20px}
+.htop{display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap}
+h1{font-size:18px;font-weight:660;letter-spacing:-.2px}
+.sub{color:var(--mid);font-size:13px;margin-top:2px}
+.home{font-size:13.5px;color:var(--accent);text-decoration:none;font-weight:600;white-space:nowrap}
+#q{width:100%;margin-top:11px;padding:9px 13px;font-size:15px;border:1px solid var(--line);
+ border-radius:8px;background:#fafbfc;font-family:inherit}
+#q:focus{outline:none;border-color:var(--accent);background:#fff}
+.main{max-width:1080px;margin:0 auto;padding:20px;display:grid;grid-template-columns:262px 1fr;gap:26px;align-items:start}
+@media(max-width:880px){.main{grid-template-columns:1fr;padding:15px}}
+nav{position:sticky;top:132px;max-height:calc(100vh - 152px);overflow-y:auto}
+@media(max-width:880px){nav{position:static;max-height:none}}
+.nb{display:block;width:100%;text-align:left;background:none;border:none;font:inherit;cursor:pointer;
+ padding:9px 12px;border-radius:8px;color:var(--mid);line-height:1.35;margin-bottom:1px;font-size:14.5px}
+.nb:hover{background:#edf0f3;color:var(--ink)}
+.nb.on{background:var(--accentbg);color:var(--accent);font-weight:640}
+.nb i{font-style:normal;font:11.5px var(--mono);opacity:.6;margin-right:8px}
+.navlbl{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--soft);padding:0 12px;margin:16px 0 6px}
+.navlbl:first-child{margin-top:0}
+article{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:30px 34px 36px}
+@media(max-width:880px){article{padding:20px 18px 26px}}
+.mod{font:12px var(--mono);color:var(--accent);font-weight:700;letter-spacing:.5px}
+article>h2{font-size:26px;line-height:1.28;font-weight:670;letter-spacing:-.4px;margin-top:6px}
+@media(max-width:880px){article>h2{font-size:22px}}
+.snote{color:var(--mid);font-size:15.5px;margin-top:9px}
+.body{margin-top:26px}
+.body h3{font-size:18.5px;font-weight:650;line-height:1.35;margin:30px 0 12px}
+.body h3:first-child{margin-top:0}
+.body p{font-size:16.5px;color:#2c3843;margin-bottom:14px}
+.body p:last-child{margin-bottom:0}
+.key{background:var(--accentbg);border-left:3px solid var(--accent);padding:14px 18px;border-radius:0 9px 9px 0;
+ font-size:16.5px;margin-bottom:16px;line-height:1.6}
+.warn{background:var(--warnbg);border-left:3px solid var(--warn);padding:14px 18px;border-radius:0 9px 9px 0;
+ font-size:16.5px;margin-bottom:16px;color:#5c4400;line-height:1.6}
+.bad{background:var(--badbg);border-left:3px solid var(--bad);padding:14px 18px;border-radius:0 9px 9px 0;
+ font-size:16.5px;margin-bottom:16px;color:#6d1f1f;line-height:1.6}
+.say{background:#fffdf5;border:1px solid #ecdfb8;border-radius:9px;padding:14px 18px;font-size:16.5px;
+ font-style:italic;color:#4a3f22;margin-bottom:16px;line-height:1.6}
+ul.b,ol.n{margin:0 0 16px 0;padding-left:0;list-style:none}
+ul.b li{position:relative;padding-left:24px;margin-bottom:9px;font-size:16.5px;color:#2c3843}
+ul.b li:before{content:"";position:absolute;left:6px;top:11px;width:6px;height:6px;border-radius:50%;background:#b6c0ca}
+ol.n{counter-reset:nn}
+ol.n li{counter-increment:nn;position:relative;padding-left:34px;margin-bottom:11px;font-size:16.5px;color:#2c3843}
+ol.n li:before{content:counter(nn);position:absolute;left:0;top:2px;width:23px;height:23px;border-radius:50%;
+ background:var(--accentbg);color:var(--accent);font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center}
+ul.chk{list-style:none;margin-bottom:16px}
+ul.chk li{position:relative;padding-left:28px;margin-bottom:9px;font-size:16.5px;color:#2c3843}
+ul.chk li:before{content:"";position:absolute;left:0;top:5px;width:15px;height:15px;border:1.6px solid #b6c0ca;border-radius:4px}
+.steps{list-style:none;counter-reset:st;margin-bottom:16px}
+.steps>li{counter-increment:st;position:relative;padding:0 0 18px 42px;margin-bottom:18px;border-bottom:1px solid var(--line)}
+.steps>li:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.steps>li:before{content:counter(st);position:absolute;left:0;top:0;width:28px;height:28px;border-radius:50%;
+ background:var(--accentbg);color:var(--accent);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.steps h4{font-size:16.5px;font-weight:650;line-height:1.4}
+.steps p{font-size:16px;color:#33414f;margin-top:5px;margin-bottom:0}
+.scroll{overflow-x:auto;margin-bottom:16px;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:15.5px;min-width:440px}
+th,td{text-align:left;padding:11px 13px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--soft);font-weight:700;background:#fafbfc}
+tr:last-child td{border-bottom:none}
+.done{background:var(--okbg);border:1px solid #bfe3ce;border-radius:10px;padding:15px 18px;margin-bottom:16px}
+.done h4{font-size:11.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--ok);margin-bottom:9px}
+.done ul.chk li{color:#1c5a3a}.done ul.chk li:before{border-color:#7cbf9b}
+.done ul.chk{margin-bottom:0}
+.nav2{display:flex;gap:10px;margin-top:32px;padding-top:22px;border-top:1px solid var(--line)}
+.nav2 button{flex:1;font:inherit;font-size:14.5px;padding:12px;border-radius:9px;border:1px solid var(--line);
+ background:#fafbfc;color:var(--ink);cursor:pointer;line-height:1.35}
+.nav2 button:disabled{opacity:.35;cursor:default}
+.nav2 button b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--soft);font-weight:700;margin-bottom:3px}
+mark{background:#ffe9a8;color:inherit;border-radius:2px}
+.hits{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px;margin-bottom:12px}
+.hit{padding:11px 14px;border-radius:8px;cursor:pointer}
+.hit:hover{background:#f4f7fa}
+.hit b{font-size:15.5px;font-weight:640;display:block}
+.hit span{font-size:14px;color:var(--mid);display:block;margin-top:2px}
+@media print{header,nav,.nav2{display:none}.main{display:block;max-width:none;padding:0}
+ article{border:none;padding:0}body{background:#fff}}
+</style>
+</head>
+<body>
+<header><div class="hw">
+ <div class="htop"><div><h1>Training Program</h1><div class="sub">Nine weeks counted from the new starter first day, whenever that is</div></div>
+ <a class="home" href="index.html">&larr; Back to the index</a></div>
+ <input id="q" type="search" placeholder="Search this manual" autocomplete="off">
+</div></header>
+<div class="main"><nav id="nav"></nav><div id="view"></div></div>
+
+<script>var DOC={id:"prg",secs:[
+
+{no:"Overview",n:"The training program at a glance",g:"The program",
+ note:"Two weeks to independent on Level 1. Then a widening period that is paced by the carrier calendar rather than by the person. Counted from their first day, not from anybody else's.",
+ blocks:[
+ {t:"p",x:"The target is both support specialists handling Level 1 tickets independently. Level 1 is a phone that will not register, a voicemail greeting, a user that needs adding, a headset that stopped working. This program reaches that in two weeks."},
+ {t:"key",x:"Every day and week here counts from the new starter first day. Day 1 means their day 1. The program runs identically for somebody who starts on the lead first morning and somebody who starts five months later."},
+ {t:"h",x:"The shape"},
+ {t:"tbl",head:["Stage","Length","What happens","Who runs it"],rows:[
+  ["Stage one, foundations","Their week 1","The material that has to come before customer contact, then shadowing, then their first easy tickets with somebody listening from about day four.","Trainer, with the lead present on day 1"],
+  ["Stage two, Level 1 with support","Their week 2","They take Level 1 tickets. Somebody listens and debriefs after each one. Prompting reduces through the week.","Trainer"],
+  ["Independent on Level 1","End of their week 2","The gate. From here they hold Level 1 tickets on their own.","Lead"],
+  ["Widening","Their weeks 3 to 6","Porting, rejections, cutovers and hardware. They are already productive throughout this. This is scope widening rather than ramping.","Trainer, with the lead on porting"],
+  ["Ongoing","Continuous","Monthly topic sessions, post incident learning, procedure updates.","Trainer, owned"]]},
+ {t:"h",x:"Why two weeks, and why the second number exists"},
+ {t:"p",x:"Two weeks is enough to be independent on Level 1 because Level 1 is bounded and the failure modes repeat. Somebody with phone experience is useful inside a week and independent inside two."},
+ {t:"bad",x:"What two weeks cannot cover is porting, and the reason has nothing to do with the person. A port takes roughly ten to fifteen business days from submission to completion. A new starter cannot watch one go end to end inside two weeks because the calendar will not allow it. The first firm order commitment date they ever see arrives after their second week. Rejections are worse, because you cannot manufacture one to practice on. You wait for a real one."},
+ {t:"key",x:"So the honest answer is two numbers. Independent on Level 1 at two weeks. Independent on porting at around week six, gated by the carrier calendar rather than by capability. Anybody who quotes a single number for this is either padding the first or pretending about the second."},
+ {t:"h",x:"Two things that make this different from most support onboarding"},
+ {t:"ul",items:[
+  "There is no existing playbook to inherit, so the material was written before the team existed. It will contain mistakes, and finding them is part of week one rather than a failure of it.",
+  "The customers are healthcare providers whose phones are how patients reach them. Emergency calling and patient information are trained on day one rather than bolted on later."]}
+]},
+
+{no:"Their week 1",n:"Their week one, foundations and first tickets",g:"The ramp",
+ blocks:[
+ {t:"p",x:"The order here is deliberate. The modules that gate safety come first, because they are the ones where being wrong has consequences that cannot be undone. Everything else is reference they can look up while working."},
+ {t:"tbl",head:["Their day","Focus","Delivered how"],rows:[
+  ["1","Welcome and access. Who we serve and why the phone matters to a dental practice. What a practice actually has with us, module 1. Emergency calling, module 7.","Lead in person or live video, then read and drill"],
+  ["2","Patient information and card payments, module 14. How a call works, module 2. Numbers and ownership, module 3.","Read, then drill, then a live walkthrough of each system"],
+  ["3","Symptom to cause, module 11. Talking to a practice, module 12. Writing a ticket, module 13. Shadowing live calls all day.","Read, then listen, saying nothing"],
+  ["4","First tickets. Easy ones, chosen deliberately, with somebody listening. Debrief after each.","Hands on, supervised"],
+  ["5","More tickets, wider range. Then week one review with the lead.","Hands on, then a conversation rather than a test"]]},
+ {t:"key",x:"Emergency calling and patient information are day one and day two rather than week two. They are the two places where a well meaning new person can cause real harm before they know enough to know better."},
+ {t:"h",x:"Running alongside all week"},
+ {t:"ul",items:[
+  "Listening to real calls from day one.",
+  "Reading real tickets, including closed ones, to see what good documentation looks like.",
+  "Keeping a questions log. Every single thing they had to ask somebody."]},
+ {t:"key",x:"The questions log is the real deliverable of week one. A new person can see what is missing for about two weeks and then they stop noticing. Capture it while it lasts and feed it into the gaps register."},
+ {t:"done",x:"End of their week one",items:[
+  "Every system logged into and navigated unaided",
+  "Can establish what a practice has with us from a number, without assuming",
+  "Knows to use 933 rather than 911, and why a submitted address is not a working one",
+  "Knows what never goes in a ticket",
+  "Has handled several tickets with somebody listening",
+  "Questions log has real volume in it"]}
+]},
+
+{no:"Their week 2",n:"Their week two, Level 1 with support",g:"The ramp",
+ note:"They are doing the job this week. Somebody is listening and the prompting reduces day by day.",
+ blocks:[
+ {t:"tbl",head:["Their day","Focus","Delivered how"],rows:[
+  ["6","Level 1 tickets from the queue. Texting and registration, module 8, because texting faults present as Level 1 and are not.","Live work, with the trainer listening"],
+  ["7","Level 1 tickets. Phones and provisioning, module 9. Provision a real phone end to end.","Live work, plus hands on hardware"],
+  ["8","Level 1 tickets. Networks for voice, module 10.","Live work, listener waits longer before helping"],
+  ["9","Level 1 tickets, unassisted where possible. Ticket quality reviewed against the standard.","Live work, listener says almost nothing"],
+  ["10","The Level 1 gate with the lead.","Assessment, then a conversation about what comes next"]]},
+ {t:"h",x:"How the support reduces"},
+ {t:"steps",items:[
+  {t:"Day 6, the listener helps",d:"They answer, the listener fills gaps in real time. Debrief after every ticket, five minutes, while it is fresh."},
+  {t:"Day 7 and 8, the listener waits",d:"Let them work it. Step in when they are stuck rather than when they are slow. Being slow is how people learn."},
+  {t:"Day 9, the listener is almost silent",d:"Present, not participating. Note things for the debrief rather than correcting live."},
+  {t:"Widen the range deliberately",d:"Do not let them settle into one ticket type. Route a hardware fault, a texting problem and one unhappy customer to them this week on purpose."}]},
+ {t:"h",x:"The Level 1 gate"},
+ {t:"p",x:"A conversation and a review of real work, not a written test. This is the gate that matters, because passing it means they hold Level 1 tickets on their own from here."},
+ {t:"done",x:"Gate to independent on Level 1",items:[
+  "Handles routine Level 1 tickets without prompting",
+  "Escalates at the right moment rather than too late",
+  "Tickets meet the documentation standard without correction",
+  "Has provisioned a phone successfully",
+  "Has handled at least one unhappy customer",
+  "Can explain what to do when a practice cannot make calls, in the right order",
+  "Knows the edge of their own scope and says so rather than guessing"]},
+ {t:"key",x:"This is the target the role sets, reached at two weeks. Everything after this is widening scope on somebody who is already carrying work."}
+]},
+
+{no:"Their weeks 3 to 6",n:"Their weeks three to six, widening the scope",g:"The ramp",
+ note:"They are productive throughout this. This is not a ramp continuing, it is scope widening on somebody already doing the job.",
+ blocks:[
+ {t:"bad",x:"Be clear with them about what this period is, or it reads as being held back. They passed the gate. They hold Level 1 on their own. What is still being added is the work that has a long feedback loop, and the loop is long because of the carrier rather than because of them."},
+ {t:"h",x:"Why this takes four more weeks"},
+ {t:"tbl",head:["What they are learning","Why it cannot be faster"],rows:[
+  ["A port from submission to completion","Roughly ten to fifteen business days per port. To see one finish, you wait for it to finish."],
+  ["Rejections and how to work them","You cannot manufacture a rejection. You wait for a real one, then work it while it is live."],
+  ["A cutover","They happen on a schedule set by the carrier, not by the training plan."],
+  ["Hardware and install days","Paced by shipping and by when a practice can take an install."]]},
+ {t:"h",x:"What runs during these weeks"},
+ {t:"steps",items:[
+  {t:"Modules 4, 5 and 6, read early in the period",d:"Porting end to end, why ports get rejected, and what happens when a number goes dead. Read in week three so the vocabulary is there before the first live one arrives."},
+  {t:"Attach them to every live port that starts",d:"Not one practice port. Every port that opens in this period, so they see several at different stages at the same time. That is how the timeline becomes real."},
+  {t:"The lead runs the rejection clinic",d:"Whenever a real rejection lands. Work through the actual order and identify the cause. This is the highest value hour in the whole program and it cannot be scheduled in advance."},
+  {t:"They own a cutover, supervised",d:"When one comes up. If none comes up in the period, that is a fact to record rather than a gate to fudge."}]},
+ {t:"warn",x:"This is the period that gets cut when the queue is deep, because they are already carrying Level 1 and it is tempting to leave them there. Cutting it produces somebody who is permanently a Level 1 specialist, which is not what was hired."},
+ {t:"done",x:"Independent on the full scope",items:[
+  "Has watched at least one port complete end to end",
+  "Has worked at least one real rejection",
+  "Names the six rejection causes",
+  "Has handled the dead number scenario on a real customer or in a scenario test",
+  "Has been through a cutover",
+  "Has caught at least one thing the procedures got wrong"]},
+ {t:"key",x:"If no rejection or no cutover happens in the window, do not pretend the gate was met. Record what has not been seen yet and keep it open until it has. A gate that gets waved through once stops meaning anything."}
+]},
+
+{no:"From week 6",n:"From their week six, ownership",g:"The ramp",
+ note:"Fully independent. The remaining question is what they own rather than what they can do.",
+ blocks:[
+ {t:"h",x:"What changes"},
+ {t:"ul",items:[
+  "They take work from the queue directly, across the full scope.",
+  "Support is available rather than assigned.",
+  "Quality review moves from every ticket to a weekly sample.",
+  "One to ones move from daily check ins to the weekly rhythm."]},
+ {t:"h",x:"Ownership starts here"},
+ {t:"p",x:"Each specialist takes an area. One might own porting procedures, the other hardware and provisioning. Owned means they maintain the procedure and answer questions about it, not that they do all the work in it. Their name goes on the document."},
+ {t:"h",x:"Watch for two failure modes"},
+ {t:"tbl",head:["Failure mode","What it looks like","What to do"],rows:[
+  ["Not asking when they should","Tickets sitting too long. Problems that got bigger than they needed to.","Make asking explicitly safe. Praise a good early escalation publicly."],
+  ["Asking when they should not","Every decision routed upward. Confidence has not caught up with competence.","Answer with a question. What would you do? Then agree with them when they are right, which is most of the time."]]},
+ {t:"done",x:"Fully ramped",items:[
+  "Handling the full scope independently",
+  "Owns an area with their name on it",
+  "Somebody else has asked them for help",
+  "Has updated a procedure themselves"]}
+]},
+
+{no:"Ongoing",n:"Once everyone is ramped",g:"Keeping it alive",
+ note:"Training does not end at ramp. This is the recurring cadence.",
+ blocks:[
+ {t:"tbl",head:["Cadence","What","Owner"],rows:[
+  ["Weekly","Quality sample per person, plus every escalation. Feedback within days.","Lead"],
+  ["Weekly","One to one, thirty minutes, never canceled.","Lead"],
+  ["Monthly","One topic session. Drawn from whatever the month's tickets showed, not from a fixed syllabus.","Trainer"],
+  ["Monthly","Gaps register worked down. Ask the newest person what they had to ask that they should have been able to look up.","Lead"],
+  ["Quarterly","Review every procedure that names a carrier or a portal screen, because those change without telling anybody.","Owners"],
+  ["After every incident","Post incident review, and at least one procedure updated as a result.","Lead"]]},
+ {t:"key",x:"A real incident makes a far better training scenario than an invented one, because everybody knows it actually happened. Turn the significant ones into scenario tests and add them to the drills."},
+ {t:"h",x:"Signs the program has gone stale"},
+ {t:"ul",items:[
+  "Nobody has corrected a procedure in a month.",
+  "The monthly session is being run from the same material as three months ago.",
+  "New starters are still asking questions that earlier new starters asked.",
+  "The gaps register is not shrinking."]}
+]},
+
+{no:"When it runs",n:"Whenever they arrive, and what changes if it is late",g:"Keeping it alive",
+ note:"This program has its own clock. This section is the only place that talks about anybody else's.",
+ blocks:[
+ {t:"p",x:"The single most common way a training plan fails is that it was written against a calendar that turned out to be wrong. This one avoids that by not being written against a calendar at all. It starts on a new starter first day and does not care what week the department is in when that happens."},
+ {t:"key",x:"So there is no version of this document that goes out of date because hiring was slow. If the seats fill in month one, it runs in month one. If they fill in month five, it runs in month five, and by then it is a better program because the procedures underneath it have been corrected by five months of real work."},
+ {t:"h",x:"The three situations, and what actually differs"},
+ {t:"tbl",head:["When they arrive","What is different","What is not"],rows:[
+  ["Already in seat when the lead starts",
+   "The lead is learning the environment across the same two weeks, so the lead is a weaker escalation point exactly when the new starter needs one. Lean harder on the trainer and on the existing team for that period, and be honest with the new starter about it rather than pretending otherwise.",
+   "The two weeks to Level 1, the gates, the material."],
+  ["Hired during the first quarter",
+   "The best case, and the one to aim for. The procedures have been written and corrected by then, so stage one uses material that has already survived contact with real work rather than material that is still theoretical.",
+   "The two weeks to Level 1, the gates, the material."],
+  ["Seats still empty at day ninety",
+   "The program is finished and waiting rather than running. That is a hiring outcome, not a gap in the quarter, and it should be reported as one. What the lead owns in that case is that the program exists, is current, and can start on a Monday with no notice.",
+   "The two weeks to Level 1, the gates, the material."]]},
+ {t:"key",x:"The right hand column is the point. Nothing structural changes. Only the quality of the material underneath changes, and it changes in the new starter favor the later they arrive."},
+ {t:"h",x:"What the lead owes this program, whenever it runs"},
+ {t:"ul",items:[
+  "Day 1 in person or on live video. Not delegated. It is the only day the lead is scheduled into the program, and it is the one that sets whether somebody asks for help later.",
+  "The week one review at the end of their first week. A conversation rather than a test.",
+  "The stage one gate at the end of their second week, and the stage two gate at the end of their fifth.",
+  "Protecting stage two when the queue is deep, which is the thing that always gets cut and is where people learn what normal sounds like."]},
+ {t:"warn",x:"If two people start on different dates, run two clocks rather than averaging them into one cohort. A person four weeks ahead being held back to keep a cohort together learns to wait, and a person four weeks behind being pulled forward learns to bluff. Both are expensive habits and both are avoidable."},
+ {t:"h",x:"Where this connects to the lead's own plan"},
+ {t:"p",x:"Only in one direction, and it is worth being precise about it. The lead's ninety day plan produces the procedures. Those procedures are the material this program teaches. So the plan feeds the program, and the program does not depend on where the plan has got to, because the material for stage one exists already."},
+ {t:"p",x:"The practical version: anybody hired in month three gets a materially better onboarding than anybody hired in month one, and that is by design rather than by accident. The program improves as the procedures are corrected, and every correction that comes out of a real ticket goes back into the drills."}
+]}
+
+]};
+</script>
+<script>
+var CUR=0, QRY="";
+try{var s=+localStorage.getItem(DOC.id+'-sec'); if(s>=0&&s<DOC.secs.length) CUR=s;}catch(e){}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function hi(s){s=esc(s);if(!QRY)return s;
+ try{return s.replace(new RegExp('('+QRY.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig'),'<mark>$1</mark>');}catch(e){return s;}}
+function txt(sec){var p=[sec.n,sec.note||''];
+ (sec.blocks||[]).forEach(function(b){
+  if(b.x)p.push(b.x);
+  (b.items||[]).forEach(function(i){p.push(typeof i==='string'?i:(i.t+' '+(i.d||'')));});
+  (b.head||[]).forEach(function(h){p.push(h);});
+  (b.rows||[]).forEach(function(r){r.forEach(function(c){p.push(c);});});});
+ return p.join(' ').toLowerCase();}
+DOC.secs.forEach(function(s){s._t=txt(s);});
+
+function block(b){
+ if(b.t==='h') return '<h3>'+hi(b.x)+'</h3>';
+ if(b.t==='p') return '<p>'+hi(b.x)+'</p>';
+ if(b.t==='key') return '<div class="key">'+hi(b.x)+'</div>';
+ if(b.t==='warn') return '<div class="warn">'+hi(b.x)+'</div>';
+ if(b.t==='bad') return '<div class="bad">'+hi(b.x)+'</div>';
+ if(b.t==='say') return '<div class="say">'+hi(b.x)+'</div>';
+ if(b.t==='ul') return '<ul class="b">'+b.items.map(function(i){return '<li>'+hi(i)+'</li>';}).join('')+'</ul>';
+ if(b.t==='ol') return '<ol class="n">'+b.items.map(function(i){return '<li>'+hi(i)+'</li>';}).join('')+'</ol>';
+ if(b.t==='chk') return '<ul class="chk">'+b.items.map(function(i){return '<li>'+hi(i)+'</li>';}).join('')+'</ul>';
+ if(b.t==='done') return '<div class="done"><h4>'+esc(b.x||'You are ready when')+'</h4><ul class="chk">'+
+   b.items.map(function(i){return '<li>'+hi(i)+'</li>';}).join('')+'</ul></div>';
+ if(b.t==='steps') return '<ol class="steps">'+b.items.map(function(i){
+   return '<li><h4>'+hi(i.t)+'</h4>'+(i.d?'<p>'+hi(i.d)+'</p>':'')+'</li>';}).join('')+'</ol>';
+ if(b.t==='tbl') return '<div class="scroll"><table><tr>'+b.head.map(function(h){return '<th>'+esc(h)+'</th>';}).join('')+'</tr>'+
+   b.rows.map(function(r){return '<tr>'+r.map(function(c){return '<td>'+hi(c)+'</td>';}).join('')+'</tr>';}).join('')+'</table></div>';
+ return '';
+}
+function drawNav(){
+ var h='',lastg=null;
+ DOC.secs.forEach(function(s,i){
+  if(s.g&&s.g!==lastg){h+='<div class="navlbl">'+esc(s.g)+'</div>';lastg=s.g;}
+  h+='<button class="nb'+(i===CUR&&!QRY?' on':'')+'" data-i="'+i+'">'+
+     (s.no?'<i>'+esc(s.no)+'</i>':'')+esc(s.n)+'</button>';});
+ var n=document.getElementById('nav');n.innerHTML=h;
+ n.querySelectorAll('.nb').forEach(function(b){
+  b.onclick=function(){CUR=+b.dataset.i;QRY='';document.getElementById('q').value='';
+   try{localStorage.setItem(DOC.id+'-sec',CUR);}catch(e){}draw();window.scrollTo(0,0);};});
+}
+function draw(){
+ drawNav();
+ var v=document.getElementById('view');
+ if(QRY){
+  var hits=DOC.secs.map(function(s,i){return {s:s,i:i};}).filter(function(o){return o.s._t.indexOf(QRY.toLowerCase())>-1;});
+  v.innerHTML='<div class="hits">'+(hits.length?hits.map(function(o){
+    return '<div class="hit" data-i="'+o.i+'"><b>'+hi(o.s.n)+'</b><span>'+esc(o.s.note||'')+'</span></div>';}).join('')
+    :'<div class="hit"><b>Nothing matches that.</b></div>')+'</div>';
+  v.querySelectorAll('.hit[data-i]').forEach(function(el){
+   el.onclick=function(){CUR=+el.dataset.i;QRY='';document.getElementById('q').value='';draw();window.scrollTo(0,0);};});
+  return;
+ }
+ var s=DOC.secs[CUR];
+ var h='<article>'+(s.no?'<div class="mod">'+esc(s.no)+'</div>':'')+
+   '<h2>'+hi(s.n)+'</h2>'+(s.note?'<div class="snote">'+hi(s.note)+'</div>':'')+
+   '<div class="body">'+(s.blocks||[]).map(block).join('')+'</div>';
+ var pv=DOC.secs[CUR-1],nx=DOC.secs[CUR+1];
+ h+='<div class="nav2">'+
+   '<button id="pv"'+(pv?'':' disabled')+'><b>Previous</b>'+esc(pv?pv.n:'Start of the manual')+'</button>'+
+   '<button id="nx"'+(nx?'':' disabled')+'><b>Next</b>'+esc(nx?nx.n:'End of the manual')+'</button></div>';
+ h+='</article>';
+ v.innerHTML=h;
+ var a=document.getElementById('pv'),b=document.getElementById('nx');
+ if(a&&pv)a.onclick=function(){CUR--;try{localStorage.setItem(DOC.id+'-sec',CUR);}catch(e){}draw();window.scrollTo(0,0);};
+ if(b&&nx)b.onclick=function(){CUR++;try{localStorage.setItem(DOC.id+'-sec',CUR);}catch(e){}draw();window.scrollTo(0,0);};
+}
+document.getElementById('q').addEventListener('input',function(e){QRY=e.target.value.trim();draw();});
+draw();
+</script>
+</body>
+</html>

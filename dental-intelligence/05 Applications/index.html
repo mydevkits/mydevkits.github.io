@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Applications</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--bg:#fbfbfc;--panel:#fff;--ink:#111a23;--mid:#5c6773;--soft:#8b96a2;--line:#e6e9ed;
+ --accent:#0b5cab;--accentbg:#eef4fb;--ok:#1a7f4b;--okbg:#e9f6ef;--warn:#9a6a00;--warnbg:#fdf4de;--bad:#a52929;--badbg:#fbeaea;
+ --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+body{font:17px/1.68 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+.wrap{max-width:830px;margin:0 auto;padding:0 22px}
+@media(max-width:600px){.wrap{padding:0 17px}body{font-size:16px}}
+.hero{padding:66px 0 44px;border-bottom:1px solid var(--line)}
+@media(max-width:600px){.hero{padding:40px 0 32px}}
+.kicker{font-size:13px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--accent)}
+h1{font-size:38px;line-height:1.16;font-weight:680;letter-spacing:-.8px;margin-top:14px}
+@media(max-width:600px){h1{font-size:28px}}
+.who{font-size:16.5px;color:var(--mid);margin-top:15px}
+.lede{font-size:19.5px;line-height:1.6;margin-top:26px;color:#26313c}
+.lede b{font-weight:660;color:var(--ink)}
+@media(max-width:600px){.lede{font-size:17.5px}}
+section{padding:52px 0;border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:none}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--soft);margin-bottom:12px}
+h2{font-size:26px;line-height:1.28;font-weight:670;letter-spacing:-.4px}
+@media(max-width:600px){h2{font-size:22px}}
+section>p{margin-top:16px;color:#2c3843}
+section>p+p{margin-top:14px}
+.crit{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin-top:18px;overflow:hidden}
+.crit .ch{padding:19px 24px 17px;border-bottom:1px solid var(--line)}
+@media(max-width:600px){.crit .ch{padding:16px 17px}}
+.crit .quo{font-size:17.5px;line-height:1.55;font-weight:640}
+.crit .quo:before{content:"\201C"}.crit .quo:after{content:"\201D"}
+.crit .src{font-size:12.5px;color:var(--soft);margin-top:6px}
+.crit .cb{padding:19px 24px 21px}
+@media(max-width:600px){.crit .cb{padding:16px 17px}}
+.crit .cb p{font-size:16.5px;color:#2c3843;margin-bottom:13px}
+.crit .cb p:last-child{margin-bottom:0}
+.crit .cb a,section a.lk{color:var(--accent);text-decoration:none;font-weight:600;border-bottom:1px solid rgba(11,92,171,.3)}
+.crit .cb a:hover,section a.lk:hover{border-bottom-color:var(--accent)}
+.badge{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+ padding:4px 10px;border-radius:6px;margin-bottom:12px;background:var(--okbg);color:var(--ok)}
+.badge.p{background:var(--warnbg);color:var(--warn)}
+.map{margin-top:20px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel)}
+.mr{display:grid;grid-template-columns:215px 1fr;border-bottom:1px solid var(--line)}
+.mr:last-child{border-bottom:none}
+@media(max-width:640px){.mr{grid-template-columns:1fr}}
+.mr .ml{padding:17px 20px;background:#fafbfc;border-right:1px solid var(--line);font-weight:640;font-size:16px;line-height:1.4}
+@media(max-width:640px){.mr .ml{border-right:none;border-bottom:1px solid var(--line);padding:13px 17px}}
+.mr .mv{padding:17px 20px;font-size:16px;color:#2c3843;line-height:1.6}
+@media(max-width:640px){.mr .mv{padding:14px 17px}}
+.mr .mv a{color:var(--accent);text-decoration:none;font-weight:600;border-bottom:1px solid rgba(11,92,171,.28)}
+.wk{margin-top:20px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel)}
+.wr{display:grid;grid-template-columns:112px 1fr;border-bottom:1px solid var(--line)}
+.wr:last-child{border-bottom:none}
+@media(max-width:600px){.wr{grid-template-columns:1fr}}
+.wr .wl{padding:15px 18px;background:#fafbfc;border-right:1px solid var(--line);font:12px var(--mono);
+ font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.6px}
+@media(max-width:600px){.wr .wl{border-right:none;border-bottom:1px solid var(--line);padding:11px 16px}}
+.wr .wv{padding:15px 18px;font-size:16px;color:#2c3843;line-height:1.55}
+.wr .wv b{font-weight:640;color:var(--ink)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
+@media(max-width:680px){.grid{grid-template-columns:1fr}}
+a.w{display:block;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px;
+ text-decoration:none;color:inherit;transition:border-color .15s,transform .15s,box-shadow .15s}
+a.w:hover{border-color:#c4d3e4;transform:translateY(-2px);box-shadow:0 6px 20px rgba(17,26,35,.06)}
+a.w h3{font-size:18px;font-weight:650;line-height:1.35}
+a.w .st{font-size:13px;color:var(--accent);font-weight:600;margin-top:5px}
+a.w p{font-size:15.5px;color:var(--mid);margin-top:10px;line-height:1.55}
+a.w .go{font-size:14px;color:var(--accent);font-weight:600;margin-top:12px}
+.need{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin-top:20px;overflow:hidden}
+.need .ni{padding:17px 22px;border-bottom:1px solid var(--line);display:flex;gap:15px;align-items:flex-start}
+.need .ni:last-child{border-bottom:none}
+@media(max-width:600px){.need .ni{padding:14px 17px;gap:12px}}
+.need .nn{width:25px;height:25px;border-radius:50%;background:var(--accentbg);color:var(--accent);flex:none;
+ font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.need .nt b{display:block;font-weight:640;font-size:16.5px;line-height:1.4}
+.need .nt span{display:block;font-size:15.5px;color:var(--mid);margin-top:4px;line-height:1.55}
+.pull{border-left:3px solid var(--accent);padding:4px 0 4px 20px;margin-top:22px;font-size:18px;line-height:1.6;color:#26313c}
+.pull b{font-weight:660;color:var(--ink)}
+.foot{padding:44px 0 66px;color:var(--soft);font-size:14.5px;line-height:1.65}
+</style>
+</head>
+<body><div class="wrap">
+<div class="hero">
+ <div class="kicker">Applications</div>
+ <h1>Two tools, and what each one prevents</h1>
+ <p class="lede">Both are working. Both sit <b>before</b> a failure rather than helping somebody recover from
+ one, at the two points where an error is cheap to prevent and expensive to fix afterwards.</p>
+</div>
+
+<section>
+ <div class="eyebrow">Built</div>
+ <h2>The tools</h2>
+ <div class="grid">
+  <a class="w" href="Number-Check.html">
+   <h3>Portability check</h3><div class="st">For sales &middot; one field</div>
+   <p>Type a number, get an answer a salesperson can act on. No jargon. Under thirty seconds, because anything
+   slower gets skipped under quota pressure by people who mean well.</p>
+   <div class="go">Open it</div></a>
+  <a class="w" href="CSR-Reader.html">
+   <h3>Account record reader</h3><div class="st">For onboarding &middot; 10 fields</div>
+   <p>Reads a carrier service record and extracts the fields a port order needs, with copy buttons, so nothing
+   gets retyped and mistyped.</p>
+   <div class="go">Open it</div></a>
+ </div>
+</section>
+
+<section>
+ <div class="eyebrow">Deployment</div>
+ <h2>How each one needs to be placed to work</h2>
+ <div class="map">
+  <div class="mr"><div class="ml">Portability check</div><div class="mv">
+   Inside the tool the reps already use, and as a required result on the opportunity before it can be marked
+   closed won. <b>An optional field is not a gate.</b> It also needs a documented exception path with an answer
+   inside one business day, because a gate with no way through it gets routed around rather than followed.
+  </div></div>
+  <div class="mr"><div class="ml">Record reader</div><div class="mv">
+   In the hands of whoever collects account details before a port order is submitted. It removes transcription
+   error as a category rather than reducing it, which matters because transcription is the one rejection cause
+   that cannot be trained away.
+  </div></div>
+ </div>
+</section>
+
+<section>
+ <div class="eyebrow">Measuring them</div>
+ <h2>How to tell whether they are working</h2>
+ <p>Rejection reasons by category, month over month. Both tools target specific categories: the portability
+ check targets numbers that were never movable, the record reader targets account number, name and address
+ mismatches.</p>
+ <div class="pull">If those categories do not shrink, <b>the tools are not working and I would say so</b> rather
+ than keeping them because they were built.</div>
+</section>
+
+<section>
+ <div class="eyebrow">Still to build</div>
+ <h2>What would come next</h2>
+ <div class="map">
+  <div class="mr"><div class="ml">Open port order view</div><div class="mv">Every order in flight with its state,
+   how long it has been there, and who is waiting on whom. A stuck port nobody is chasing is the most common
+   quiet failure in this function, and it is invisible without a list.</div></div>
+  <div class="mr"><div class="ml">Emergency address audit</div><div class="mv">A standing check that every live
+   practice has a provisioned address on every handset, rather than a manual sweep. Given what it costs to be
+   wrong, this should not depend on somebody remembering.</div></div>
+  <div class="mr"><div class="ml">Rejection capture</div><div class="mv">Categorizing a rejection at the moment
+   it happens rather than reconstructing it later. It is the number I most want to report and the one most
+   easily lost.</div></div>
+ </div>
+ <p>All three depend on access to the platform and the ticketing system, so they are week four and later rather
+ than now.</p>
+</section>
+
+<div class="foot"><a href="../02%20For%20Management/Applications.html">The write up for management</a></div>
+</div></body></html>

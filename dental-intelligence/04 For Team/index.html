@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VoIP Support, the team handbook</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--bg:#fbfbfc;--panel:#fff;--ink:#111a23;--mid:#5c6773;--soft:#8b96a2;--line:#e6e9ed;
+ --accent:#0b5cab;--accentbg:#eef4fb;--ok:#1a7f4b;--okbg:#e9f6ef;--warn:#9a6a00;--warnbg:#fdf4de;--bad:#a52929;--badbg:#fbeaea}
+body{font:17px/1.68 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+.wrap{max-width:820px;margin:0 auto;padding:0 22px}
+@media(max-width:600px){.wrap{padding:0 17px}body{font-size:16px}}
+.hero{padding:58px 0 40px;border-bottom:1px solid var(--line)}
+@media(max-width:600px){.hero{padding:38px 0 30px}}
+.kicker{font-size:13px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--accent)}
+h1{font-size:36px;line-height:1.18;font-weight:680;letter-spacing:-.7px;margin-top:14px}
+@media(max-width:600px){h1{font-size:28px}}
+.lede{font-size:19px;line-height:1.62;margin-top:24px;color:#26313c}
+.lede b{font-weight:660;color:var(--ink)}
+@media(max-width:600px){.lede{font-size:17.5px}}
+section{padding:48px 0;border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:none}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--soft);margin-bottom:12px}
+h2{font-size:25px;line-height:1.28;font-weight:670;letter-spacing:-.4px}
+@media(max-width:600px){h2{font-size:21px}}
+section>p{margin-top:15px;color:#2c3843}
+.path{margin-top:22px;counter-reset:pp;list-style:none}
+.path li{counter-increment:pp;position:relative;padding-left:56px;margin-bottom:22px}
+.path li:last-child{margin-bottom:0}
+.path li:before{content:counter(pp);position:absolute;left:0;top:2px;width:38px;height:38px;border-radius:50%;
+ background:var(--accent);color:#fff;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.path h3{font-size:19px;font-weight:650;line-height:1.35}
+.path p{font-size:16.5px;color:var(--mid);margin-top:5px;line-height:1.6}
+.path a{color:var(--accent);text-decoration:none;font-weight:600;border-bottom:1px solid rgba(11,92,171,.3)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px}
+@media(max-width:680px){.grid{grid-template-columns:1fr}}
+a.w{display:block;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px;
+ text-decoration:none;color:inherit;transition:border-color .15s,transform .15s,box-shadow .15s}
+a.w:hover{border-color:#c4d3e4;transform:translateY(-2px);box-shadow:0 6px 20px rgba(17,26,35,.06)}
+a.w h3{font-size:18px;font-weight:650;line-height:1.35}
+a.w .st{font-size:13px;color:var(--accent);font-weight:600;margin-top:5px}
+a.w p{font-size:15.5px;color:var(--mid);margin-top:10px;line-height:1.55}
+.rule{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin-top:20px;overflow:hidden}
+.rule .ri{padding:17px 22px;border-bottom:1px solid var(--line)}
+.rule .ri:last-child{border-bottom:none}
+@media(max-width:600px){.rule .ri{padding:15px 17px}}
+.rule b{display:block;font-weight:650;font-size:17px;line-height:1.4}
+.rule span{display:block;font-size:16px;color:var(--mid);margin-top:5px;line-height:1.6}
+.pull{border-left:3px solid var(--accent);padding:4px 0 4px 20px;margin-top:22px;font-size:18px;line-height:1.6;color:#26313c}
+.pull b{font-weight:660;color:var(--ink)}
+.red{border-left-color:var(--bad)}
+.foot{padding:40px 0 60px;color:var(--soft);font-size:14.5px;line-height:1.65}
+.foot a{color:var(--mid)}
+</style>
+</head>
+<body><div class="wrap">
+
+<div class="hero">
+ <div class="kicker">VoIP Support</div>
+ <h1>Everything you need to do this job</h1>
+ <p class="lede">This is the team handbook. The training you work through, the procedures you follow, and the
+ reference you search when something unusual turns up. <b>If any of it makes you stop and ask somebody a question,
+ that is a fault in the document, not in you.</b> Say so and it gets fixed the same day.</p>
+</div>
+
+<section>
+ <div class="eyebrow">If you are new</div>
+ <h2>Work through it in this order</h2>
+ <p>Two weeks from your first day to handling Level 1 tickets on your own. Porting and cutovers take until about
+ week six, because a port runs ten to fifteen business days and nobody can watch one finish faster than that.
+ The stages are gated on what you can do rather than on time served.</p>
+ <ol class="path">
+  <li><h3>Read the training manual</h3>
+   <p>Fourteen modules, in the order you will need them. Start at the beginning and do not skip module seven on
+   emergency calling. <a href="Training-Manual.html">Open the training manual</a></p></li>
+  <li><h3>Drill what you read</h3>
+   <p>Flash cards for recall, order of operations drills for sequence, scenario tests for judgement. Reading alone
+   does not stick. <a href="Training.html">Open the practice tools</a></p></li>
+  <li><h3>Learn the actual steps</h3>
+   <p>Every job you will be asked to do, one step per screen, with the forms attached. Keep this open while you
+   work rather than trying to memorize it. <a href="Step-By-Step.html">Open the walkthroughs</a></p></li>
+  <li><h3>Know how you will be assessed</h3>
+   <p>The gates between stages are written down in advance so nobody is guessing what the bar is.
+   <a href="../03%20For%20Trainer/Training-Program.html">Open the program</a></p></li>
+ </ol>
+</section>
+
+<section>
+ <div class="eyebrow">Day to day</div>
+ <h2>What to reach for, and when</h2>
+ <div class="grid">
+  <a class="w" href="Step-By-Step.html">
+   <h3>Step by step</h3><div class="st">Doing an actual job</div>
+   <p>Twenty two situations a customer can present, one step per screen, with checklists and the forms you need
+   at each stage. This is the one you keep open.</p></a>
+  <a class="w" href="SOP-Manual.html">
+   <h3>Standard operating procedures</h3><div class="st">How we do things</div>
+   <p>Every procedure with an owner, a definition of done and a failure path. Shift operations, tickets,
+   escalation, staging, compliance.</p></a>
+  <a class="w" href="Field-Manual.html">
+   <h3>Field manual</h3><div class="st">Looking something up</div>
+   <p>1,091 searchable entries. When a customer asks something unusual and you need the answer while they are
+   still on the line.</p></a>
+  <a class="w" href="Phones-And-Logistics.html">
+   <h3>Phones and hardware</h3><div class="st">Anything physical</div>
+   <p>Which phone suits which room, how to set one up, and what to do when a phone is claimed by a previous
+   provider, which is the thing that ruins install days.</p></a>
+  <a class="w" href="Training-Manual.html">
+   <h3>Training manual</h3><div class="st">Understanding why</div>
+   <p>The background behind the procedures. Worth rereading a module when something has not clicked.</p></a>
+  <a class="w" href="Rules-Of-Engagement.html">
+   <h3>Rules of engagement</h3><div class="st">Who owns what</div>
+   <p>What this team owns, what we do not, severity levels, and how we work with sales, onboarding and
+   application support.</p></a>
+ </div>
+</section>
+
+<section>
+ <div class="eyebrow">Non negotiable</div>
+ <h2>Six things that are never optional</h2>
+ <p>Everything else in these documents is guidance you can apply judgement to. These six are not.</p>
+ <div class="rule">
+  <div class="ri"><b>Emergency calling comes first, always</b>
+   <span>On any contact where a practice cannot make calls, tell them in the first ten seconds to use mobiles for
+   emergencies until we confirm the line is working. Then carry on. This comes before diagnosis, before apologies,
+   before everything. Never test by dialing 911 and never ask a customer to. <b>933 is the test line</b> and it
+   reads back the address registered against that phone.</span></div>
+  <div class="ri"><b>Every handset gets its own emergency address, verified with 933</b>
+   <span>Not one for the practice. And verified by dialing 933 from the handset and listening to what it reads
+   back, not just by the platform showing it as submitted. An address that failed validation looks fine on our
+   side and does nothing in a real emergency.</span></div>
+  <div class="ri"><b>Nobody cancels anything until we confirm in writing</b>
+   <span>A disconnected number cannot be forwarded. The account that owned it is gone. This is the most
+   expensive mistake a customer can make and they make it with good intentions, to save a month of billing.</span></div>
+  <div class="ri"><b>Never give a date the carrier has not given us</b>
+   <span>A range that is explained holds up. A date that slips does not. Say what you are doing next and when
+   you will next speak, which are both things you control.</span></div>
+  <div class="ri"><b>Patient information never goes in a ticket</b>
+   <span>Not in chat, not in email. Ask for what you actually need, which is almost always just the numbers
+   and the time.</span></div>
+  <div class="ri"><b>Update every thirty minutes during an outage</b>
+   <span>Whether or not there is news. Still working on it, here is what we have ruled out, next update at half
+   past, is a complete update. Silence is what turns a bad morning into a lost customer.</span></div>
+ </div>
+</section>
+
+<section>
+ <div class="eyebrow">How we work</div>
+ <h2>A few things about this team</h2>
+ <div class="pull"><b>Asking for help is not failing, but neither is working a problem.</b> There is no minute
+ count that means escalate. If you have genuinely been at something for about an hour and are not closing in,
+ ask somebody to look with you. The exception is scale: a whole practice with no phones does not wait an hour.</div>
+ <div class="pull">Write your tickets as you go, not from memory at the end of the day. <b>Detail decays within
+ the hour</b>, and the details that decay first are exactly the ones an escalation needs: the exact numbers, the
+ exact time with the time zone, and what you already ruled out.</div>
+ <div class="pull red">Two rejections in a row on the same port order is <b>a process failure, not bad luck.</b>
+ Escalate rather than submitting a third time, and never resubmit the paperwork that just failed without getting
+ fresh account details first.</div>
+ <div class="pull">If you follow a procedure and get a bad outcome, <b>the procedure is wrong.</b> That is a
+ finding about the document, not about you. Raise it the same day, with the specific step, what you expected
+ and what actually happened.</div>
+</section>
+
+<div class="foot">
+ Everything here works offline in a browser and nothing needs installing. If something is missing, wrong or
+ confusing, say so, and it gets corrected rather than worked around.
+ <br><br>
+</div>
+
+</div></body></html>

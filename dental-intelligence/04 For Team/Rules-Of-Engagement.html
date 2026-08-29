@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rules of Engagement</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+ --bg:#f6f7f9; --panel:#fff; --ink:#131c25; --mid:#5a6572; --soft:#8b96a2; --line:#e2e6ea;
+ --accent:#0b5cab; --accentbg:#eaf2fb;
+ --ok:#1a7f4b; --okbg:#e7f5ed;
+ --warn:#9a6a00; --warnbg:#fdf3dd;
+ --bad:#a52929; --badbg:#fbeaea;
+ --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+body{font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+ background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+header{background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30}
+.hw{max-width:1080px;margin:0 auto;padding:13px 20px}
+.htop{display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap}
+h1{font-size:18px;font-weight:660;letter-spacing:-.2px}
+.sub{color:var(--mid);font-size:13px;margin-top:2px}
+.home{font-size:13.5px;color:var(--accent);text-decoration:none;font-weight:600;white-space:nowrap}
+#q{width:100%;margin-top:11px;padding:9px 13px;font-size:15px;border:1px solid var(--line);
+ border-radius:8px;background:#fafbfc;font-family:inherit}
+#q:focus{outline:none;border-color:var(--accent);background:#fff}
+.main{max-width:1080px;margin:0 auto;padding:20px;display:grid;grid-template-columns:262px 1fr;gap:26px;align-items:start}
+@media(max-width:880px){.main{grid-template-columns:1fr;padding:15px}}
+nav{position:sticky;top:132px;max-height:calc(100vh - 152px);overflow-y:auto}
+@media(max-width:880px){nav{position:static;max-height:none}}
+.nb{display:block;width:100%;text-align:left;background:none;border:none;font:inherit;cursor:pointer;
+ padding:9px 12px;border-radius:8px;color:var(--mid);line-height:1.35;margin-bottom:1px;font-size:14.5px}
+.nb:hover{background:#edf0f3;color:var(--ink)}
+.nb.on{background:var(--accentbg);color:var(--accent);font-weight:640}
+.nb i{font-style:normal;font:11.5px var(--mono);opacity:.6;margin-right:8px}
+.navlbl{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--soft);padding:0 12px;margin:16px 0 6px}
+.navlbl:first-child{margin-top:0}
+article{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:30px 34px 36px}
+@media(max-width:880px){article{padding:20px 18px 26px}}
+.mod{font:12px var(--mono);color:var(--accent);font-weight:700;letter-spacing:.5px}
+article>h2{font-size:26px;line-height:1.28;font-weight:670;letter-spacing:-.4px;margin-top:6px}
+@media(max-width:880px){article>h2{font-size:22px}}
+.snote{color:var(--mid);font-size:15.5px;margin-top:9px}
+.body{margin-top:26px}
+.body h3{font-size:18.5px;font-weight:650;line-height:1.35;margin:30px 0 12px}
+.body h3:first-child{margin-top:0}
+.body p{font-size:16.5px;color:#2c3843;margin-bottom:14px}
+.body p:last-child{margin-bottom:0}
+.key{background:var(--accentbg);border-left:3px solid var(--accent);padding:14px 18px;border-radius:0 9px 9px 0;
+ font-size:16.5px;margin-bottom:16px;line-height:1.6}
+.warn{background:var(--warnbg);border-left:3px solid var(--warn);padding:14px 18px;border-radius:0 9px 9px 0;
+ font-size:16.5px;margin-bottom:16px;color:#5c4400;line-height:1.6}
+.bad{background:var(--badbg);border-left:3px solid var(--bad);padding:14px 18px;border-radius:0 9px 9px 0;
+ font-size:16.5px;margin-bottom:16px;color:#6d1f1f;line-height:1.6}
+.say{background:#fffdf5;border:1px solid #ecdfb8;border-radius:9px;padding:14px 18px;font-size:16.5px;
+ font-style:italic;color:#4a3f22;margin-bottom:16px;line-height:1.6}
+ul.b,ol.n{margin:0 0 16px 0;padding-left:0;list-style:none}
+ul.b li{position:relative;padding-left:24px;margin-bottom:9px;font-size:16.5px;color:#2c3843}
+ul.b li:before{content:"";position:absolute;left:6px;top:11px;width:6px;height:6px;border-radius:50%;background:#b6c0ca}
+ol.n{counter-reset:nn}
+ol.n li{counter-increment:nn;position:relative;padding-left:34px;margin-bottom:11px;font-size:16.5px;color:#2c3843}
+ol.n li:before{content:counter(nn);position:absolute;left:0;top:2px;width:23px;height:23px;border-radius:50%;
+ background:var(--accentbg);color:var(--accent);font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center}
+ul.chk{list-style:none;margin-bottom:16px}
+ul.chk li{position:relative;padding-left:28px;margin-bottom:9px;font-size:16.5px;color:#2c3843}
+ul.chk li:before{content:"";position:absolute;left:0;top:5px;width:15px;height:15px;border:1.6px solid #b6c0ca;border-radius:4px}
+.steps{list-style:none;counter-reset:st;margin-bottom:16px}
+.steps>li{counter-increment:st;position:relative;padding:0 0 18px 42px;margin-bottom:18px;border-bottom:1px solid var(--line)}
+.steps>li:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.steps>li:before{content:counter(st);position:absolute;left:0;top:0;width:28px;height:28px;border-radius:50%;
+ background:var(--accentbg);color:var(--accent);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.steps h4{font-size:16.5px;font-weight:650;line-height:1.4}
+.steps p{font-size:16px;color:#33414f;margin-top:5px;margin-bottom:0}
+.scroll{overflow-x:auto;margin-bottom:16px;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:15.5px;min-width:440px}
+th,td{text-align:left;padding:11px 13px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--soft);font-weight:700;background:#fafbfc}
+tr:last-child td{border-bottom:none}
+.done{background:var(--okbg);border:1px solid #bfe3ce;border-radius:10px;padding:15px 18px;margin-bottom:16px}
+.done h4{font-size:11.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--ok);margin-bottom:9px}
+.done ul.chk li{color:#1c5a3a}.done ul.chk li:before{border-color:#7cbf9b}
+.done ul.chk{margin-bottom:0}
+.nav2{display:flex;gap:10px;margin-top:32px;padding-top:22px;border-top:1px solid var(--line)}
+.nav2 button{flex:1;font:inherit;font-size:14.5px;padding:12px;border-radius:9px;border:1px solid var(--line);
+ background:#fafbfc;color:var(--ink);cursor:pointer;line-height:1.35}
+.nav2 button:disabled{opacity:.35;cursor:default}
+.nav2 button b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--soft);font-weight:700;margin-bottom:3px}
+mark{background:#ffe9a8;color:inherit;border-radius:2px}
+.hits{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px;margin-bottom:12px}
+.hit{padding:11px 14px;border-radius:8px;cursor:pointer}
+.hit:hover{background:#f4f7fa}
+.hit b{font-size:15.5px;font-weight:640;display:block}
+.hit span{font-size:14px;color:var(--mid);display:block;margin-top:2px}
+@media print{header,nav,.nav2{display:none}.main{display:block;max-width:none;padding:0}
+ article{border:none;padding:0}body{background:#fff}}
+</style>
+</head>
+<body>
+<header><div class="hw">
+ <div class="htop"><div><h1>Rules of Engagement</h1><div class="sub">How this department works, and how it works with everyone else</div></div>
+ <a class="home" href="index.html">&larr; Back to the index</a></div>
+ <input id="q" type="search" placeholder="Search this manual" autocomplete="off">
+</div></header>
+<div class="main"><nav id="nav"></nav><div id="view"></div></div>
+
+<script>var DOC={id:"roe",secs:[
+
+{no:"Charter",n:"What this team is for",g:"The department",
+ note:"A one page answer to what do you people actually do, which is a question you will be asked constantly.",
+ blocks:[
+ {t:"key",x:"VoIP Support exists so that a dental practice moving its phone service to us never loses the ability to take a patient call. Everything else this team does is downstream of that."},
+ {t:"h",x:"What we own"},
+ {t:"ul",items:[
+  "Getting a practice's phone numbers moved to us without service interruption.",
+  "Provisioning and supporting the physical phones and the phone system build.",
+  "Emergency address registration and accuracy for every handset we deploy.",
+  "Messaging enablement: hosted messaging, toll free, and registration.",
+  "Support for calls and texts on numbers we host. Not every practice has their phones with us and many have their own provider, so our scope follows the number rather than the account.",
+  "The Screen Pop and simultaneous ring integration, including where the phone service is not ours. It is our integration even though it runs on their provider.",
+  "The escalation relationship with the voice platform and the carrier.",
+  "The procedures, runbooks and dial plan standards for all of the above."]},
+ {t:"h",x:"What we explicitly do not own"},
+ {t:"ul",items:[
+  "The practice management software itself. Scheduling, patient records, reporting, logins to the product.",
+  "Whether a feature exists. That is product, not support.",
+  "The practice's own network, router or internet connection. We diagnose against it and advise, we do not administer it.",
+  "Their own VoIP provider service, where the phones are not with us. We can tell them what we see and what to ask for, we cannot fix it.",
+  "Billing disputes and contract terms.",
+  "Legal questions about recording consent or patient privacy. We route those to compliance."]},
+ {t:"warn",x:"Not owning something is not the same as not caring about it. If we hand something on, we hand it on properly: what we found, what we ruled out, and who is currently talking to the customer."},
+ {t:"h",x:"How we are measured"},
+ {t:"tbl",head:["Area","Measure","Reported to"],rows:[
+  ["Onboarding","Time to activation, health check completion","Director of Onboarding"],
+  ["Support","Ticket volume, resolution time, customer satisfaction","VP of Support"],
+  ["Porting quality","Port success on first submission, rejection reasons by category","Both"],
+  ["Compliance","Emergency address coverage and provisioned status","VP of Support, with Security and Compliance"]]}
+]},
+
+{no:"Severity",n:"Severity, response and escalation",g:"The department",
+ note:"What counts as urgent, what we commit to, and when something leaves our hands.",
+ blocks:[
+ {t:"h",x:"Severity, defined by impact rather than by feeling"},
+ {t:"tbl",head:["Level","What it means","Examples"],rows:[
+  ["1, critical","A practice cannot take calls at all, or emergency calling is affected.","Whole practice down. Cutover failed. Number disconnected. No emergency address on live phones."],
+  ["2, major","A core function is broken but the practice can still operate.","Texting down. One department's phones failing. Port rejected with a date at risk."],
+  ["3, minor","One user or one feature affected, with a workaround.","One handset faulty. Voicemail greeting wrong. A single extension misrouting."],
+  ["4, request","No service impact.","Add a user. Change a menu. Question about how something works."]]},
+ {t:"bad",x:"Emergency calling comes before everything, at every severity. On any contact where a practice cannot make calls, tell them within the first ten seconds to use mobiles for emergencies until we confirm the line is working. Then continue. Never ask a customer to test by dialing 911 and never do so yourself. 933 is the test line: it reads back the address and callback number registered against that phone."},
+ {t:"h",x:"What we commit to"},
+ {t:"p",x:"Targets to be confirmed against whatever the company already commits to contractually. These are proposed starting points, not invented obligations."},
+ {t:"tbl",head:["Level","First response","Update cadence","Resolve or escalate"],rows:[
+  ["1","15 minutes","Every 30 minutes, news or not","Escalate within 1 hour if not resolving"],
+  ["2","1 hour","Twice daily","Escalate within 1 business day"],
+  ["3","4 business hours","On change","3 business days"],
+  ["4","1 business day","On change","5 business days"]]},
+ {t:"h",x:"When something escalates"},
+ {t:"ol",items:[
+  "Emergency calling is affected. Immediately, always.",
+  "A whole practice is down and the cause is not becoming clear. Do not sit on that one, but for anything smaller give it real troubleshooting time first, around an hour, before pulling somebody else in.",
+  "A port order has been rejected twice. That is a process failure, not bad luck, and a third attempt is unlikely to differ.",
+  "A carrier will not move and a committed date is at risk.",
+  "The customer asks for a manager. That is a request for somebody with authority to decide, which is reasonable.",
+  "Two or more practices report the same symptom in a short window. That is a pattern until proven otherwise."]},
+ {t:"h",x:"What an escalation must contain"},
+ {t:"key",x:"An exact failing example, the numbers on both ends, the time with the time zone, what has already been ruled out, and what is being asked for. A vague escalation gets a request for details and costs an hour."}
+]},
+
+{no:"Decisions",n:"Who decides what",g:"The department",
+ note:"Decision rights, written down, so nobody has to guess in the middle of a bad morning.",
+ blocks:[
+ {t:"tbl",head:["Decision","Who decides","Notes"],rows:[
+  ["Go or no go on a complex cutover","Team Lead","Named explicitly in the job description. Criteria are written, not improvised."],
+  ["Committing a cutover date to a customer","Team Lead","Never before the carrier has returned a commitment date."],
+  ["Declaring a practice level incident","Anyone on the team","Better to declare and stand down than to wait for permission."],
+  ["Declaring a multi practice incident","Team Lead","And notify the VP of Support immediately."],
+  ["Escalating to the voice platform or carrier","Anyone, following the standard","The standard is what makes this safe to delegate."],
+  ["Overriding the sales portability gate","Team Lead","With a written reason. A gate with no documented exception path gets routed around."],
+  ["Goodwill credit or concession","VP of Support","Amount and authority to be confirmed."],
+  ["Changing a published procedure","The procedure's named owner","Anyone can raise a correction. One person publishes."],
+  ["Taking a phone out of service or replacing it","Anyone on the team","Prove the fault first: known good port, known good cable."]]},
+ {t:"h",x:"The go or no go criteria for a cutover"},
+ {t:"p",x:"A cutover proceeds only when all of these are true. If any is false, it moves, and moving a date is far cheaper than a failed cutover."},
+ {t:"chk",items:[
+  "The carrier has returned a firm commitment date and it is today",
+  "Every number in scope is accounted for, including fax and any secondary lines",
+  "Hardware has been on site and tested for at least several days",
+  "Emergency addresses registered, and 933 dialed from every handset with the correct address read back",
+  "The practice has confirmed in writing that they have not canceled their old service",
+  "Staff have been trained and know who to call",
+  "It is not a Friday, the day before a holiday, or the middle of clinical hours",
+  "Somebody from this team is available for the whole day, not just the morning"]}
+]},
+
+{no:"Sales",n:"Working with Sales",g:"Other teams",
+ note:"The highest value relationship in this job, and the one most likely to be adversarial if handled badly.",
+ blocks:[
+ {t:"h",x:"The problem, stated plainly"},
+ {t:"p",x:"Anything sales promises becomes our problem. A number promised that cannot port, a date promised before the carrier gave one, a phone count that missed two rooms. Complaining about this changes nothing. Making the right answer fast and easy to get changes everything."},
+ {t:"h",x:"What we need from them"},
+ {t:"ul",items:[
+  "Every published number the practice uses, not just the main one.",
+  "A portability result on the opportunity before it can be marked closed won.",
+  "A room by room phone count rather than a headcount.",
+  "Whether the building has network cable to every phone position, and whether they have a switch that powers phones.",
+  "The authorized contact, and specifically who is allowed to sign.",
+  "No dates committed to the customer before we have one from the carrier."]},
+ {t:"h",x:"What they can expect from us"},
+ {t:"ul",items:[
+  "A portability check that takes under thirty seconds and lives in the tool they already use.",
+  "A plain answer in their language, not ours. No jargon that needs explaining.",
+  "An exception path when a number fails the check, with an answer within one business day. The deal is not dead, it changes shape.",
+  "Early warning when something in a deal will not work, rather than after it closes.",
+  "We never tell their customer that sales got it wrong."]},
+ {t:"key",x:"A rep who has to email support and wait a day will guess. A rep who can check in thirty seconds will check. That is the entire design problem, and speed is the whole answer."},
+ {t:"warn",x:"An optional field is not a gate. If the portability check does not block the stage, it will be skipped under quota pressure by good people who mean well."}
+]},
+
+{no:"Onboarding",n:"Working with Onboarding",g:"Other teams",
+ note:"Every cutover touches them, and our KPIs are reported to their Director.",
+ blocks:[
+ {t:"h",x:"Where the line sits"},
+ {t:"p",x:"Onboarding owns getting the practice live on the product. We own getting their phones live. Those two run in parallel on the same customer, and the failure mode is each assuming the other has the customer."},
+ {t:"h",x:"What we need from them"},
+ {t:"ul",items:[
+  "Their timeline, so phone activation can be sequenced against it rather than colliding with it.",
+  "Notice when a practice's go live date moves, because a cutover date is far harder to move than an onboarding date.",
+  "Who owns the customer relationship during activation, named per account.",
+  "A heads up when a practice is already unhappy, before we walk into it."]},
+ {t:"h",x:"What they can expect from us"},
+ {t:"ul",items:[
+  "Hardware on site at least a week before any cutover.",
+  "A cutover date only once the carrier has committed one.",
+  "Phone install and number cutover separated by at least a day, so a fault is attributable.",
+  "Post cutover health checks completed and recorded, since that is a shared measure."]},
+ {t:"key",x:"Ask what they need from us before telling them what we need from them. It changes the entire relationship, and they have been doing this longer than we have."},
+ {t:"h",x:"One shared number"},
+ {t:"p",x:"Time to activation is reported to the Director of Onboarding and depends on both teams. Neither team can move it alone, which makes it a genuinely shared measure rather than a stick."}
+]},
+
+{no:"Application support",n:"Working with Application Support",g:"Other teams",
+ note:"The boundary that looks obvious and is not.",
+ blocks:[
+ {t:"h",x:"The case that keeps coming back"},
+ {t:"p",x:"A practice says patient reminders are not going out. Is that ours because it is messaging, or theirs because it is a product feature? Neither team can tell from the description, and the two failure modes are fighting over it or both dropping it."},
+ {t:"key",x:"Route on the symptom, not the topic. Can they make and receive calls? Can they send and receive texts? Or is the software not doing something it should? The first two are ours. The third is theirs, even when the thing the software failed to do involves a message."},
+ {t:"h",x:"The rule for genuinely ambiguous cases"},
+ {t:"ol",items:[
+  "Whoever picked it up keeps the customer until it is formally handed over.",
+  "A handover includes what was found and what was ruled out, not just the ticket.",
+  "If it is genuinely both, one team is named as owning the customer. Shared ownership means nobody calls them back.",
+  "Log it. Three of the same kind is a conversation to have with evidence, not a complaint to make from memory."]},
+ {t:"h",x:"What we need from them"},
+ {t:"ul",items:[
+  "Advance notice of releases that touch messaging or calling.",
+  "A named counterpart and a regular conversation, monthly is enough.",
+  "Their read on whether a practice is already unhappy."]},
+ {t:"h",x:"What they can expect from us"},
+ {t:"ul",items:[
+  "Plain language about what our systems actually do, so their team can route correctly.",
+  "Early warning of any outage that will generate calls to them.",
+  "We never leave a customer stranded between the two teams."]}
+]},
+
+{no:"Logistics",n:"Working with Logistics",g:"Other teams",
+ note:"They can only hit a date they were told about.",
+ blocks:[
+ {t:"h",x:"What we need from them"},
+ {t:"ul",items:[
+  "A confirmed ship date, and notification the moment it moves. A ship date change is a notification, not something we discover by asking.",
+  "Tracking as soon as it exists.",
+  "A hardware address manifest with the order, if the supplier provides one. It lets us set up every phone before it arrives.",
+  "Confirmation of what actually shipped, line by line, including accessories.",
+  "Lead times by model, so we can quote dates rather than guess."]},
+ {t:"h",x:"What they can expect from us"},
+ {t:"ul",items:[
+  "Exact part numbers, never model names. The same model is sold with and without a power supply under different part numbers.",
+  "Accessories as explicit separate lines. Power supplies, headsets, headset adapters, expansion modules, wall brackets.",
+  "The cutover date, not just the delivery date, so they understand what the real deadline is.",
+  "As much notice as we can give."]},
+ {t:"warn",x:"The four dates are not one date. Order date, ship date, delivery date, cutover date. Confusing them is how a practice ends up with a live number and no phones."},
+ {t:"h",x:"Returns"},
+ {t:"p",x:"Three different things with three different paths: wrong item sent, damaged in transit, faulty in use. Somebody has to say which, because that determines who bears the cost. And prove the fault before claiming it, because a phone that works on another port was never faulty."}
+]},
+
+{no:"Compliance",n:"Working with Security and Compliance",g:"Other teams",
+ note:"Not an adjacent function. The job description puts emergency address accuracy and PCI and HIPAA handling for call recording and patient information inside this role.",
+ blocks:[
+ {t:"p",x:"This is the one place where the job description names a named framework rather than an outcome. It asks this role to uphold emergency address registration accuracy, and PCI and HIPAA handling standards for call recording and patient information, across the team. That makes the Director of Security and Compliance a working relationship rather than a distant one."},
+ {t:"h",x:"What sits with us"},
+ {t:"ul",items:[
+  "Emergency address accuracy on every handset we deploy, confirmed by dialing 933 and listening to the address it reads back, not merely by the platform showing it as submitted.",
+  "Keeping patient information out of tickets, chats and email, including at the vendor escalation, which is where it is most likely to leave the company.",
+  "Keeping card numbers out of the same places, on the same rule.",
+  "Knowing that a recorded call plus a card payment is a combination that has to be decided about before recording is enabled, and refusing to enable it locally.",
+  "Verifying who we are talking to before discussing an account or making a change.",
+  "Reporting an exposure the same hour, and deleting nothing."]},
+ {t:"h",x:"What we route to them"},
+ {t:"ul",items:[
+  "Any question about call recording consent, which varies by state and carries extra obligations when patients are involved.",
+  "Any request to enable call recording for a practice, particularly one that takes card payments over the phone.",
+  "Anything found inside a recording or a voicemail that should not be there.",
+  "Any question about what a practice is permitted to send to patients.",
+  "Any suspected exposure of patient or card information, immediately.",
+  "Contractual questions about who is accountable for what."]},
+ {t:"key",x:"When a question turns legal rather than technical, hand it over. Being helpful with an answer you are not qualified to give is the worst available outcome."},
+ {t:"h",x:"What we need from them"},
+ {t:"ul",items:[
+  "Clarity on who is legally accountable for emergency address accuracy: us, the platform, or the practice. That determines how hard we can push a practice that will not give us suite level detail.",
+  "Whether the business associate agreement covers recordings and voicemail held on the phone platform, and whether DialStack signs one with us as a subcontractor.",
+  "Whether we are in PCI scope for voice, and what is required if a recording captures a card number.",
+  "Retention and access rules for recordings and voicemail.",
+  "The identity verification standard, and whether an authorized contact list exists per practice.",
+  "The reporting route and deadline when something is exposed.",
+  "Whether call recordings can be used for our own quality review."]},
+ {t:"p",x:"Seven questions, and none of them can be answered from outside. They are written down so that week one is a conversation with an agenda rather than a discovery exercise."}
+]},
+
+{no:"Vendors",n:"Working with the platform and the carrier",g:"Other teams",
+ note:"The job description names this as ours to own.",
+ blocks:[
+ {t:"h",x:"Who is who"},
+ {t:"tbl",head:["Vendor","What they provide","We go to them for"],rows:[
+  ["DialStack","The voice platform.","Port orders, platform faults, call routing behavior, emergency address provisioning, outages."],
+  ["Bandwidth","The carrier holding numbers and messaging.","Number availability, portability, hosted messaging, registration."],
+  ["Yealink, Poly, Snom","Phone hardware.","Warranty, and releasing a hardware address claimed by a previous provider."]]},
+ {t:"h",x:"What a working vendor relationship means"},
+ {t:"ol",items:[
+  "A named contact, not a support address.",
+  "A known escalation path with expected response times at each level.",
+  "Their support hours, and whether there is an out of hours route.",
+  "A status page we are subscribed to, so we learn about outages from them rather than from angry practices.",
+  "A recurring call, monthly is enough, so problems get raised before they are urgent."]},
+ {t:"key",x:"Before escalating anywhere, say out loud which of the systems you believe is at fault and why. If you cannot, you are not ready to escalate, and going to the wrong one costs a day."},
+ {t:"h",x:"What we owe them"},
+ {t:"p",x:"Specific failing examples rather than descriptions. Numbers on both ends, exact time with time zone, what we ruled out. A vendor who gets good tickets from us gives us better answers, and that compounds."},
+ {t:"warn",x:"A release ticket for a hardware address claimed by a previous provider takes days, not hours, and nobody publishes a turnaround time. Never schedule a cutover assuming one will clear same day."}
+]},
+
+{no:"Practices",n:"Working with the practice itself",g:"Other teams",
+ note:"The rules of engagement with the customer, which are also rules of engagement.",
+ blocks:[
+ {t:"h",x:"What we commit to them"},
+ {t:"ul",items:[
+  "Updates every thirty minutes during an outage, whether or not there is news.",
+  "A next contact time rather than a fix time, because only one of those is ours to keep.",
+  "Bad news the moment we know it, by phone, not once we have a solution.",
+  "One named person talking to them throughout, even when the work is escalated.",
+  "Written confirmation before they cancel anything."]},
+ {t:"h",x:"What we need from them"},
+ {t:"ul",items:[
+  "Every published number, including the fax line.",
+  "An authorized person who can sign, and who is actually available.",
+  "Notification when a phone physically moves, because the emergency address does not follow it.",
+  "That they do not cancel their old service until we confirm the port is complete."]},
+ {t:"bad",x:"The do not cancel instruction goes in writing at three points: at signing, at submission, and when the cutover date is confirmed. It is repeated because it is the single most expensive thing a customer can do, and they do it with the best of intentions to save a month of billing."},
+ {t:"h",x:"What we will not do"},
+ {t:"ul",items:[
+  "Give a date we do not have.",
+  "Blame the carrier, even when it is the carrier. To the practice, we chose the carrier.",
+  "Say we are still working on it for a third day without saying what has actually been ruled out.",
+  "Let somebody go without a working phone while a replacement ships."]}
+]}
+
+]};
+</script>
+<script>
+var CUR=0, QRY="";
+try{var s=+localStorage.getItem(DOC.id+'-sec'); if(s>=0&&s<DOC.secs.length) CUR=s;}catch(e){}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function hi(s){s=esc(s);if(!QRY)return s;
+ try{return s.replace(new RegExp('('+QRY.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig'),'<mark>$1</mark>');}catch(e){return s;}}
+function txt(sec){var p=[sec.n,sec.note||''];
+ (sec.blocks||[]).forEach(function(b){
+  if(b.x)p.push(b.x);
+  (b.items||[]).forEach(function(i){p.push(typeof i==='string'?i:(i.t+' '+(i.d||'')));});
+  (b.head||[]).forEach(function(h){p.push(h);});
+  (b.rows||[]).forEach(function(r){r.forEach(function(c){p.push(c);});});});
+ return p.join(' ').toLowerCase();}
+DOC.secs.forEach(function(s){s._t=txt(s);});
+
+function block(b){
+ if(b.t==='h') return '<h3>'+hi(b.x)+'</h3>';
+ if(b.t==='p') return '<p>'+hi(b.x)+'</p>';
+ if(b.t==='key') return '<div class="key">'+hi(b.x)+'</div>';
+ if(b.t==='warn') return '<div class="warn">'+hi(b.x)+'</div>';
+ if(b.t==='bad') return '<div class="bad">'+hi(b.x)+'</div>';
+ if(b.t==='say') return '<div class="say">'+hi(b.x)+'</div>';
+ if(b.t==='ul') return '<ul class="b">'+b.items.map(function(i){return '<li>'+hi(i)+'</li>';}).join('')+'</ul>';
+ if(b.t==='ol') return '<ol class="n">'+b.items.map(function(i){return '<li>'+hi(i)+'</li>';}).join('')+'</ol>';
+ if(b.t==='chk') return '<ul class="chk">'+b.items.map(function(i){return '<li>'+hi(i)+'</li>';}).join('')+'</ul>';
+ if(b.t==='done') return '<div class="done"><h4>'+esc(b.x||'You are ready when')+'</h4><ul class="chk">'+
+   b.items.map(function(i){return '<li>'+hi(i)+'</li>';}).join('')+'</ul></div>';
+ if(b.t==='steps') return '<ol class="steps">'+b.items.map(function(i){
+   return '<li><h4>'+hi(i.t)+'</h4>'+(i.d?'<p>'+hi(i.d)+'</p>':'')+'</li>';}).join('')+'</ol>';
+ if(b.t==='tbl') return '<div class="scroll"><table><tr>'+b.head.map(function(h){return '<th>'+esc(h)+'</th>';}).join('')+'</tr>'+
+   b.rows.map(function(r){return '<tr>'+r.map(function(c){return '<td>'+hi(c)+'</td>';}).join('')+'</tr>';}).join('')+'</table></div>';
+ return '';
+}
+function drawNav(){
+ var h='',lastg=null;
+ DOC.secs.forEach(function(s,i){
+  if(s.g&&s.g!==lastg){h+='<div class="navlbl">'+esc(s.g)+'</div>';lastg=s.g;}
+  h+='<button class="nb'+(i===CUR&&!QRY?' on':'')+'" data-i="'+i+'">'+
+     (s.no?'<i>'+esc(s.no)+'</i>':'')+esc(s.n)+'</button>';});
+ var n=document.getElementById('nav');n.innerHTML=h;
+ n.querySelectorAll('.nb').forEach(function(b){
+  b.onclick=function(){CUR=+b.dataset.i;QRY='';document.getElementById('q').value='';
+   try{localStorage.setItem(DOC.id+'-sec',CUR);}catch(e){}draw();window.scrollTo(0,0);};});
+}
+function draw(){
+ drawNav();
+ var v=document.getElementById('view');
+ if(QRY){
+  var hits=DOC.secs.map(function(s,i){return {s:s,i:i};}).filter(function(o){return o.s._t.indexOf(QRY.toLowerCase())>-1;});
+  v.innerHTML='<div class="hits">'+(hits.length?hits.map(function(o){
+    return '<div class="hit" data-i="'+o.i+'"><b>'+hi(o.s.n)+'</b><span>'+esc(o.s.note||'')+'</span></div>';}).join('')
+    :'<div class="hit"><b>Nothing matches that.</b></div>')+'</div>';
+  v.querySelectorAll('.hit[data-i]').forEach(function(el){
+   el.onclick=function(){CUR=+el.dataset.i;QRY='';document.getElementById('q').value='';draw();window.scrollTo(0,0);};});
+  return;
+ }
+ var s=DOC.secs[CUR];
+ var h='<article>'+(s.no?'<div class="mod">'+esc(s.no)+'</div>':'')+
+   '<h2>'+hi(s.n)+'</h2>'+(s.note?'<div class="snote">'+hi(s.note)+'</div>':'')+
+   '<div class="body">'+(s.blocks||[]).map(block).join('')+'</div>';
+ var pv=DOC.secs[CUR-1],nx=DOC.secs[CUR+1];
+ h+='<div class="nav2">'+
+   '<button id="pv"'+(pv?'':' disabled')+'><b>Previous</b>'+esc(pv?pv.n:'Start of the manual')+'</button>'+
+   '<button id="nx"'+(nx?'':' disabled')+'><b>Next</b>'+esc(nx?nx.n:'End of the manual')+'</button></div>';
+ h+='</article>';
+ v.innerHTML=h;
+ var a=document.getElementById('pv'),b=document.getElementById('nx');
+ if(a&&pv)a.onclick=function(){CUR--;try{localStorage.setItem(DOC.id+'-sec',CUR);}catch(e){}draw();window.scrollTo(0,0);};
+ if(b&&nx)b.onclick=function(){CUR++;try{localStorage.setItem(DOC.id+'-sec',CUR);}catch(e){}draw();window.scrollTo(0,0);};
+}
+document.getElementById('q').addEventListener('input',function(e){QRY=e.target.value.trim();draw();});
+draw();
+</script>
+</body>
+</html>

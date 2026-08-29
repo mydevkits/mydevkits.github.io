@@ -1,0 +1,1710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Step By Step</title>
+<style>
+:root{
+ --paper:#F5F7F8;--surface:#FFFFFF;--surface-2:#EDF1F3;--surface-3:#E3E9EC;
+ --ink:#131C25;--ink-2:#3A4A57;--muted:#5E6E7A;--faint:#8496A2;
+ --rule:#D8E0E5;--rule-soft:#E7ECEF;
+ --accent:#0D6670;--accent-2:#0A4E56;--accent-wash:#DFEDEE;--accent-line:#7FBCC2;
+ --crit:#9C3128;--crit-wash:#F6E6E4;--crit-line:#E3BFBA;
+ --warn:#7E5A0E;--warn-wash:#F7EFDD;--warn-line:#E2D0A5;
+ --ok:#26603F;--ok-wash:#E1EFE7;--ok-line:#BBD9C7;
+ --shadow:0 1px 2px rgba(19,28,37,.05),0 12px 30px -20px rgba(19,28,37,.4);
+ --ui:ui-sans-serif,"Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,Arial,sans-serif;
+ --mono:ui-monospace,"Cascadia Mono","Cascadia Code",Consolas,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+ --paper:#0C1319;--surface:#141D25;--surface-2:#1B262F;--surface-3:#22303A;
+ --ink:#E7EDF1;--ink-2:#C2CED6;--muted:#8B9BA7;--faint:#6D7E8B;
+ --rule:#26333D;--rule-soft:#1E2A33;
+ --accent:#4CBAC4;--accent-2:#7FD3DA;--accent-wash:#0F2C31;--accent-line:#1E4E55;
+ --crit:#E58A81;--crit-wash:#2E1A18;--crit-line:#4A2A26;
+ --warn:#D9AC4E;--warn-wash:#2B2413;--warn-line:#463A1B;
+ --ok:#69BE8C;--ok-wash:#12261B;--ok-line:#24422F;
+ --shadow:0 1px 2px rgba(0,0,0,.4),0 14px 34px -22px rgba(0,0,0,.95);
+}}
+:root[data-theme="dark"]{
+ --paper:#0C1319;--surface:#141D25;--surface-2:#1B262F;--surface-3:#22303A;
+ --ink:#E7EDF1;--ink-2:#C2CED6;--muted:#8B9BA7;--faint:#6D7E8B;
+ --rule:#26333D;--rule-soft:#1E2A33;
+ --accent:#4CBAC4;--accent-2:#7FD3DA;--accent-wash:#0F2C31;--accent-line:#1E4E55;
+ --crit:#E58A81;--crit-wash:#2E1A18;--crit-line:#4A2A26;
+ --warn:#D9AC4E;--warn-wash:#2B2413;--warn-line:#463A1B;
+ --ok:#69BE8C;--ok-wash:#12261B;--ok-line:#24422F;
+ --shadow:0 1px 2px rgba(0,0,0,.4),0 14px 34px -22px rgba(0,0,0,.95);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:none}
+input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+
+header{background:var(--surface);border-bottom:1px solid var(--rule);position:sticky;top:0;z-index:30}
+.hin{max-width:900px;margin:0 auto;padding:.65rem 1.2rem;display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}
+.mark{font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.hin .sp{margin-left:auto;display:flex;gap:.4rem}
+.tb{padding:.32rem .6rem;border:1px solid var(--rule);border-radius:6px;font-size:.78rem;color:var(--muted);background:var(--surface-2)}
+.tb:hover{color:var(--accent);border-color:var(--accent-line)}
+#bar{height:3px;background:var(--rule-soft)}
+#barfill{height:100%;background:var(--accent);width:0;transition:width .2s}
+
+main{max-width:900px;margin:0 auto;padding:1.5rem 1.2rem 6rem}
+h1{font-size:1.45rem;font-weight:650;letter-spacing:-.02em;margin:0 0 .3rem;line-height:1.22}
+.lede{color:var(--muted);font-size:.94rem;margin:0 0 1.7rem;max-width:68ch}
+
+.grp{margin-bottom:1.6rem}
+.grp h2{font-size:.67rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:0 0 .1rem}
+.grp .gn{font-size:.84rem;color:var(--muted);margin:0 0 .65rem}
+.cards{display:grid;gap:.55rem;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.c{background:var(--surface);border:1px solid var(--rule);border-radius:9px;padding:.8rem .95rem;text-align:left;
+ box-shadow:var(--shadow);display:flex;flex-direction:column;gap:.28rem}
+.c:hover{border-color:var(--accent)}
+.c.fail{border-left:3px solid var(--crit)}
+.c.best{border-left:3px solid var(--ok)}
+.c .t{font-size:.96rem;font-weight:650;line-height:1.28}
+.c .w{font-size:.85rem;color:var(--muted);font-style:italic;line-height:1.4}
+.c .m{font-family:var(--mono);font-size:.66rem;color:var(--faint);display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.15rem}
+.c .done{color:var(--ok)}
+.tagbest{font-family:var(--mono);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;background:var(--ok-wash);
+ color:var(--ok);padding:.08rem .3rem;border-radius:3px;font-weight:700;align-self:flex-start}
+
+/* step view */
+.crumb{display:flex;align-items:center;gap:.6rem;margin-bottom:1.1rem;flex-wrap:wrap}
+.crumb button{font-size:.83rem;color:var(--accent)}
+.crumb .of{font-family:var(--mono);font-size:.72rem;color:var(--faint);margin-left:auto}
+.stephead{margin-bottom:1.1rem}
+.stephead .flow{font-family:var(--mono);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:.3rem}
+.stephead h1{margin-bottom:.45rem}
+.badges{display:flex;gap:.4rem;flex-wrap:wrap}
+.who{font-family:var(--mono);font-size:.62rem;letter-spacing:.09em;text-transform:uppercase;font-weight:700;
+ padding:.16rem .45rem;border-radius:4px;background:var(--surface-3);color:var(--muted)}
+.who.sales{background:var(--accent-wash);color:var(--accent-2)}
+.who.cust{background:var(--warn-wash);color:var(--warn)}
+.who.lead{background:var(--crit-wash);color:var(--crit)}
+.pri{font-family:var(--mono);font-size:.62rem;letter-spacing:.09em;text-transform:uppercase;font-weight:700;
+ padding:.16rem .45rem;border-radius:4px;background:var(--crit-wash);color:var(--crit)}
+.detail{font-size:1rem;color:var(--ink-2);margin:0 0 1.1rem;line-height:1.65}
+.where{background:var(--accent-wash);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+ padding:.7rem .9rem;margin:0 0 1.4rem}
+.where .wk{font-family:var(--mono);font-size:.62rem;letter-spacing:.11em;text-transform:uppercase;
+ color:var(--accent-2);font-weight:700;display:block;margin-bottom:.2rem}
+.where p{margin:0;font-size:.93rem;color:var(--ink-2);line-height:1.55}
+
+.sec{margin-bottom:1.3rem}
+.sec .st{font-family:var(--mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:.55rem}
+.chk{display:grid;gap:.35rem}
+.chk label{display:grid;grid-template-columns:22px 1fr;gap:.55rem;align-items:start;background:var(--surface);
+ border:1px solid var(--rule);border-radius:8px;padding:.6rem .8rem;cursor:pointer;font-size:.95rem;color:var(--ink-2)}
+.chk label:hover{border-color:var(--accent-line)}
+.chk input{width:17px;height:17px;margin:.15rem 0 0;accent-color:var(--accent);cursor:pointer}
+.chk label.on{background:var(--ok-wash);border-color:var(--ok-line);color:var(--ink)}
+.chk label.on span{text-decoration:line-through;text-decoration-color:var(--ok-line)}
+
+.forms{display:grid;gap:.45rem}
+.fm{display:flex;align-items:center;gap:.7rem;background:var(--surface);border:1px solid var(--rule);
+ border-radius:8px;padding:.65rem .85rem;text-align:left;width:100%;box-shadow:var(--shadow)}
+.fm:hover{border-color:var(--accent)}
+.fm.pri{border-left:3px solid var(--crit)}
+.fm .ic{font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;
+ color:var(--accent);background:var(--accent-wash);padding:.2rem .42rem;border-radius:4px;white-space:nowrap}
+.fm .tx{min-width:0}
+.fm .tx b{display:block;font-size:.94rem;font-weight:650}
+.fm .tx span{display:block;font-size:.8rem;color:var(--muted);line-height:1.4}
+.fm .go{margin-left:auto;color:var(--accent);font-size:.85rem;white-space:nowrap}
+
+.fb{background:var(--crit-wash);border-left:3px solid var(--crit);border-radius:0 8px 8px 0;padding:.7rem .9rem;margin-bottom:.45rem}
+.fb .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--crit);font-weight:700}
+.fb p{margin:.2rem 0 0;font-size:.92rem;color:var(--ink-2)}
+.jump{margin-top:.5rem;display:inline-block;font-size:.84rem;color:var(--crit);border:1px solid var(--crit-line);
+ border-radius:6px;padding:.24rem .55rem;background:var(--surface)}
+.jump.acc{color:var(--accent);border-color:var(--accent-line)}
+
+.nav{display:flex;gap:.6rem;align-items:center;margin-top:2rem;padding-top:1.2rem;border-top:1px solid var(--rule);flex-wrap:wrap}
+.nb{padding:.6rem 1.1rem;border-radius:8px;border:1px solid var(--rule);background:var(--surface-2);font-size:.92rem}
+.nb:hover{border-color:var(--accent-line);color:var(--accent)}
+.nb.pri{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
+.nb.pri:hover{background:var(--accent-2);color:#fff}
+.nb[disabled]{opacity:.4;cursor:not-allowed}
+.nav .left{margin-left:auto;font-size:.82rem;color:var(--muted)}
+
+.block{margin-top:1.5rem;border-radius:9px;padding:.9rem 1.05rem;border:1px solid var(--rule);background:var(--surface)}
+.block.watch{background:var(--warn-wash);border-color:var(--warn-line)}
+.block .bt{font-family:var(--mono);font-size:.63rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:.45rem}
+.block.watch .bt{color:var(--warn)}
+.block ul{margin:0;padding-left:1.1rem}
+.block li{font-size:.92rem;color:var(--ink-2);margin:.3rem 0;line-height:1.5}
+.block.say{background:var(--surface-2);border-left:3px solid var(--accent-line)}
+.block.say .bt{color:var(--accent)}
+.block.say p{margin:0;font-size:.97rem;color:var(--ink-2);font-style:italic;line-height:1.6}
+
+/* modal */
+#ov{position:fixed;inset:0;background:rgba(10,16,22,.55);display:none;z-index:60;padding:1.2rem;overflow-y:auto}
+#ov.on{display:block}
+.mod{max-width:820px;margin:1rem auto;background:var(--surface);border-radius:12px;box-shadow:0 20px 60px -20px rgba(0,0,0,.6);overflow:hidden}
+.mh{padding:1rem 1.2rem;border-bottom:1px solid var(--rule);display:flex;gap:.7rem;align-items:flex-start;flex-wrap:wrap}
+.mh h2{margin:0;font-size:1.1rem;font-weight:650}
+.mh .kind{font-family:var(--mono);font-size:.6rem;letter-spacing:.09em;text-transform:uppercase;font-weight:700;
+ color:var(--accent);background:var(--accent-wash);padding:.16rem .42rem;border-radius:4px}
+.mh .x{margin-left:auto;font-size:1.3rem;color:var(--muted);line-height:1}
+.mb{padding:1.1rem 1.2rem;max-height:calc(100vh - 220px);overflow-y:auto}
+.mb .meta{background:var(--surface-2);border-radius:8px;padding:.75rem .9rem;margin-bottom:1rem}
+.mb .meta div{font-size:.88rem;color:var(--ink-2);margin:.3rem 0;line-height:1.5}
+.mb .meta b{color:var(--ink)}
+.doc{background:var(--surface-2);border:1px solid var(--rule);border-radius:8px;padding:1rem;
+ font-family:var(--mono);font-size:.8rem;line-height:1.75;white-space:pre-wrap;word-break:break-word}
+.doc .fill{display:inline-block;min-width:150px;border:none;border-bottom:1.5px solid var(--accent-line);
+ background:var(--accent-wash);color:var(--ink);font-family:var(--mono);font-size:.8rem;padding:0 .25rem;border-radius:2px 2px 0 0}
+.doc .fill:focus{outline:none;border-bottom-color:var(--accent);background:var(--surface)}
+.doc .fill.us{background:var(--ok-wash);border-bottom-color:var(--ok-line)}
+.mf{padding:.85rem 1.2rem;border-top:1px solid var(--rule);display:flex;gap:.5rem;flex-wrap:wrap;background:var(--surface-2)}
+.tipbox{margin-top:.9rem;background:var(--warn-wash);border-left:3px solid var(--warn);border-radius:0 7px 7px 0;
+ padding:.6rem .85rem;font-size:.88rem;color:var(--ink-2);line-height:1.5}
+
+/* setup */
+.setup{display:grid;gap:.6rem;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.setup label{display:block;font-size:.78rem;color:var(--muted);margin-bottom:.2rem;font-weight:600}
+.setup input{width:100%;padding:.5rem .65rem;border:1px solid var(--rule);border-radius:7px;background:var(--surface-2);font-size:.92rem}
+.setup input:focus{outline:none;border-color:var(--accent);background:var(--surface)}
+
+@media print{
+ body *{visibility:hidden}
+ #ov,#ov *{visibility:visible}
+ #ov{position:absolute;inset:0;background:#fff;padding:0;overflow:visible}
+ .mod{box-shadow:none;margin:0;max-width:100%}
+ .mh .x,.mf,.mb .meta,.tipbox{display:none}
+ .doc{border:none;background:#fff;font-size:11pt;color:#000}
+ .doc .fill{background:#fff;border-bottom:1px solid #666;color:#000}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+ <div class="hin">
+  <span class="mark">Step By Step</span>
+  <div class="sp">
+   <button class="tb" id="setupBtn">Your details</button>
+   <button class="tb" id="formsBtn">All forms</button>
+   <button class="tb" id="theme" title="Light or dark">&#9680;</button>
+  </div>
+ </div>
+ <div id="bar"><div id="barfill"></div></div>
+</header>
+
+<main id="app"></main>
+<div id="ov"><div class="mod" id="mod"></div></div>
+
+<script>/* ============================================================
+   FORMS LIBRARY
+   Every field written [[LIKE THIS]] becomes a fillable box.
+   Fields named US_* are filled from your details once, in Setup.
+   ============================================================ */
+var FORMS=[
+
+{
+ id:"number-recovery",
+ name:"Emergency: their number is dead, get it back on",
+ kind:"Checklist and script",
+ priority:true,
+ who:"The customer makes the carrier call. You stay on the line with them.",
+ why:"The single best outcome is getting the old carrier to switch the number back on. Once it is live again we port it properly and it never goes dark a second time. Everything else on this page is what you do while that is in progress, or what you fall back to if the carrier says no.",
+ after:"Work top to bottom. Section 1 is time sensitive and beats every other thing on this list.",
+ doc:true,
+ body:
+"NUMBER RECOVERY\n"+
+"Practice: [[BUSINESS NAME]]\n"+
+"Dead number: [[DEAD NUMBER]]\n"+
+"Old carrier: [[CURRENT CARRIER]]\n"+
+"Date it was canceled: [[CANCEL DATE]]\n"+
+"Date: [[DATE]]\n\n"+
+
+"1. RECONNECT THE OLD SERVICE. Start this in the first hour.\n\n"+
+"   Why this is first: a canceled number is not deleted straight away. The\n"+
+"   carrier holds it for a period before it goes back into the pool and can\n"+
+"   be handed to somebody else. While it is still in that hold the carrier\n"+
+"   can usually switch it back on. After it is reassigned it is gone for\n"+
+"   good and no amount of escalation brings it back. The hold length varies\n"+
+"   by carrier and nobody will quote you one. Treat it as days.\n\n"+
+"   The customer has to make this call. The carrier will not discuss a\n"+
+"   closed account with us. Get them on the phone, have them dial the\n"+
+"   carrier, and stay on the line so you hear the answer yourself.\n\n"+
+"   [ ] Customer on the phone with [[CURRENT CARRIER]], we are listening in\n"+
+"   [ ] Asked in these words: reinstate the existing number on the existing\n"+
+"       account. Not a new number. Not a new account.\n"+
+"   [ ] Asked whether the number has already been released or reassigned\n"+
+"   [ ] Asked what it costs to reconnect: $ ______________\n"+
+"   [ ] Asked whether reconnecting starts a new contract term\n"+
+"       If they want a 1 or 2 year commitment, ask for month to month\n"+
+"       instead. Do not let them sign a term for a number we are\n"+
+"       porting away in three weeks.\n"+
+"   [ ] Asked for call forwarding to [[NEW NUMBER]] while it is reconnected\n"+
+"   [ ] Representative name: ______________________________\n"+
+"   [ ] Ticket or reference number: _______________________\n"+
+"   [ ] Date the number will be live again: _______________\n\n"+
+"   If the front line says no, do not hang up. Ask for the retention\n"+
+"   department or the porting department by name. They handle this far\n"+
+"   more often than the first person who answers, and they have authority\n"+
+"   the first person does not.\n\n"+
+
+"2. THE PART EVERYONE GETS WRONG AFTER RECONNECTION\n\n"+
+"   [ ] Told the customer, in plain words, DO NOT CANCEL AGAIN.\n"+
+"       The port itself ends the old service. If they cancel a second\n"+
+"       time to save a month of billing, the number dies again and this\n"+
+"       time it very likely will not come back.\n"+
+"   [ ] Got a FRESH copy of the bill or account record after reconnection.\n"+
+"       Reconnecting often issues a new account number, and sometimes a\n"+
+"       new main billing number on the account. Any LOA or account detail\n"+
+"       collected before the cancellation is now wrong, and submitting it\n"+
+"       is a guaranteed rejection.\n"+
+"   [ ] New account number: _______________________________\n"+
+"   [ ] Main billing number on the account now: ___________\n"+
+"   [ ] New PIN or passcode if one was set on reconnection: _______\n"+
+"   [ ] Fresh LOA signed with the new details, dated today\n"+
+"   [ ] Port restarted and submitted\n"+
+"   [ ] Customer told to keep paying the old carrier until we confirm the\n"+
+"       port completed\n\n"+
+
+"3. GIVE THEM A WORKING PHONE, running at the same time as section 1\n\n"+
+"   [ ] New number provisioned in their area code and ringing their staff\n"+
+"   [ ] Confirmed the practice can make and receive calls on it\n"+
+"   [ ] Front desk told they can start calling today's patients directly now\n\n"+
+"   Be clear with them that this is a working phone, not a rescue of their\n"+
+"   inbound calls. A disconnected number cannot be forwarded, because the\n"+
+"   account that held it is gone. There is no setting anywhere that\n"+
+"   redirects those calls. Only the old carrier can, and only by switching\n"+
+"   the number back on.\n\n"+
+
+"4. CHECK WHAT ELSE SURVIVED\n\n"+
+"   [ ] Is any other line on that account still working?\n"+
+"       A fax line or second number may not have been canceled.\n"+
+"       If one is alive, it CAN be forwarded. Do that.\n"+
+"   [ ] Is their texting still working? It may be on a different system.\n\n"+
+
+"5. ONLY IF THE CARRIER SAYS NO: update where patients find them\n\n"+
+"   Do not start this while reconnection is still a live possibility, or\n"+
+"   you will change every listing and then change them all back.\n\n"+
+"   [ ] Google Business Profile           <-- do this one first\n"+
+"   [ ] Website header, footer, contact page\n"+
+"   [ ] Voicemail greeting on anything still working\n"+
+"   [ ] Text message to existing patients, if texting still works\n"+
+"   [ ] Facebook and any other social profiles\n"+
+"   [ ] Online booking or scheduling pages\n"+
+"   [ ] Insurance directory listings (slow, start early)\n"+
+"   [ ] Sign on the door\n"+
+"   [ ] Email signature for the whole practice\n"+
+"   [ ] Any online review profiles\n\n"+
+"   What cannot be fixed, say this out loud: printed signage, business\n"+
+"   cards, referral pads, and the number already saved in patients'\n"+
+"   phones. Those calls are lost. Tell them on day one rather than\n"+
+"   letting them discover it in week three.\n\n"+
+
+"FOLLOW UP\n\n"+
+"  [ ] Called the practice at end of day one\n"+
+"  [ ] Called again on day three\n"+
+"  [ ] Reconnection outcome confirmed either way, in writing\n"+
+"  [ ] If recovered, port restarted with a fresh LOA and fresh account\n"+
+"      details, and the customer knows not to cancel again",
+ phone:
+"What to say to the practice:\n\n"+
+"\"I have to be straight with you. Once a number is disconnected we cannot forward it, because the account that held it is gone. There is no switch on our side for that. The one thing that actually fixes this is your old carrier turning the number back on, and that gets harder every day we wait, so I want to do that right now while I have you.\n\n"+
+"You have to be the one who calls them, they will not talk to me about a closed account. Can you dial them now and keep me on the line? I will tell you exactly what to ask for.\n\n"+
+"While that is going, I am setting you up a working number today so your staff can call people back.\"\n\n"+
+
+"What the customer should ask the carrier, word for word:\n\n"+
+"\"I canceled this account and I need the number reinstated on the same account. Not a new number. Has it been released yet? What does reconnection cost, and does it start a new contract term? I need month to month if so, because I am moving the number to a new provider in a few weeks. And can you put call forwarding on it to my temporary number while that happens?\"",
+ tip:"Two things kill this recovery. One, waiting a day before calling, because the number may be reassigned by then. Two, the customer canceling a second time after reconnection to avoid another month of billing. Say both out loud on the first call."
+},
+
+{
+ id:"naming-glossary",
+ name:"What everything is actually called",
+ kind:"Reference",
+ who:"You, before you talk to a carrier or a customer.",
+ why:"A port order is a record in a portal. An LSR is the form the platform generates from it. An LOA is a signed document. Saying the wrong one to a carrier gets you the wrong answer.",
+ after:"Nothing to send. Read it once and the rest of the process stops being confusing.",
+ body:
+"DOCUMENTS, things with signatures or content\n\n"+
+"  LOA, Letter of Authorization\n"+
+"    The customer's signed permission to move their numbers.\n"+
+"    We send the template. The customer signs. It uploads to the port order.\n\n"+
+"  Messaging LOA\n"+
+"    A SEPARATE signed permission to add texting to a number.\n"+
+"    Different document. Does not cover voice. Must be under 30 days old.\n\n"+
+"  CSR, Customer Service Record\n"+
+"    The losing carrier's own file on the account: exact business name,\n"+
+"    service address, account number, every working number.\n"+
+"    The customer requests it. Carriers will not give it to us.\n\n"+
+"  Bill copy\n"+
+"    A recent invoice. Sometimes accepted in place of a CSR.\n\n"+
+"  LSR, Local Service Request\n"+
+"    The industry form that actually asks the losing carrier to release\n"+
+"    the numbers. GENERATED BY THE PLATFORM from your port order.\n"+
+"    You never fill one in by hand.\n\n"+
+"RECORDS, things that live in a system\n\n"+
+"  Port order, or port-in order\n"+
+"    The request record you create.\n"+
+"    Bandwidth: Numbers, then Port.  DialStack: the port order flow.\n\n"+
+"  Hosted messaging order\n"+
+"    The request to add texting to a number you do not carry voice for.\n"+
+"    Bandwidth: Numbers, then Hosted Messaging.\n\n"+
+"  Toll free verification\n"+
+"    An application to let a toll free number send texts.\n"+
+"    A separate web form, not a portal screen.\n\n"+
+"  Brand and Campaign\n"+
+"    The two 10DLC registrations. A brand is the business.\n"+
+"    A campaign is what you send. The brand comes first.\n\n"+
+"NEITHER\n\n"+
+"  FOC, Firm Order Commitment\n"+
+"    Not a document. The DATE the losing carrier commits to.\n\n"+
+"  PIN or passcode\n"+
+"    A security code on the phone account. Rarely on the CSR.\n"+
+"    Must be asked for separately.\n\n"+
+"  BTN, Billing Telephone Number\n"+
+"    The number the account is billed under. The account anchor.\n\n"+
+"THE SENTENCE THAT CLEARS IT UP\n\n"+
+"  You create a PORT ORDER, attach the LOA, and the platform turns it\n"+
+"  into an LSR which it sends to the losing carrier. The carrier replies\n"+
+"  with an FOC DATE, or a rejection.",
+ tip:"Bandwidth's port wizard calls the upload area Documents and Supplemental Information, with a File(s) control for the LOA and a separate field called Person authorizing this port (Name on LOA). Toll free LOAs must be PDF or TIFF."
+},
+
+{
+ id:"pin-request",
+ name:"Port out PIN request (email or phone script)",
+ kind:"Script and email",
+ priority:true,
+ who:"The customer calls their current phone company. We cannot do this for them.",
+ why:"A port out PIN is a security code on the phone account. Without it, most carriers reject the port. It is almost never printed on the customer service record, so it has to be asked for separately. This is the single most commonly missed item in the whole process.",
+ after:"Record the PIN on the account the moment you get it. Do not leave it in an email thread. If the carrier says there is no PIN on the account, write that down too, because you will be asked.",
+ body:
+"Hello,\n\n"+
+"I am the account holder for account [[ACCOUNT NUMBER]] at [[SERVICE ADDRESS]].\n\n"+
+"I am transferring my phone service to a new provider. Please provide the port out PIN or passcode for this account so the transfer can be processed.\n\n"+
+"If there is no PIN on the account, please confirm that in writing.\n\n"+
+"Account holder name: [[BUSINESS NAME]]\n"+
+"Billing telephone number: [[BILLING TELEPHONE NUMBER]]\n"+
+"Contact: [[CONTACT NAME]], [[CONTACT PHONE]]\n\n"+
+"Thank you,\n[[CONTACT NAME]]",
+ phone:
+"If they call instead of emailing, have them say this:\n\n"+
+"\"I am transferring my phone service to another provider and I need the port out PIN for my account. My account number is [[ACCOUNT NUMBER]].\"\n\n"+
+"If the representative says they do not have one, ask: \"Can you confirm there is no port out PIN or passcode on this account?\" and note the name of the person who said it."
+},
+
+{
+ id:"csr-request",
+ name:"Customer Service Record (CSR) request",
+ kind:"Email the customer sends",
+ who:"The customer sends this to their current phone company. Carriers will not give it to us.",
+ why:"The customer service record is the carrier's own file on the account. It shows the exact business name, service address, account number and every working number. Almost every port rejection is a mismatch against this document, so getting it first prevents most failures.",
+ after:"Run it through the CSR Reader. Check every field against what the customer told you, because the two often differ.",
+ body:
+"Hello,\n\n"+
+"I am the account holder for account [[ACCOUNT NUMBER]].\n\n"+
+"Please email me a copy of my Customer Service Record (CSR) for this account.\n\n"+
+"Please send it by email rather than reading it over the phone, as I need the exact details in writing.\n\n"+
+"Account holder name: [[BUSINESS NAME]]\n"+
+"Service address: [[SERVICE ADDRESS]]\n"+
+"Billing telephone number: [[BILLING TELEPHONE NUMBER]]\n\n"+
+"Thank you,\n[[CONTACT NAME]]\n[[CONTACT EMAIL]]",
+ tip:"Tell the customer to insist on email. Carriers will happily read details over the phone, and details heard over the phone are how mismatches happen."
+},
+
+{
+ id:"loa-voice",
+ name:"Letter of Authorization (LOA), phone numbers",
+ kind:"Signed document",
+ priority:true,
+ who:"Signed by whoever the current carrier has on file as the account holder. This may not be the person who signed your agreement.",
+ why:"This is the customer's written permission to move their numbers. Without a valid signed LOA no carrier will release anything. It must be signed and dated, and many carriers reject one older than thirty days.",
+ after:"Check the signature date before submitting. Check the signer name matches the account holder on the customer service record. Then attach it to the port order.",
+ doc:true,
+ body:
+"LETTER OF AUTHORIZATION\n"+
+"Telephone Number Transfer\n\n"+
+"Date: [[DATE]]\n\n"+
+"I, [[SIGNER NAME]], acting as [[SIGNER TITLE]] of [[BUSINESS NAME]],\n"+
+"authorize [[US_COMPANY]] to act as my agent for the purpose of transferring\n"+
+"the telephone numbers listed below from my current service provider.\n\n"+
+"ACCOUNT DETAILS, exactly as they appear on the current provider's records\n\n"+
+"  Business name on account:   [[BUSINESS NAME]]\n"+
+"  Service address:            [[SERVICE ADDRESS]]\n"+
+"  City, State, ZIP:           [[CITY STATE ZIP]]\n"+
+"  Current provider:           [[CURRENT CARRIER]]\n"+
+"  Account number:             [[ACCOUNT NUMBER]]\n"+
+"  Billing telephone number:   [[BILLING TELEPHONE NUMBER]]\n"+
+"  Port out PIN or passcode:   [[PORT OUT PIN]]\n\n"+
+"TELEPHONE NUMBERS TO BE TRANSFERRED\n\n"+
+"  [[NUMBERS TO TRANSFER]]\n\n"+
+"I confirm that I am authorized to make changes to this account. I understand\n"+
+"that I should not cancel my existing service until the transfer is complete\n"+
+"and confirmed in writing, and that canceling early may cause the permanent\n"+
+"loss of these telephone numbers.\n\n"+
+"Signature:  ______________________________________\n\n"+
+"Print name: [[SIGNER NAME]]\n\n"+
+"Title:      [[SIGNER TITLE]]\n\n"+
+"Date:       [[DATE]]\n\n"+
+"---------------------------------------------------------------\n"+
+"Submitted by [[US_COMPANY]]\n"+
+"[[US_ADDRESS]]\n"+
+"[[US_CONTACT]]  [[US_PHONE]]  [[US_EMAIL]]",
+ tip:"This is a starting template. Have it reviewed by your legal team, and check whether your platform partner generates its own LOA, in which case use theirs instead."
+},
+
+{
+ id:"loa-sms",
+ name:"Letter of Authorization (LOA), text messaging",
+ kind:"Signed document",
+ who:"Signed by the account holder. Same person as the phone LOA in most cases.",
+ why:"Adding texting to a number is a separate permission from moving the calls. It is a different document and it does not cover the voice side. Carriers reject one signed more than thirty days ago.",
+ after:"Check the date before submitting. If it is close to thirty days old, get a fresh one rather than risking a rejection.",
+ doc:true,
+ body:
+"LETTER OF AUTHORIZATION\n"+
+"Text Messaging Service\n\n"+
+"Date: [[DATE]]\n\n"+
+"I, [[SIGNER NAME]], acting as [[SIGNER TITLE]] of [[BUSINESS NAME]],\n"+
+"authorize [[US_COMPANY]] to enable and manage text messaging service on the\n"+
+"telephone numbers listed below.\n\n"+
+"I understand that this authorization applies to text messaging only and does\n"+
+"not change my voice telephone service, which remains with my current provider.\n\n"+
+"BUSINESS DETAILS\n\n"+
+"  Legal business name:        [[BUSINESS NAME]]\n"+
+"  Business address:           [[SERVICE ADDRESS]]\n"+
+"  City, State, ZIP:           [[CITY STATE ZIP]]\n"+
+"  Federal Tax ID (EIN):       [[EIN]]\n"+
+"  Website:                    [[WEBSITE]]\n\n"+
+"TELEPHONE NUMBERS\n\n"+
+"  [[NUMBERS TO TRANSFER]]\n\n"+
+"I confirm I am authorized to make changes to these numbers.\n\n"+
+"Signature:  ______________________________________\n\n"+
+"Print name: [[SIGNER NAME]]\n\n"+
+"Title:      [[SIGNER TITLE]]\n\n"+
+"Date:       [[DATE]]\n\n"+
+"---------------------------------------------------------------\n"+
+"Submitted by [[US_COMPANY]]\n"+
+"[[US_ADDRESS]]\n"+
+"[[US_CONTACT]]  [[US_PHONE]]  [[US_EMAIL]]",
+ tip:"Watch the thirty day rule. This is the most common reason a messaging order bounces."
+},
+
+{
+ id:"no-cancel",
+ name:"Do not cancel acknowledgement",
+ kind:"Signed or emailed confirmation",
+ priority:true,
+ who:"The customer signs or replies to confirm.",
+ why:"If a customer cancels their old phone service before the transfer finishes, the numbers are usually gone permanently. This is the worst outcome in the whole process and it is entirely preventable. Getting it in writing means it has been said clearly, and it protects everyone if it happens anyway.",
+ after:"Keep it on the account. Repeat the message verbally at the port date confirmation and again on cutover day.",
+ doc:true,
+ body:
+"IMPORTANT: DO NOT CANCEL YOUR CURRENT PHONE SERVICE\n\n"+
+"Date: [[DATE]]\n"+
+"Practice: [[BUSINESS NAME]]\n\n"+
+"We are transferring your telephone numbers to [[US_COMPANY]].\n\n"+
+"Please read and confirm the following.\n\n"+
+"1. DO NOT cancel or disconnect your current phone service.\n"+
+"   If your service is canceled before the transfer completes, your telephone\n"+
+"   numbers may be permanently lost and cannot be recovered.\n\n"+
+"2. DO NOT make changes to your phone account.\n"+
+"   Adding features, changing the address or changing the business name during\n"+
+"   the transfer will cause it to be rejected and delayed.\n\n"+
+"3. WAIT for our written confirmation.\n"+
+"   We will email you when it is safe to cancel your old service. This is\n"+
+"   normally about three days after your numbers move.\n\n"+
+"I understand and agree to the above.\n\n"+
+"Signature:  ______________________________________\n\n"+
+"Print name: [[SIGNER NAME]]\n\n"+
+"Date:       [[DATE]]",
+ tip:"An email reply saying \"understood, we will not cancel anything\" is enough. Getting it in writing matters more than the format."
+},
+
+{
+ id:"info-sheet",
+ name:"Customer information sheet (our form)",
+ kind:"Form the customer fills in",
+ who:"The customer, usually the office manager.",
+ why:"Collects everything needed in one pass instead of five phone calls. Send it at the start.",
+ after:"Check the business name against the customer service record when it arrives. They very often differ, and the carrier's version is the one that counts.",
+ doc:true,
+ body:
+"PHONE SERVICE INFORMATION SHEET\n"+
+"Please complete and return to [[US_CONTACT]] at [[US_EMAIL]]\n\n"+
+"YOUR PRACTICE\n\n"+
+"  Legal business name (as on your tax paperwork):  [[BUSINESS NAME]]\n"+
+"  Name on your current phone bill:                 [[NAME ON PHONE BILL]]\n"+
+"  Service address:                                 [[SERVICE ADDRESS]]\n"+
+"  City, State, ZIP:                                [[CITY STATE ZIP]]\n"+
+"  Federal Tax ID (EIN):                            [[EIN]]\n"+
+"  Website address:                                 [[WEBSITE]]\n"+
+"  Main contact name:                               [[CONTACT NAME]]\n"+
+"  Contact email and phone:                         [[CONTACT EMAIL]]\n\n"+
+"YOUR CURRENT PHONE SERVICE\n\n"+
+"  Current phone company:                           [[CURRENT CARRIER]]\n"+
+"  Account number:                                  [[ACCOUNT NUMBER]]\n"+
+"  Main billing telephone number:                   [[BILLING TELEPHONE NUMBER]]\n"+
+"  Contract end date, if any:                       [[CONTRACT END DATE]]\n"+
+"  Port out PIN or passcode:                        [[PORT OUT PIN]]\n\n"+
+"YOUR PHONE NUMBERS\n"+
+"List every number, including any on your signage, website, Google listing,\n"+
+"insurance directories and referral pads.\n\n"+
+"  [[ALL NUMBERS AND WHAT EACH IS USED FOR]]\n\n"+
+"OTHER THINGS ON A PHONE LINE\n"+
+"Tick anything you have. These need separate handling.\n\n"+
+"  [ ] Fax machine          [ ] Fire alarm panel     [ ] Elevator phone\n"+
+"  [ ] Burglar alarm        [ ] Card terminal        [ ] Postage meter\n\n"+
+"TEXT MESSAGING\n\n"+
+"  Do you text patients today?                      [[YES OR NO]]\n"+
+"  If yes, what software sends the texts?           [[TEXTING VENDOR]]\n\n"+
+"ADVERTISING\n\n"+
+"  Does a marketing company handle your ads?        [[YES OR NO]]\n"+
+"  If yes, which company?                           [[MARKETING COMPANY]]\n\n"+
+"YOUR INTERNET\n\n"+
+"  Internet provider:                               [[ISP]]\n"+
+"  Upload speed, if known:                          [[UPLOAD SPEED]]"
+},
+
+{
+ id:"tenlc-sheet",
+ name:"Text registration information sheet (our form)",
+ kind:"Form the customer fills in",
+ who:"The customer. The details must match official records exactly.",
+ why:"Carriers verify these against public and IRS records. A name that does not match, or a free email address, gets the application rejected.",
+ after:"Check the website before you submit anything. That is what actually blocks approval, not the phone details.",
+ doc:true,
+ body:
+"TEXT MESSAGING REGISTRATION\n"+
+"Please complete and return to [[US_CONTACT]] at [[US_EMAIL]]\n\n"+
+"These details are checked against official records, so they must match exactly.\n\n"+
+"  Legal business name, exactly as on your IRS letter:  [[BUSINESS NAME]]\n"+
+"  Federal Tax ID (EIN):                                [[EIN]]\n"+
+"  Business address:                                    [[SERVICE ADDRESS]]\n"+
+"  City, State, ZIP:                                    [[CITY STATE ZIP]]\n"+
+"  Business type (LLC, PC, Corporation, Sole Prop):     [[ENTITY TYPE]]\n"+
+"  State of registration:                               [[STATE OF REGISTRATION]]\n"+
+"  Website address (must be live and secure):           [[WEBSITE]]\n"+
+"  Contact name:                                        [[CONTACT NAME]]\n"+
+"  Contact email on your business domain:               [[CONTACT EMAIL]]\n"+
+"    (a Gmail or Yahoo address will usually be rejected)\n"+
+"  Contact phone:                                       [[CONTACT PHONE]]\n\n"+
+"WHAT YOU WILL SEND PATIENTS\n"+
+"Tick all that apply.\n\n"+
+"  [ ] Appointment reminders and confirmations\n"+
+"  [ ] Forms and paperwork links\n"+
+"  [ ] Billing and payment links\n"+
+"  [ ] Recall and check up reminders\n"+
+"  [ ] Review requests\n\n"+
+"HOW PATIENTS AGREE TO BE TEXTED\n"+
+"Describe how a patient opts in, for example a checkbox on your new patient form.\n\n"+
+"  [[HOW PATIENTS OPT IN]]"
+},
+
+{
+ id:"website-checklist",
+ name:"Website requirements checklist",
+ kind:"Checklist for the customer's web person",
+ who:"Whoever maintains the practice website.",
+ why:"This is the most common reason texting approval is delayed, and it has nothing to do with phones. Send it on day one so the fix runs in parallel.",
+ after:"Ask the customer to confirm when it is live, then check the site yourself before submitting. Do not take their word for it.",
+ doc:true,
+ body:
+"WEBSITE REQUIREMENTS FOR TEXT MESSAGING APPROVAL\n"+
+"For: [[BUSINESS NAME]]\n"+
+"Website: [[WEBSITE]]\n\n"+
+"Mobile phone carriers check your website before approving a business to send\n"+
+"text messages. All of the following must be true.\n\n"+
+"1. THE SITE IS LIVE AND SECURE\n"+
+"   [ ] The website loads and is not under construction\n"+
+"   [ ] The address begins with https, not http\n"+
+"       An http address is rejected automatically\n\n"+
+"2. YOUR BUSINESS DETAILS ARE VISIBLE\n"+
+"   [ ] Physical address shown on the site\n"+
+"   [ ] Phone number shown on the site\n"+
+"   [ ] Business name matches your legal name\n\n"+
+"3. PRIVACY POLICY\n"+
+"   [ ] A privacy policy page exists and is reachable from the main menu\n"+
+"   [ ] It contains wording to this effect:\n\n"+
+"       \"We do not sell or share your mobile phone number or text message\n"+
+"        opt in information with third parties for marketing purposes.\"\n\n"+
+"       This exact idea must be present. It is the single most common reason\n"+
+"       an application is rejected.\n\n"+
+"4. TERMS AND CONDITIONS\n"+
+"   [ ] A terms page exists, as a real page and not a pop up\n"+
+"   [ ] It describes the text messaging program, including:\n"+
+"       what kinds of messages are sent, roughly how often,\n"+
+"       that message and data rates may apply,\n"+
+"       how to stop messages by replying STOP,\n"+
+"       and how to get help by replying HELP\n\n"+
+"5. HOW PATIENTS AGREE\n"+
+"   [ ] Anywhere you collect a phone number, there is a checkbox or clear\n"+
+"       statement that the patient agrees to receive text messages\n\n"+
+"Sample wording for the privacy and terms pages is available from us on request."
+},
+
+{
+ id:"privacy-sample",
+ name:"Privacy policy wording",
+ kind:"Text to give the customer",
+ who:"The customer's web person pastes this into their privacy policy.",
+ why:"Removes the excuse and cuts the delay. Most practices do not know what wording is required.",
+ after:"Check the live site once they say it is done.",
+ body:
+"TEXT MESSAGING PRIVACY\n\n"+
+"When you provide your mobile phone number to [[BUSINESS NAME]], you may receive\n"+
+"text messages from us relating to your care, including appointment reminders,\n"+
+"confirmations, forms and account information.\n\n"+
+"We do not sell or share your mobile phone number or your text message opt in\n"+
+"information with third parties for marketing purposes.\n\n"+
+"Message frequency varies. Message and data rates may apply.\n\n"+
+"You can stop receiving text messages at any time by replying STOP to any\n"+
+"message. You can request help by replying HELP, or by contacting our office at\n"+
+"[[CONTACT PHONE]].\n\n"+
+"We take reasonable steps to protect the information you give us, including your\n"+
+"phone number and any information you send us by text message.",
+ tip:"The sentence about not sharing phone numbers for marketing is the one carriers look for. It cannot be left out or reworded into something vague."
+},
+
+{
+ id:"terms-sample",
+ name:"Terms and conditions wording",
+ kind:"Text to give the customer",
+ who:"The customer's web person pastes this into their terms page.",
+ why:"Carriers check for six specific things. This covers all of them.",
+ after:"Confirm it is a real page with its own address, not a pop up box.",
+ body:
+"TEXT MESSAGING TERMS\n\n"+
+"By providing your mobile phone number to [[BUSINESS NAME]], you agree to receive\n"+
+"text messages from us about your care and your account.\n\n"+
+"WHAT WE SEND\n"+
+"Appointment reminders and confirmations, forms and paperwork links, billing and\n"+
+"payment information, and check up reminders.\n\n"+
+"HOW OFTEN\n"+
+"Message frequency varies depending on your appointments and account activity.\n\n"+
+"COST\n"+
+"Message and data rates may apply. These are charged by your mobile carrier, not\n"+
+"by us.\n\n"+
+"HOW TO STOP\n"+
+"Reply STOP to any message to stop receiving text messages. You will receive one\n"+
+"confirmation that you have been unsubscribed.\n\n"+
+"HOW TO GET HELP\n"+
+"Reply HELP to any message, or call our office at [[CONTACT PHONE]].\n\n"+
+"PRIVACY\n"+
+"Our privacy policy explains how we handle your information and is available at\n"+
+"[[WEBSITE]].\n\n"+
+"LIABILITY\n"+
+"Carriers are not liable for delayed or undelivered messages."
+},
+
+{
+ id:"cutover-confirm",
+ name:"Cutover date confirmation",
+ kind:"Email we send",
+ who:"Us, to the customer, once the date is confirmed by their old carrier.",
+ why:"Puts the date, the expectations and the do not cancel warning in one place they can find later.",
+ after:"Save it on the account. Reference it on cutover day.",
+ body:
+"Subject: Your phone transfer is confirmed for [[CUTOVER DATE]]\n\n"+
+"Hello [[CONTACT NAME]],\n\n"+
+"Your phone numbers will transfer to us on [[CUTOVER DATE]] starting at\n"+
+"[[CUTOVER TIME]].\n\n"+
+"WHAT HAPPENS ON THE DAY\n"+
+"We will call you before we begin and stay on the line with you. Numbers do not\n"+
+"all switch at the same moment, so there may be a short period where things\n"+
+"behave oddly. We will test every number with you before we finish.\n\n"+
+"WHAT WE NEED FROM YOU\n"+
+"Please have [[SITE CONTACT]] available and reachable on the day.\n"+
+"Please keep a mobile phone handy until we confirm emergency calling is working.\n\n"+
+"IMPORTANT\n"+
+"Do not cancel your service with [[CURRENT CARRIER]]. We will keep it running for\n"+
+"about three days after the transfer as a safety net, and we will email you when\n"+
+"it is safe to cancel.\n\n"+
+"If you need to reach us on the day, call [[US_PHONE]].\n\n"+
+"[[US_CONTACT]]\n[[US_COMPANY]]",
+},
+
+{
+ id:"release-old",
+ name:"Safe to cancel notice",
+ kind:"Email we send",
+ priority:true,
+ who:"Us, only after every number has been tested and stable for about three days.",
+ why:"Until this goes out, the customer cancels nothing. It is the one message that closes the highest risk in the process.",
+ after:"Ask them to confirm once they have canceled, and note it on the account.",
+ body:
+"Subject: You can now cancel your old phone service\n\n"+
+"Hello [[CONTACT NAME]],\n\n"+
+"Your numbers have transferred successfully and everything has been tested and\n"+
+"stable for the last few days.\n\n"+
+"You can now cancel your service with [[CURRENT CARRIER]].\n\n"+
+"Please let me know once you have done it so I can note it on your account.\n\n"+
+"If anything is not working the way you expect, tell me before you cancel and we\n"+
+"will sort it out first.\n\n"+
+"[[US_CONTACT]]\n[[US_COMPANY]]\n[[US_PHONE]]",
+ tip:"Never send this early. The old service is the only real safety net once the numbers have moved."
+}
+];
+</script>
+<script>var GROUPS=[
+ {k:"text",  label:"Texting only",             note:"They keep their phone system. We only handle messages."},
+ {k:"voice", label:"Phones only",              note:"We take over calls. Texting stays where it is."},
+ {k:"both",  label:"Phones and texting",       note:"We take over everything."},
+ {k:"change",label:"Changes to a live account",note:"Already with us, something needs to move."},
+ {k:"fail",  label:"Something went wrong",     note:"Pick the thing that failed."}
+];
+
+var FLOWS=[
+
+/* ================= TEXTING ONLY ================= */
+{
+ id:"text-855", group:"text", best:true,
+ title:"Texting on a new 855 number",
+ when:"\"I want to text my patients. I do not care what number it comes from.\"",
+ timeline:"A few days, if their website is already in order",
+ summary:"We give them a toll free number. Nobody touches their phone line. The only thing that usually holds this up is their website, so check it early.",
+ steps:[
+ {t:"Make sure they understand what patients will see",who:"Sales",
+  d:"Patients will see an 855 number, not the practice number. Most practices are fine with this. Some are not, and it costs nothing to find out now.",
+  forms:["naming-glossary"],
+  check:["Told them messages come from an 855 number","They are comfortable with that"],
+  fail:[{if:"they want patients to see the office number",then:"Different path, takes longer.",goto:"text-own"}]},
+
+ {t:"Send the customer the information sheet",who:"Sales",
+  d:"You need four things: their exact legal business name as it appears on their IRS paperwork, their EIN, their business address and their website address. The legal name matters, not the name on the sign. Smith Family Dentistry PC is not the same as Smith Family Dental.",
+  forms:["tenlc-sheet"],
+  check:["Registration sheet sent","Sheet returned and complete","Legal name looks like a legal name, with any PC or LLC on it"]},
+
+ {t:"Check their website yourself",who:"Onboarding",
+  d:"Do this before you submit anything. Open the site. The address must start with https and not http, because http is rejected automatically. The site must show their address and phone number. It needs a privacy policy that says they do not share phone numbers or text opt in data with third parties for marketing. If any of that is missing, the application will be declined and you will have burned a cycle.",
+  forms:["website-checklist","privacy-sample","terms-sample"],
+  check:["Site loads and starts with https","Address and phone number visible on the site","Privacy policy exists and has the no sharing wording","Terms page exists as a real page"],
+  fail:[{if:"anything on the site is missing",then:"Stop and send them the checklist. Do not submit.",goto:"fail-website"}]},
+
+ {t:"Submit the toll free verification application",who:"Onboarding",
+  d:"This goes to the carrier for review. Use the customer's business email address, not a Gmail or Yahoo one, or it will be rejected. The number cannot send anything at all while the review is running, so do not tell the customer they can start texting today.",
+  where:"Bandwidth. The **toll free verification** application is a separate web form rather than a Dashboard screen. Ask someone for the current link, it is not in the portal navigation.",
+  check:["Submitted","Business domain email used, not a free one","Customer told it is in review and cannot send yet"]},
+
+ {t:"Confirm it is live and test it",who:"Onboarding",
+  d:"Once approved the number appears in the practice settings as their SMS number. Send a real text and receive one back. Do not close this out on the approval email alone.",
+  where:"Dental Intelligence. The approved number appears in Settings, Practice Setup, Practice Info, in the SMS phone number field.",
+  check:["Approved","Test message sent successfully","Test message received successfully","Customer shown where the number lives in settings"],
+  fail:[{if:"it was rejected",then:"Read the exact reason. It is nearly always the website or an EIN mismatch.",goto:"fail-tfn"}]}
+ ],
+ watch:["Patients will not recognize an 855 number. Suggest the practice mentions it at checkout for the first few weeks.",
+        "Insurance companies often block their verification codes to toll free numbers. If the practice needs codes sent to this number, it will not work."],
+ say:"\"We can have you texting patients within a few days. Messages will come from a toll free number rather than your office line. If you would rather patients see your own number, we can do that too, it just takes a bit longer.\""
+},
+
+{
+ id:"text-own", group:"text",
+ title:"Texting on their own office number",
+ when:"\"I want patients to text the number on my sign.\"",
+ timeline:"5 to 7 business days for inbound. Add 5 to 6 weeks for outbound too.",
+ summary:"We add texting to their existing number without touching their phone service. Their calls keep working exactly as they do now. This is called hosted messaging.",
+ steps:[
+ {t:"Explain the two levels, because they are very different",who:"Sales",
+  d:"Level one is inbound only. Patients can text the office number, but our messages still go out from an 855. That takes about a week. Level two makes their number the sending number too, and that adds five to six weeks of approval. Most practices hear \"my number can text\" and assume level two.",
+  check:["Explained inbound versus outbound","They know which one they are getting","They know the timeline for each"]},
+
+ {t:"If it is a mobile number, there is a route, but it is a bigger job",who:"Onboarding",
+  d:"A wireless number cannot have its messaging split off while it stays with the mobile carrier, because messaging on a mobile number lives on the wireless network rather than in the hosted messaging registry. The workaround is to port the number to us first. Once it is no longer a wireless number it becomes a number whose voice and messaging can be handled separately, and hosted messaging becomes possible. Test messaging on it before telling the practice it is done. Treat this as a port project with a texting outcome rather than as a texting request, because that is what it actually is.",
+  check:["Confirmed whether the number is wireless","If wireless, the practice understands this becomes a port first","Port path agreed before any texting promise"]},
+ {t:"Check the number can actually be text enabled",who:"Onboarding",
+  d:"Most landline and business VoIP numbers can. A mobile number cannot, unless it is ported to us first, see the step above.",
+  check:["Number checked","Confirmed it can be hosted"],
+  fail:[{if:"it cannot be hosted",then:"They keep the 855 for texting. Say so clearly rather than leaving it open.",goto:"fail-nohost"}]},
+
+ {t:"Ask who texts on that number today",who:"Onboarding",
+  d:"If their reminder software already sends texts from this number, another company holds the messaging on it right now. We have to take it over deliberately, and their old texting will stop when we do. Find this out before you submit anything.",
+  check:["Asked what software sends their reminders today","If another vendor holds it, the switch date is agreed in writing"],
+  fail:[{if:"another vendor holds it",then:"Coordinate before submitting.",goto:"fail-hostedaway"}]},
+
+ {t:"Get the messaging Letter of Authorization (LOA) signed",who:"Onboarding",
+  d:"This is a different document from the one used to move phone numbers. It must be signed and dated within the last thirty days or it gets rejected as stale. Send it, get it back signed, check the date.",
+  forms:["loa-sms"],
+  check:["Authorization sent to the customer","Signed copy received","Signature date is within the last thirty days","Signer is the account holder"]},
+
+ {t:"Submit the hosted messaging order",who:"Onboarding",
+  d:"Their voice carrier is not involved and their calls are unaffected. Usually five to seven business days.",
+  where:"Bandwidth Dashboard. Numbers, then Hosted Messaging. This creates a **hosted messaging order**, which Bandwidth's API calls an importTnOrder. It is a different screen and a different record from Numbers, then Port. Attach the **messaging LOA** here, not the voice one.",
+  check:["Order submitted","Reference recorded on the account","Customer given an expected date"]},
+
+ {t:"Test it in both directions",who:"Onboarding",
+  d:"Send a text to the office number from a mobile, and send one out. Confirm both before telling the customer it is done.",
+  where:"Send a real text from a mobile to the office number, then send one out from Dental Intelligence, Patients, Patient Chat.",
+  check:["Inbound text received","Outbound text sent","Customer confirmed it is working"]},
+
+ {t:"Optional, full registration for outbound",who:"Onboarding",
+  d:"Only if they want automated messages to come from their own number too. Same website requirements as toll free, plus campaign approval. Five to six weeks. Bundled for a single location, about thirty dollars a month for multi location groups.",
+  where:"Bandwidth Dashboard, Campaigns, then Brands. There are two records: a **brand**, which is the business, and a **campaign**, which is what you send. The brand comes first.",
+  forms:["tenlc-sheet","website-checklist"],
+  check:["Customer decided whether they want this","If yes, registration submitted"]}
+ ],
+ watch:["Even after full registration, bulk and automated messages still go out from the toll free number. Only inbound and manual conversations use the office number. Say this once up front or it becomes a support ticket.",
+        "If we ever move their phone service later, it can knock this texting out. Put a note on the account."],
+ say:"\"We can make your office number textable in about a week, and your phones will not be touched. If you also want our automated reminders to come from that number, that is a separate approval and takes about five to six weeks.\""
+},
+
+{
+ id:"text-switch", group:"text",
+ title:"Taking texting over from their current vendor",
+ when:"\"I already text through my old software. I want you to do it instead.\"",
+ timeline:"5 to 7 business days, plus however long the old vendor takes",
+ summary:"The number is already set up for texting, just not by us. We are taking the messaging over from another company.",
+ steps:[
+ {t:"Find out who has it now",who:"Onboarding",
+  d:"Ask what software sends their appointment reminders today. That company holds the texting on the number.",
+  check:["Current texting vendor identified"]},
+
+ {t:"Agree a switch date",who:"Sales",
+  d:"Their existing reminders stop when we take over. If they have a busy week or a campaign running, pick a date around it.",
+  check:["Customer knows their old reminders will stop","Switch date agreed","Customer will turn reminders off in the old system that day"]},
+
+ {t:"Fresh messaging Letter of Authorization (LOA)",who:"Onboarding",
+  d:"Must be signed within the last thirty days. An older one will be rejected.",
+  forms:["loa-sms"],
+  check:["Signed and dated within thirty days"]},
+
+ {t:"Submit the hosted messaging order",who:"Onboarding",
+  d:"The old vendor may be notified. Some cooperate quickly, some do not.",
+  check:["Submitted","Customer told what to expect"],
+  fail:[{if:"the old vendor blocks or drags it out",then:"This is commercial, not technical.",goto:"fail-hostedaway"}]},
+
+ {t:"Test both directions and confirm",who:"Onboarding",
+  d:"Real message in, real message out. Then confirm the old system is switched off.",
+  where:"Send a real text in from a mobile, and out from Dental Intelligence, Patients, Patient Chat.",
+  check:["Inbound tested","Outbound tested","Old system reminders confirmed off"]}
+ ],
+ watch:["If the old system keeps trying to send, patients get duplicates or nothing. Confirm it is off."],
+ say:"\"We can take the texting over. Your reminders from the old system will stop when we do, so let us pick a date that is not in the middle of your busiest week.\""
+},
+
+/* ================= PHONES ONLY ================= */
+{
+ id:"voice-new", group:"voice", best:true,
+ title:"New customer moving all their numbers",
+ when:"\"I want you to take over my phones.\"",
+ timeline:"Four to six weeks from signature to live",
+ summary:"The long one. Two things take weeks and everything else takes days, so start the slow parts first.",
+ steps:[
+ {t:"Check every number before the deal closes",who:"Sales",
+  d:"Not just the main line. Ask what is on their signage, website, Google listing, insurance directories and referral pads. Run each number through the Number Check tool. Then ask whose name is on the phone bill, because if it is not the person you are talking to they cannot approve the move.",
+  forms:["naming-glossary"],
+  check:["Every published number listed","Each one checked","Asked whose name is on the phone bill","Asked whether a marketing company handles their ads"],
+  fail:[{if:"a number cannot be moved",then:"There are options. Do not walk away and do not promise either.",goto:"fail-noport"},
+        {if:"a marketing company owns one of the numbers",then:"Handle it separately and never put it in a cutover date.",goto:"fail-agency"}]},
+
+ {t:"Ask what else is plugged into a phone line",who:"Sales",
+  d:"Fax, fire alarm panel, elevator phone, burglar alarm, card terminal, postage meter. The fire alarm and elevator lines must never be moved into a phone system, they are life safety equipment and they stay where they are.",
+  check:["Asked the question","Alarm and elevator lines identified and excluded","Fax decided, and if moving to fax to email the compliance position is confirmed","Card terminal has a plan"]},
+
+ {t:"Check their internet before you quote",who:"Onboarding",
+  d:"Upload speed, not download. Their imaging and backups push up the same pipe the calls use, and practices always quote you their download speed. Also check what router they have, whether the network switch can power the phones, and whether there are enough network sockets in each room.",
+  check:["Upload speed measured, not just asked","Router make and model noted","Enough network sockets in each room","Any work the practice needs to do is agreed and scheduled"]},
+
+ {t:"Send the customer information sheet",who:"Onboarding",
+  d:"One form instead of five phone calls. It collects the business details, the current carrier, the account number, every number and what each is used for.",
+  forms:["info-sheet"],
+  check:["Sheet sent","Sheet returned","Every field filled in"]},
+
+ {t:"Get the Customer Service Record (CSR)",who:"Onboarding",
+  d:"This is the carrier's own file on the account. It is the single most useful document in the process, because almost every rejection is a mismatch against it. The customer has to request it, carriers will not give it to us. Insist they get it by email, not read over the phone.",
+  forms:["csr-request"],
+  check:["Request email sent to the customer","Record received by email","Run through the CSR Reader","Business name on the record compared against what the customer told you"]},
+
+ {t:"Get the port out PIN from their carrier",who:"Customer", priority:true,
+  d:"This is the item most often missed, and it will stop the port dead. A port out PIN is a security code on the phone account. It is almost never printed on the customer service record, so it has to be asked for separately, and only the account holder can usually get it. Do not assume there is not one. If the carrier says there is no PIN, get that in writing too.",
+  forms:["pin-request"],
+  check:["Customer asked their carrier for the PIN","PIN received and recorded on the account","Or written confirmation there is no PIN on the account"],
+  fail:[{if:"the customer cannot get the PIN",then:"Only the account holder can request it. If the account is in a previous owner's name, that is the real problem and it needs solving first.",goto:"fail-reject"}]},
+
+ {t:"Get the Letter of Authorization (LOA) signed",who:"Customer",
+  d:"This is the customer's written permission to move the numbers. It must be signed by whoever the current carrier has on file as the account holder, which is not always the person who signed your agreement. Check the signature date, many carriers reject anything older than thirty days.",
+  forms:["loa-voice"],
+  check:["Authorization sent","Signed copy received","Signer name matches the account holder on the record","Signature is dated and recent"]},
+
+ {t:"Get the do not cancel acknowledgement signed",who:"Customer", priority:true,
+  d:"If the customer cancels their old service before the transfer completes, their numbers are usually gone permanently. This is the worst thing that happens in this job. Get it in writing, then say it again verbally at least twice more.",
+  forms:["no-cancel"],
+  check:["Sent to the customer","Signed or confirmed by email","Said out loud on a call as well"]},
+
+ {t:"Start the texting registration now",who:"Onboarding",
+  d:"Do not wait for the phones. Texting approval is often the longer of the two and it runs perfectly well alongside the port.",
+  forms:["tenlc-sheet","website-checklist"],
+  check:["Registration started","Website checked"],
+  goto:"text-own"},
+
+ {t:"Build and prove it on temporary numbers while the port is in flight",who:"Onboarding", priority:true,
+  d:"Do not wait for the port date to build. Get temporary numbers in their area code, build the whole system on them, register and verify the emergency addresses by dialing 933, install the phones and train the staff. The practice can be live on the new system before their own numbers move, and cutover becomes a swap rather than a launch. Full detail is in the staging procedure, SOP-950.",
+  check:["Temporary numbers obtained","System built on them","Emergency addresses verified with 933 before cutover","Phones installed and in use","Staff trained on the live system"]},
+ {t:"Build the phone system",who:"Onboarding",
+  d:"Extensions, ring groups, the menu callers hear, opening hours, holidays, voicemail. Build it all on temporary numbers and test every path, so that on cutover day the only new thing is the number itself.",
+  where:"DialStack portal. Users and extensions, then ring groups, then the auto attendant, then hours and holidays.",
+  check:["Extensions built","Menu and after hours path built and tested","Opening hours and holidays set","Timezone checked, it is wrong by default surprisingly often","Voicemail boxes have named owners"]},
+
+ {t:"Register the emergency address for every phone",who:"Onboarding", priority:true,
+  d:"Every phone needs an emergency address with the suite and room detail, not just the street. One address for the whole building is not good enough, because a dispatcher cannot use it. Register it, then confirm it actually came back as provisioned. Submitted is not the same as provisioned.",
+  where:"DialStack portal, Locations. Create a location record, then assign each deskphone and DECT handset to it. Check the status field reaches provisioned. Submitted is not provisioned.",
+  check:["Every phone has an address","Suite and room detail included","Status confirmed as provisioned, not just submitted","Test call made where the platform supports it"]},
+
+ {t:"Ship and set up the handsets",who:"Onboarding",
+  d:"Order only supported models. Label each phone by room, not by person, because staff change and rooms do not. Get them on site several days early so there is time to fix a problem.",
+  where:"DialStack supports Snom, Yealink and Poly only. Cisco and Grandstream are explicitly unsupported, so do not order them.",
+  check:["Supported models only","Labeled by room","On site and registered","Spare handset on hand"]},
+
+ {t:"Submit the port order (this generates the LSR to their carrier)",who:"Onboarding",
+  d:"You are creating a **port order**, which is a record in the portal, and attaching the signed **LOA** to it. The platform turns that into an **LSR**, the Local Service Request, and sends it to the losing carrier. You never fill in an LSR by hand. Only submit when everything above is done, because a rejection costs a full cycle. Check every field against the **CSR** one last time, character for character, including any PC or DDS on the business name.",
+  where:"DialStack portal, Phone Numbers, then the port order flow. You are creating a **port order**, which is a record. DialStack turns it into an **LSR**, the industry form, and sends that to the losing carrier with the LOA attached. You never fill in an LSR by hand. The Timing and Documents step is where the CSR and bill copy upload.",
+  check:["Every field matched against the record","Authorization attached and in date","PIN included","Order submitted","Reference recorded"],
+  fail:[{if:"it comes back rejected",then:"It is a paperwork mismatch nearly every time.",goto:"fail-reject"}]},
+
+ {t:"Get the FOC date and confirm it in writing",who:"Onboarding",
+  d:"The date comes back from the old carrier, usually five to thirty days out. Nothing gets scheduled until you have it. Avoid Fridays, the day before a holiday, and the middle of clinical hours.",
+  where:"DialStack shows it on the port order. The **FOC**, Firm Order Commitment, is a date rather than a document. The status moves through draft, approved, submitted, foc, complete, with exception meaning it was rejected.",
+  forms:["cutover-confirm"],
+  check:["Date received","Confirmed to the customer in writing","Not a Friday or a day before a holiday","Named person on site that day","Staffing arranged on our side"]},
+
+ {t:"Train the staff before anything changes",who:"Onboarding",
+  d:"Do this while the phones are still on temporary numbers and the stakes are low. Front desk gets the real training on transfers, park and the busy lamp keys. Everyone else needs ten minutes. Tell them emergency calling works normally, they dial 911 as they always would, and that we have already verified the registered address from every handset using the 933 test line. Do not have staff place a test call to 911.",
+  check:["Front desk trained properly","Everyone else given the short version","Emergency dialing shown","One page cheat sheet left at each position"]},
+
+ {t:"Cutover day",who:"Onboarding",
+  d:"Get on a call with them before the window opens. Numbers do not all switch at the same moment, so wait out the settling period before you panic. Then test every single number from an outside mobile, test outbound, test emergency calling, and walk every menu path including after hours.",
+  check:["On a call with the practice before the window","Every ported number tested inbound","Outbound tested and caller ID correct","Emergency calling verified","Voicemail tested","Every menu path walked","Fax tested if any moved","Texting tested if applicable"],
+  fail:[{if:"a number did not come through",then:"Wait out the settling period first, then escalate with specifics.",goto:"fail-cutover"}]},
+
+ {t:"Leave the old service running for three days",who:"Customer",
+  d:"This is the safety net and the only real way back. The customer cancels nothing until we send written confirmation.",
+  check:["Old service confirmed still active","Call records watched for failed inbound","Checked in with the practice on day one and day three"]},
+
+ {t:"Tell them it is safe to cancel",who:"Onboarding",
+  d:"Only once everything has been tested and stable for about three days. This is the message that closes out the biggest risk in the process.",
+  forms:["release-old"],
+  check:["Everything stable for three days","Written confirmation sent","Customer confirmed they have canceled"]},
+
+ {t:"Health checks at 7 and 30 days",who:"Onboarding",
+  d:"A phone call, not an email. Ask about specific things rather than in general, because the problems that matter are the ones staff work around instead of reporting.",
+  check:["7 day call done","30 day call done","Emergency addresses still correct","Account handed to steady state support with notes"]}
+ ],
+ watch:["The customer canceling their old service early is the one failure you cannot undo. Say it at signature, at the date confirmation and on cutover day.",
+        "The port out PIN is the item most often missed. Ask for it early, not on submission day.",
+        "Never schedule a cutover on a Friday or before a holiday. If it goes wrong you have no support desk on the other side."],
+ say:"\"The move takes about four to six weeks. I will confirm your date as soon as your current carrier gives it to us. The one thing I really need from you is that you do not cancel anything until I tell you it is safe.\""
+},
+
+{
+ id:"voice-existing", group:"voice",
+ title:"Existing customer adding phones",
+ when:"\"I already use you for everything else. Now I want the phones.\"",
+ timeline:"Four to six weeks, but discovery is faster",
+ summary:"Same process as a new customer, with two differences. We already know them, and we have far more to lose if it goes wrong.",
+ steps:[
+ {t:"Get their current contract end date",who:"Sales",
+  d:"When does their phone contract end and is there a fee to leave early. Ask this first, because it decides whether this is a deal now or a deal in eight months.",
+  check:["End date recorded","Any early termination fee known","Date logged even if the deal is not now"],
+  fail:[{if:"they are locked in with a fee",then:"Log the date and come back to it.",goto:"fail-contract"}]},
+
+ {t:"Run the full new customer process",who:"Onboarding",
+  d:"Nothing gets skipped because they are already a customer. Numbers, PIN, authorization, network, build, emergency addresses, port, train, cutover.",
+  check:["Full process started"],
+  goto:"voice-new"},
+
+ {t:"Handle their existing texting deliberately",who:"Onboarding", priority:true,
+  d:"If we already text patients on their office number, moving the phone service can knock that texting out. It has to be planned into the cutover rather than discovered afterwards.",
+  check:["Checked whether we text on any of these numbers","Messaging permission planned around the port date","Tested after cutover"],
+  fail:[{if:"texting stops after the move",then:"Known failure with a specific fix.",goto:"fail-textdied"}]}
+ ],
+ watch:["A bad cutover here does not just lose a phone deal, it puts the whole account at risk. Treat these more carefully than new business, not less."],
+ say:"\"Since you are already with us most of this is easier. The main thing I need to know is when your current phone contract ends and whether there is a fee to leave early.\""
+},
+
+{
+ id:"voice-newnum", group:"voice",
+ title:"Brand new number, nothing to move",
+ when:"\"We are a new practice and do not have a number yet.\"",
+ timeline:"Days. The easiest thing we do.",
+ summary:"No port, no paperwork, no waiting on another carrier.",
+ steps:[
+ {t:"Pick the number",who:"Onboarding",
+  d:"Choose something in their local area code so it looks right to patients.",
+  where:"Bandwidth Dashboard, Numbers, then Buy Numbers. Search by area code or rate center.",
+  check:["Number chosen","Customer approved it"]},
+ {t:"Build the phone system",who:"Onboarding",
+  d:"Extensions, menu, hours, holidays, voicemail. Same build as any other account.",
+  check:["Built","Tested","Timezone checked"]},
+ {t:"Register the emergency address",who:"Onboarding", priority:true,
+  d:"Every phone, with the suite and room detail. Confirm it came back provisioned.",
+  check:["Every phone has an address","Confirmed provisioned","Test call made"]},
+ {t:"Ship and set up the handsets",who:"Onboarding",
+  d:"Labeled by room. On site early.",
+  check:["Delivered","Registered","Tested"]},
+ {t:"Set up texting",who:"Onboarding",
+  d:"Toll free is fastest. Their own new number needs registration if they want it sending.",
+  goto:"text-855",
+  check:["Texting path chosen","Started"]},
+ {t:"Train and go live",who:"Onboarding",
+  d:"No cutover risk here, so pick any day that suits them.",
+  check:["Staff trained","Live","Customer told not to print signage until the number is tested"]}
+ ],
+ watch:["Tell them to hold off ordering signs and cards until the number is live and tested."],
+ say:"\"Since there is nothing to move we can have you live very quickly. Just do not order signage until I confirm the number is working.\""
+},
+
+{
+ id:"voice-partial", group:"voice",
+ title:"Moving some numbers, leaving others",
+ when:"\"Move my main line but leave the fax and the alarm alone.\"",
+ timeline:"Same as a full move, with one extra trap",
+ summary:"Normal and usually correct. There is one thing that catches people.",
+ steps:[
+ {t:"Find the account anchor number",who:"Onboarding", priority:true,
+  d:"Every phone account has one number the bill sits under. If that number moves while others stay behind, the old carrier needs a replacement anchor or the whole order is rejected. Find out which number it is before you submit anything.",
+  check:["Anchor number identified from the record","If it is moving, a replacement anchor has been chosen","Customer agreed the replacement"],
+  fail:[{if:"the anchor is moving with no replacement",then:"The order will reject. Sort it first.",goto:"fail-reject"}]},
+ {t:"Decide each remaining line",who:"Onboarding",
+  d:"Fax needs a compliance check before anything is recommended. A dental practice fax carries patient information: referrals, insurance, records. Moving it to a fax to email service puts that information into email, which requires a signed business associate agreement with the provider plus encryption in transit and at rest. Confirm the position with compliance first, and never let a practice move their fax onto a consumer product. Alarm and elevator lines stay where they are, always. Card terminals often fail on VoIP so confirm there is a plan.",
+  check:["Every line has a decision","Life safety lines excluded","Customer knows they keep paying their old carrier for whatever stays"]},
+ {t:"Split the order if you need to",who:"Onboarding",
+  d:"Numbers on different accounts, or with different carriers, cannot go on one order.",
+  check:["Checked whether one order or several"]},
+ {t:"Run the normal port",who:"Onboarding",
+  d:"Everything else is the standard process.",
+  goto:"voice-new",
+  check:["Standard port process started"]}
+ ],
+ watch:["The customer keeps paying their old carrier for whatever stays behind. Say it before the first bill arrives."],
+ say:"\"We can move the numbers that matter and leave the rest. Your alarm and elevator lines should stay where they are, that is a safety requirement rather than a preference.\""
+},
+
+/* ================= BOTH ================= */
+{
+ id:"both-full", group:"both", best:true,
+ title:"Everything, phones and texting",
+ when:"\"Take all of it.\"",
+ timeline:"Four to six weeks, with the two parts finishing on different days",
+ summary:"Two tracks running side by side. They finish at different times and that is normal. Tell the customer that at the start rather than explaining it later.",
+ steps:[
+ {t:"Run the full number check before closing",who:"Sales",
+  d:"Every published number, who owns each one, and what else is on a phone line.",
+  goto:"voice-new",
+  check:["Full number check done"]},
+ {t:"Start the texting registration on day one",who:"Onboarding", priority:true,
+  d:"Do not wait for the phone side. If their website is not compliant it can take weeks to fix, and that becomes the real critical path rather than the port.",
+  forms:["tenlc-sheet","website-checklist"],
+  check:["Registration sheet sent","Website checked on day one"]},
+ {t:"Run the voice port on its own track",who:"Onboarding",
+  d:"Record, PIN, authorization, build, emergency addresses, submit, date.",
+  goto:"voice-new",
+  check:["Voice track running"]},
+ {t:"Sequence the texting around the cutover",who:"Onboarding", priority:true,
+  d:"This is the step people miss. If the number is set up for texting and then the phone service moves, the texting can drop out with no error message at all. Plan the messaging permission to follow the port rather than leaving it to chance.",
+  check:["Messaging permission planned around the port date","Someone owns this step by name"],
+  fail:[{if:"texting stops after the phones move",then:"Known failure, specific fix.",goto:"fail-textdied"}]},
+ {t:"Test both on cutover day",who:"Onboarding",
+  d:"Calls in and out, emergency calling, and a real text in and out on every number that should have it.",
+  check:["Calls tested","Emergency calling verified","Texts tested in both directions"]}
+ ],
+ watch:["Give the customer one timeline with two dates on it rather than one vague answer.",
+        "Reminders are what patients notice. If texting has to go dark for a day, say so before rather than after."],
+ say:"\"There are two parts to this and they finish on slightly different days. I will give you a date for the phones and a date for the texting, and I will tell you straight away if either moves.\""
+},
+
+/* ================= CHANGES ================= */
+{
+ id:"change-addloc", group:"change",
+ title:"Adding a second location",
+ when:"\"We are opening another office.\"",
+ timeline:"Days for a new number, four to six weeks if moving one",
+ steps:[
+ {t:"New number or moving one",who:"Sales",
+  d:"A new number is fast. Moving an existing one is a full port.",
+  check:["Decided which"],goto:"voice-new"},
+ {t:"Register a separate emergency address",who:"Onboarding", priority:true,
+  d:"The new site needs its own emergency address with its own suite and room detail. Do not let the new phones inherit the first location's address. This is the most common way emergency calling goes wrong.",
+  where:"DialStack portal, Locations. Create a new location for the new site rather than reusing the first one.",
+  check:["New site has its own address","Suite and room detail included","Confirmed provisioned","Test call made from the new site"]},
+ {t:"Decide how calls move between sites",who:"Onboarding",
+  d:"Can staff transfer between offices, does one cover the other's overflow, is there a shared after hours line.",
+  check:["Routing between sites agreed","Built and tested"]},
+ {t:"Check the new site's internet separately",who:"Onboarding",
+  d:"Different building, different problems. Treat it like a fresh install.",
+  check:["Upload speed measured","Router and switch checked","Enough sockets"]}
+ ],
+ watch:["Groups often want one main number that routes by location. Design that deliberately rather than bolting it on later."],
+ say:"\"The new office needs its own emergency address on file. That is a legal requirement and not something we can copy across from the first location.\""
+},
+
+{
+ id:"change-move", group:"change",
+ title:"The practice is physically moving",
+ when:"\"We are moving to a new building.\"",
+ timeline:"Update the emergency address before they move, not after",
+ steps:[
+ {t:"Update the emergency address first",who:"Onboarding", priority:true,
+  d:"Before the phones arrive at the new place. If someone dials 911 from the new office while the old address is on file, help is sent to the wrong building. Nothing warns you about this.",
+  where:"DialStack portal, Locations. Update the record, confirm it reaches provisioned, then remove the old one.",
+  check:["New address registered","Confirmed provisioned","Old address removed"]},
+ {t:"Check the new building",who:"Onboarding",
+  d:"New internet, new router, new wiring. Treat it as a new install.",
+  check:["Internet checked","Sockets counted","Any work scheduled before move day"]},
+ {t:"Confirm the numbers can come with them",who:"Onboarding",
+  d:"Numbers usually move even across town. Longer distances get complicated, so check early rather than assuming.",
+  check:["Numbers checked for the new location"]},
+ {t:"Test emergency calling at the new site",who:"Onboarding",
+  d:"Confirm the address that comes back is the new one.",
+  check:["Test call made","Correct address confirmed"]}
+ ],
+ watch:["Emergency addresses do not update themselves when a practice moves. Nothing errors, it just quietly points at the old building."],
+ say:"\"Before you move in I need to update your emergency address, so that a 911 call from the new office sends help to the right place.\""
+},
+
+{
+ id:"change-addnum", group:"change",
+ title:"Adding or retiring a number",
+ when:"\"We need another line.\" or \"We do not use that number any more.\"",
+ timeline:"Same day for a new number",
+ steps:[
+ {t:"Adding a number",who:"Onboarding",
+  d:"Pick it, point it where they want, decide whether it needs texting.",
+  where:"Bandwidth Dashboard, Numbers, Buy Numbers to get it, then DialStack to point it somewhere.",
+  check:["Number added","Routing set","Texting decided"]},
+ {t:"Retiring a number",who:"Onboarding",
+  d:"Check where it is published first. If it is on old signage, an insurance directory or a Google listing, forward it somewhere rather than deleting it. A deleted number is gone.",
+  check:["Checked where it is published","Forwarded rather than deleted if still published","Customer confirmed in writing before removal"]},
+ {t:"If it is going to another provider",who:"Onboarding",
+  d:"They are moving away from us. Be quick and helpful about it. A clean exit is worth more than a delay.",
+  check:["Released promptly","Nothing held up"]}
+ ],
+ watch:["A number that gets deleted rather than forwarded cannot be brought back. Confirm before removing anything."],
+ say:"\"Before we retire that number let us check it is not still printed anywhere. Forwarding it costs almost nothing and avoids missed calls.\""
+},
+
+/* ================= FAILURES ================= */
+{
+ id:"fail-noport", group:"fail",
+ title:"The number will not port to us",
+ when:"The coverage check came back no.",
+ timeline:"Same day for the workaround",
+ summary:"Almost never the end. It usually means our provider does not cover that particular local zone, not that the number is stuck.",
+ steps:[
+ {t:"Ask for the full coverage check, not the quick one",who:"Onboarding", priority:true,
+  d:"Carriers keep two lists, the zones they serve themselves and the zones they reach through partner carriers. The quick check only shows the first list. A number that looks unportable is very often portable through a partner. Never tell a customer no based on a quick check.",
+  where:"Bandwidth. The portability check has a detail setting. The default hides partner coverage, so ask for the full off-net check explicitly.",
+  check:["Full check requested","Partner coverage confirmed either way"]},
+ {t:"If a partner covers it, take that route",who:"Onboarding",
+  d:"Slower, sometimes handled manually. Quote weeks rather than days, but the customer keeps their number.",
+  check:["Partner route confirmed","Customer given a realistic timeline"]},
+ {t:"If nothing covers it, use the composite fix",who:"Onboarding",
+  d:"Get a new number in the nearest covered zone, forward their old number to it, and add texting to the old number separately. Live in about a day. Their number keeps ringing and keeps texting, and they pay their old carrier a small amount for the forward.",
+  check:["New number obtained","Forwarding set up and tested","Texting added to the old number","Customer understands the small ongoing cost"]},
+ {t:"Only then consider the harder options",who:"Team Lead",
+  d:"Moving the number through a second carrier first, or opening an account with another carrier. These are for volume problems, not for one stubborn number.",
+  check:["Escalated to the team lead if the composite fix will not do"]}
+ ],
+ watch:["Never say cannot be ported until the full check has been run. It is wrong more often than it is right."],
+ say:"\"Your number is in an area our main provider does not reach directly. There are a couple of ways around it. Give me a day and I will come back with the option that keeps your number working.\""
+},
+
+{
+ id:"fail-reject", group:"fail",
+ title:"The port order was rejected",
+ when:"The old carrier sent it back.",
+ timeline:"Adds a full cycle, so days to weeks",
+ summary:"Almost every rejection is a typo rather than a technical problem, which is good news because typos are fixable.",
+ steps:[
+ {t:"Read the exact reason",who:"Onboarding",
+  d:"Do not guess and do not resubmit with everything double checked. Find the one field that was wrong.",
+  check:["Reason code read and understood"]},
+ {t:"Go back to the carrier's own record",who:"Onboarding",
+  d:"Not the customer's memory. The usual culprits are a business name missing a PC or DDS, the billing address used instead of the service address, an account number formatted differently, or a missing PIN.",
+  forms:["csr-request"],
+  check:["Record checked again","The one wrong field identified"]},
+ {t:"If it is a missing PIN",who:"Customer", priority:true,
+  d:"The customer has to call their carrier and ask for the port out PIN. Only the account holder can usually get it. If the account is in a previous owner's name, that is the real problem.",
+  forms:["pin-request"],
+  check:["PIN obtained","Or confirmed in writing there is none"]},
+ {t:"If it is a freeze or a pending order",who:"Customer",
+  d:"That is theirs to clear with their old carrier and it can take weeks. We cannot escalate it. Tell them plainly rather than softening it.",
+  check:["Customer told clearly","Customer contacted their carrier","New expected date given"]},
+ {t:"Fix the one field and resubmit the port order",who:"Onboarding",
+  d:"Then tell the customer the same day with a new expected range.",
+  check:["Corrected","Resubmitted","Customer updated the same day"]}
+ ],
+ watch:["Two rejections in a row is our process failing rather than bad luck. Escalate it instead of trying a third time."],
+ say:"\"Your old carrier sent it back because the business name on file is spelled slightly differently. I have corrected it and resubmitted. This adds about a week.\""
+},
+
+{
+ id:"fail-cutover", group:"fail",
+ title:"Cutover day and a number is not working",
+ when:"The window passed and calls are not coming through.",
+ timeline:"Minutes to hours. Move fast and communicate faster.",
+ steps:[
+ {t:"Ask about emergency calling first",who:"Onboarding", priority:true,
+  d:"Before anything else. If emergency calling is affected, tell the practice to use mobile phones for emergencies until it is confirmed working. Nothing else matters more than this.",
+  check:["Emergency calling checked","Practice told to use mobiles if it is affected"]},
+ {t:"Wait out the settling period",who:"Onboarding",
+  d:"Numbers do not all switch at the same moment. A number that has not moved after a few minutes is usually fine. Escalating at minute two wastes the hour you might actually need later.",
+  check:["Settling period waited out"]},
+ {t:"Get them taking calls, then diagnose",who:"Onboarding",
+  d:"This is what the old service was kept alive for. Route calls back the old way if you have to. Fix the cause second.",
+  check:["Practice is answering calls somehow","Then started diagnosing"]},
+ {t:"Escalate with specifics",who:"Team Lead",
+  d:"Give the platform an exact failing call, the numbers involved, and the time with the timezone. A description of the problem gets a request for details and costs you an hour.",
+  check:["Specific failing call captured","Escalation raised with full detail"]},
+ {t:"Update the practice on a clock",who:"Onboarding",
+  d:"Every thirty minutes whether or not there is news. Silence is what turns a bad morning into a lost customer.",
+  check:["Update given","Next update time promised"]}
+ ],
+ watch:["Nobody cancels the old service until every number has been tested and stable for three days."],
+ say:"\"Two of your numbers are through and one is still moving. Your phones are answering either way. I will call you in thirty minutes with an update.\""
+},
+
+{
+ id:"fail-textdied", group:"fail",
+ title:"Texting stopped after the phones moved",
+ when:"Calls are fine. Reminders have gone quiet.",
+ timeline:"Usually a same day fix once you know where to look",
+ summary:"Known and predictable. Calls and texts run on separate systems, and moving the calls can knock the texting off.",
+ steps:[
+ {t:"Confirm it is the messaging side",who:"Support",
+  d:"Calls work, texts do not. That points at messaging rather than the phone platform. Do not send this to the phone platform.",
+  check:["Calls confirmed working","Texts confirmed failing"]},
+ {t:"Check the messaging permission on that number",who:"Support", priority:true,
+  d:"Numbers are locked against messaging by default. If nobody opened that permission after the move, texting silently does not work and nothing produces an error anywhere.",
+  where:"DialStack portal, open the number, find the SMS Port-Out card. Every number starts locked. Open the window, then Bandwidth can host the messaging.",
+  check:["Permission checked on the specific number","Reopened if closed"]},
+ {t:"Resubmit the hosted messaging order and test",who:"Onboarding",
+  d:"Then send a real message in and out. Do not trust the confirmation.",
+  where:"Bandwidth Dashboard, Numbers, Hosted Messaging. Create a new **hosted messaging order**. Then test a real message in and out.",
+  check:["Resubmitted","Inbound tested","Outbound tested"]},
+ {t:"Add it to the cutover checklist",who:"Team Lead",
+  d:"If it happened once it will happen again. It belongs as a checked step in every cutover rather than something people remember.",
+  check:["Added to the cutover checklist"]}
+ ],
+ watch:["This produces no error message anywhere. The practice finds out when patients stop turning up."],
+ say:"\"Your calls and your texts run on two different systems and the texting permission did not follow the move. I am fixing it now and will confirm with a test message.\""
+},
+
+{
+ id:"fail-tfn", group:"fail",
+ title:"Texting registration was rejected",
+ when:"The application came back declined.",
+ timeline:"Days if it is paperwork, weeks if the website has to change",
+ steps:[
+ {t:"Read the actual reason code",who:"Onboarding",
+  d:"They are specific and they tell you exactly what to fix.",
+  check:["Reason read and understood"]},
+ {t:"Website problems are the most common",who:"Customer",
+  d:"Site not live, on http instead of https, no privacy policy, or a privacy policy missing the line about not sharing phone numbers for marketing.",
+  forms:["website-checklist","privacy-sample","terms-sample"],
+  check:["Website checked against the list","Checklist sent to the customer"],
+  goto:"fail-website"},
+ {t:"EIN not matching IRS records",who:"Customer",
+  d:"They need to send us their IRS letter, either the CP 575 or the 147C. Until that clears, the number cannot be approved for texting.",
+  check:["IRS letter requested","Received and submitted"]},
+ {t:"A free email address was used",who:"Onboarding",
+  d:"Resubmit with an address on their own business domain.",
+  check:["Business domain email obtained","Resubmitted"]},
+ {t:"Fix and resubmit the toll free verification application",who:"Onboarding",
+  d:"A rejected application loses its place if it sits.",
+  check:["Resubmitted","Customer updated"]}
+ ],
+ watch:["The number cannot send anything at all while an application is pending or rejected. It is a hard block, not a slowdown."],
+ say:"\"The carriers declined it because your website needs a privacy policy with some specific wording. I will send you exactly what it needs to say. Once that is live we resubmit and it usually clears within a few days.\""
+},
+
+{
+ id:"fail-website", group:"fail",
+ title:"Their website is blocking the texting",
+ when:"Everything is ready except the website.",
+ timeline:"Depends entirely on their web person. Start it on day one.",
+ summary:"The most common cause of a texting delay, and nobody sees it coming because it has nothing to do with phones.",
+ steps:[
+ {t:"Tell them precisely what is missing",who:"Onboarding",
+  d:"Not a general request to update the site. A specific list.",
+  forms:["website-checklist"],
+  check:["Checklist sent","Specific missing items named"]},
+ {t:"Send the template wording",who:"Onboarding",
+  d:"We have sample privacy policy and terms wording. Sending it removes the excuse and halves the delay.",
+  forms:["privacy-sample","terms-sample"],
+  check:["Wording sent to the customer"]},
+ {t:"Find out who actually controls the website",who:"Sales",
+  d:"Ask who updates their site and how quickly that person moves. That answer is your timeline, not our process. If it is a marketing agency they no longer use, this can take a very long time.",
+  check:["Web person identified","Realistic date agreed"]},
+ {t:"Offer the toll free number meanwhile",who:"Sales",
+  d:"They can be texting from an 855 number while the site gets fixed.",
+  goto:"text-855",
+  check:["Offered as an interim step"]}
+ ],
+ watch:["Practices often do not know who controls their website. Ask early."],
+ say:"\"The hold up is on your website rather than on our side. Here is exactly what it needs to say. As soon as your web person adds it we can move, and in the meantime we can start you texting from a toll free number.\""
+},
+
+{
+ id:"fail-hostedaway", group:"fail",
+ title:"Another vendor holds the texting",
+ when:"The hosting order was refused, or their old software is still sending.",
+ timeline:"Days if the vendor cooperates, longer if not",
+ steps:[
+ {t:"Identify the vendor",who:"Onboarding",
+  d:"Ask the practice what software sends their reminders today.",
+  check:["Vendor identified"]},
+ {t:"Get a fresh messaging Letter of Authorization (LOA)",who:"Onboarding",
+  d:"Signed within the last thirty days or it is rejected as stale.",
+  forms:["loa-sms"],
+  check:["Fresh authorization signed and dated"]},
+ {t:"Set expectations about the gap",who:"Sales",
+  d:"Their existing reminders stop when we take over. Pick a date that does not land on their busiest day.",
+  check:["Customer knows reminders will stop","Date agreed"]},
+ {t:"If the vendor blocks it",who:"Team Lead",
+  d:"This is commercial rather than technical. The practice may need to contact their old vendor directly, because that vendor will move faster for their own customer than for us.",
+  check:["Practice asked to contact them directly","Escalated on our side"]}
+ ],
+ watch:["Have the practice turn reminders off in the old system on the switch date, or patients get duplicates or nothing at all."],
+ say:"\"Your current software is holding the texting on that number and we need them to release it. You may need to ask them directly, they tend to move faster for their own customer than for us.\""
+},
+
+{
+ id:"fail-nohost", group:"fail",
+ title:"The number cannot be text enabled at all",
+ when:"Hosting is not available for that number.",
+ timeline:"Immediate, there is nothing to wait for",
+ steps:[
+ {t:"Confirm why",who:"Onboarding",
+  d:"Mobile numbers cannot be hosted for business texting. Some carriers and some areas are not supported.",
+  check:["Reason confirmed"]},
+ {t:"Offer the toll free number",who:"Onboarding",
+  d:"They still get full texting, patients just see a different number.",
+  goto:"text-855",
+  check:["Offered and explained"]},
+ {t:"Or a new local number for texting",who:"Onboarding",
+  d:"A local number that can be registered, used alongside their existing phone number.",
+  check:["Alternative agreed"]}
+ ],
+ watch:["Do not leave this vague. A practice that thinks texting is coming and then finds out it is not will remember that conversation."],
+ say:"\"That particular number cannot be set up for texting, which is a carrier limitation rather than anything we control. We can get you texting from a toll free number or a new local number instead.\""
+},
+
+{
+ id:"fail-agency", group:"fail",
+ title:"A marketing company owns the number",
+ when:"The number on their ads is not really theirs.",
+ timeline:"Unpredictable. Start early and never promise a date.",
+ summary:"Passes every automated check and is still unmovable. Catch it in the sales conversation, not afterwards.",
+ steps:[
+ {t:"Spot it in discovery",who:"Sales",
+  d:"Ask whether a marketing company handles their advertising. If yes, at least one published number is probably a tracking number that agency controls.",
+  check:["Asked the question","Any agency owned numbers identified"]},
+ {t:"The practice has to ask, not us",who:"Customer",
+  d:"The agency's customer is the practice. They will respond to them and often ignore us, especially if they are losing the account.",
+  check:["Practice asked the agency in writing"]},
+ {t:"Give them the words to use",who:"Sales",
+  d:"Have the practice ask the agency in writing to release the number to them, and to confirm what account it sits under.",
+  check:["Wording provided","Request sent"]},
+ {t:"If the agency refuses",who:"Onboarding",
+  d:"Set up a new number and have the practice update their ads to point at it. Not ideal, but recoverable.",
+  check:["New number set up","Ads updated"]}
+ ],
+ watch:["Never include an agency owned number in a cutover date. It is outside our control and it will make us look bad."],
+ say:"\"The number on your ads belongs to your marketing company rather than to you. You will need to ask them to release it, and I would not want to give you a date until they confirm.\""
+},
+
+{
+ id:"fail-canceled", group:"fail",
+ title:"The customer canceled their old service early",
+ when:"The number is disconnected before the port completed.",
+ timeline:"Act within hours. This one has a real deadline and the deadline is not ours.",
+ summary:"The worst thing that happens in this job and mostly preventable. There is exactly one thing that actually fixes it: getting the old carrier to switch the number back on. Everything else is damage control. So do that first, do it today, and do the rest in parallel.",
+ steps:[
+ {t:"Get the customer on the phone with their old carrier, today",who:"Team Lead and Customer together", priority:true,
+  d:"A canceled number is not deleted straight away. The carrier holds it for a period before it goes back into the pool and gets handed to somebody else. While it is still in that hold, the carrier can usually reinstate it. After it is reassigned it is gone permanently and no escalation brings it back. Nobody will quote you a hold length, so treat it as days rather than weeks. The customer has to place the call, because the carrier will not discuss a closed account with us. Stay on the line so you hear the answer yourself instead of getting it secondhand tomorrow. Ask for the number to be reinstated on the same account, not for a new number. Ask whether it has already been released. Ask what reconnection costs and whether it starts a new contract term, and push for month to month if it does. Ask for call forwarding to the temporary number while the port runs. If the front line says no, ask for the retention department or the porting department by name before you hang up.",
+  where:"This is not a system task. It is a phone call the customer makes with you listening. Record the representative name, the ticket number and the date the number goes live again.",
+  forms:["number-recovery"],
+  check:["Customer on the phone with the old carrier, us listening in","Asked to reinstate the existing number on the existing account","Asked whether the number has already been released","Reconnection cost and contract terms known","Asked for forwarding to the temporary number","Representative name and ticket number recorded","Escalated to retention or porting if the front line refused"]},
+ {t:"If it comes back on, do not let them cancel it again",who:"Team Lead", priority:true,
+  d:"This is where the recovery gets thrown away. The customer sees another month of billing from a carrier they thought they were rid of, cancels a second time, and the number dies again, this time usually for good. Say it out loud and put it in writing: the port itself ends the old service, so leave the account open and keep paying until we confirm the port completed. The second thing to catch here is that reconnecting often issues a new account number, and sometimes changes which number is the main billing number on the account. Any LOA or account detail you collected before the cancellation is now wrong, and submitting it is a guaranteed rejection. Pull a fresh bill, collect the new details, and get a new LOA signed and dated today before you resubmit.",
+  where:"Fresh LOA from the forms list. New port order in DialStack with the new account number, because editing the old rejected one carries the stale details forward.",
+  forms:["loa-voice"],
+  check:["Customer told, in writing, not to cancel again","Fresh bill or account record obtained after reconnection","New account number recorded","Main billing number on the account reconfirmed","New PIN or passcode captured if one was set","Fresh LOA signed and dated today","Port resubmitted with the new details"]},
+ {t:"Give them a working phone while that is going on",who:"Onboarding", priority:true,
+  d:"Run this at the same time as the carrier call, not after it. Be clear with the practice about what it is: a working phone so staff can call people back, not a rescue of their inbound calls. You cannot forward a disconnected number, because the account that owned it is gone and there is no setting anywhere that redirects those calls. Only the old carrier can, and only by switching the number back on. Also check whether any other line on the old account survived, a fax line or a second number often does, and a line that is still alive CAN be forwarded.",
+  where:"New number: Bandwidth Dashboard, Numbers, then Buy Numbers, in their area code. Then point it at their staff in DialStack.",
+  check:["New number provisioned and ringing their staff","Practice confirmed they can call out and receive","Front desk told to start calling today's patients directly","Checked whether any other line on the old account survived"]},
+ {t:"Only once the carrier has said no, start changing listings",who:"Onboarding",
+  d:"Hold this until reconnection is genuinely dead, otherwise you change every listing and then change them all back. When it is dead, the order matters: Google Business Profile first, because that is where most new patients look, then website, voicemail greeting, social profiles, booking pages, insurance directories, door sign, email signatures. And say plainly what cannot be fixed, on day one rather than in week three: printed signage, business cards, referral pads, and the number already saved in patients' phones.",
+  forms:["number-recovery"],
+  check:["Reconnection confirmed dead in writing","Google Business Profile updated","Website updated","Voicemail greeting updated on anything still working","Insurance directories started","Told them plainly what cannot be updated"]},
+ {t:"Be honest about the outcome",who:"Team Lead",
+  d:"If the number is genuinely gone, say so early. The instinct is to keep saying we are working on it. That costs them the weeks they needed to be rebuilding their listings.",
+  check:["Customer told the truth early","Help offered with listings and signage"]}
+ ],
+ watch:["The clock is the old carrier's hold period and nobody will tell you how long it is. A call today is worth far more than a perfect plan tomorrow.","This is why the do not cancel instruction goes in writing and gets repeated at every stage.","After a reconnection, the account number is probably different. Resubmitting the old paperwork will get you rejected."],
+ say:"\"I have to be straight with you. Once a number is disconnected we cannot forward it, there is no switch on our side for that. The one thing that actually fixes this is your old carrier turning the number back on, and it gets harder every day we wait. You have to be the one who calls them, they will not talk to me about a closed account. Can you dial them now and keep me on the line? While that is going I am setting you up a working number today.\""
+},
+
+{
+ id:"fail-contract", group:"fail",
+ title:"They are locked into a contract",
+ when:"There is a cancellation fee or time left to run.",
+ timeline:"Depends on their contract end date",
+ steps:[
+ {t:"Get the actual end date",who:"Sales",
+  d:"Not roughly, the date. It decides when this deal can happen and it makes the pipeline forecastable.",
+  check:["Exact end date recorded","Logged even though the deal is not now"]},
+ {t:"Find out the fee",who:"Customer",
+  d:"Some practices will pay to leave. Many will not.",
+  check:["Fee amount known","Customer decided"]},
+ {t:"Decide the timing honestly",who:"Sales",
+  d:"If they are twenty months into a three year term this is a future deal, not a current one. Log it and follow up rather than pushing.",
+  check:["Follow up date set for a couple of months before their contract ends"]},
+ {t:"Remember an unpaid balance blocks the port",who:"Onboarding",
+  d:"Even if they walk away, an outstanding balance or unpaid termination fee will cause the port to be rejected. It has to be settled first.",
+  check:["Customer told the balance must be clear before we submit"]}
+ ],
+ watch:["Record every contract end date you learn, even on deals going nowhere. That list is the most useful thing sales can build for this team."],
+ say:"\"It sounds like you have time left on your current agreement. Let me note when it ends and come back to you a couple of months before, so we can line the move up with no overlap.\""
+}
+];
+</script>
+<script>
+(function(){
+"use strict";
+var app=document.getElementById("app"), ov=document.getElementById("ov"), mod=document.getElementById("mod");
+var state={flow:null,step:0}, ticks={}, us={}, fills={};
+
+/* ---------- storage, optional and never fatal ---------- */
+function save(){try{localStorage.setItem("sbs",JSON.stringify({ticks:ticks,us:us}))}catch(e){}}
+function load(){try{var r=JSON.parse(localStorage.getItem("sbs")||"{}");ticks=r.ticks||{};us=r.us||{}}catch(e){ticks={};us={}}}
+load();
+
+var US_FIELDS=[
+ ["US_COMPANY","Your company name"],["US_ADDRESS","Company address"],
+ ["US_CONTACT","Your name"],["US_PHONE","Your phone"],["US_EMAIL","Your email"]
+];
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function whoCls(w){var l=(w||"").toLowerCase();
+ return l.indexOf("sales")>-1?"sales":l.indexOf("customer")>-1?"cust":l.indexOf("lead")>-1?"lead":""}
+function flowById(id){for(var i=0;i<FLOWS.length;i++)if(FLOWS[i].id===id)return FLOWS[i];return null}
+function formById(id){for(var i=0;i<FORMS.length;i++)if(FORMS[i].id===id)return FORMS[i];return null}
+function tk(f,s,i){return f+"|"+s+"|"+i}
+function stepDone(f,si){
+ var st=f.steps[si]; if(!st.check||!st.check.length) return false;
+ for(var i=0;i<st.check.length;i++) if(!ticks[tk(f.id,si,i)]) return false;
+ return true;
+}
+function flowProgress(f){
+ var n=0; for(var i=0;i<f.steps.length;i++) if(stepDone(f,i)) n++;
+ return n;
+}
+
+/* ---------- home ---------- */
+function home(){
+ state.flow=null;
+ document.getElementById("barfill").style.width="0";
+ var h='<h1>What is the customer asking for?</h1>'+
+  '<p class="lede">Pick one. You get the steps one at a time, in order, with the forms you need attached to the step that needs them. Tick things off as you go and it remembers where you were.</p>';
+ GROUPS.forEach(function(g){
+  var items=FLOWS.filter(function(f){return f.group===g.k});
+  if(!items.length)return;
+  h+='<div class="grp"><h2>'+esc(g.label)+'</h2><p class="gn">'+esc(g.note)+'</p><div class="cards">';
+  items.forEach(function(f){
+   var done=flowProgress(f), tot=f.steps.length;
+   h+='<button class="c'+(g.k==="fail"?" fail":"")+(f.best?" best":"")+'" data-flow="'+esc(f.id)+'">'+
+    (f.best?'<span class="tagbest">most common</span>':'')+
+    '<span class="t">'+esc(f.title)+'</span>'+
+    '<span class="w">'+esc(f.when)+'</span>'+
+    '<span class="m"><span>'+tot+' steps</span><span>'+esc(f.timeline)+'</span>'+
+    (done?'<span class="done">'+done+' done</span>':'')+'</span></button>';
+  });
+  h+='</div></div>';
+ });
+ app.innerHTML=h; window.scrollTo(0,0); location.hash="";
+}
+
+/* ---------- step ---------- */
+function show(fid,si){
+ var f=flowById(fid); if(!f){home();return}
+ si=Math.max(0,Math.min(si||0,f.steps.length-1));
+ state.flow=f; state.step=si;
+ var st=f.steps[si];
+ document.getElementById("barfill").style.width=(((si+1)/f.steps.length)*100)+"%";
+
+ var h='<div class="crumb"><button data-home="1">&#8592; All situations</button>'+
+   '<span class="of">Step '+(si+1)+' of '+f.steps.length+'</span></div>'+
+   '<div class="stephead"><div class="flow">'+esc(f.title)+'</div>'+
+   '<h1>'+esc(st.t)+'</h1><div class="badges">'+
+   (st.who?'<span class="who '+whoCls(st.who)+'">'+esc(st.who)+'</span>':'')+
+   (st.priority?'<span class="pri">Do not skip</span>':'')+'</div></div>'+
+   '<p class="detail">'+esc(st.d)+'</p>'+
+   (st.where?'<div class="where"><span class="wk">Where to do it</span><p>'+esc(st.where)+'</p></div>':'');
+
+ if(st.forms&&st.forms.length){
+  h+='<div class="sec"><div class="st">Forms you need for this step</div><div class="forms">';
+  st.forms.forEach(function(id){
+   var fm=formById(id); if(!fm)return;
+   h+='<button class="fm'+(fm.priority?" pri":"")+'" data-form="'+esc(id)+'">'+
+     '<span class="ic">'+esc(fm.kind)+'</span>'+
+     '<span class="tx"><b>'+esc(fm.name)+'</b><span>'+esc(fm.who)+'</span></span>'+
+     '<span class="go">Open &#8594;</span></button>';
+  });
+  h+='</div></div>';
+ }
+ if(st.goto){
+  var g=flowById(st.goto);
+  if(g) h+='<div class="sec"><button class="jump acc" data-flow="'+esc(st.goto)+'">Full steps for this: '+esc(g.title)+' &#8594;</button></div>';
+ }
+ if(st.check&&st.check.length){
+  h+='<div class="sec"><div class="st">Before you move on</div><div class="chk">';
+  st.check.forEach(function(c,i){
+   var k=tk(f.id,si,i), on=!!ticks[k];
+   h+='<label class="'+(on?"on":"")+'"><input type="checkbox" data-tick="'+esc(k)+'"'+(on?" checked":"")+'><span>'+esc(c)+'</span></label>';
+  });
+  h+='</div></div>';
+ }
+ if(st.fail&&st.fail.length){
+  h+='<div class="sec"><div class="st">If it goes wrong</div>';
+  st.fail.forEach(function(fb){
+   var t=flowById(fb.goto);
+   h+='<div class="fb"><span class="k">If '+esc(fb.if)+'</span><p>'+esc(fb.then)+'</p>'+
+     (t?'<button class="jump" data-flow="'+esc(fb.goto)+'">Go to: '+esc(t.title)+' &#8594;</button>':'')+'</div>';
+  });
+  h+='</div>';
+ }
+
+ var last=si===f.steps.length-1;
+ h+='<div class="nav">'+
+  '<button class="nb" data-step="'+(si-1)+'"'+(si===0?" disabled":"")+'>&#8592; Back</button>'+
+  (last?'<button class="nb pri" data-home="1">Finish</button>'
+       :'<button class="nb pri" data-step="'+(si+1)+'">Next step &#8594;</button>')+
+  '<span class="left">'+(stepDone(f,si)?"All checked":(st.check?st.check.length+" to check":""))+'</span></div>';
+
+ if(last){
+  if(f.watch&&f.watch.length) h+='<div class="block watch"><div class="bt">Watch out for</div><ul>'+
+    f.watch.map(function(w){return '<li>'+esc(w)+'</li>'}).join("")+'</ul></div>';
+  if(f.say) h+='<div class="block say"><div class="bt">What to tell the customer</div><p>'+esc(f.say)+'</p></div>';
+ }
+ app.innerHTML=h; window.scrollTo(0,0);
+ location.hash=f.id+"/"+si;
+}
+
+/* ---------- forms ---------- */
+function renderDoc(fm){
+ var body=fm.body||"";
+ var out=esc(body).replace(/\[\[([^\]]+)\]\]/g,function(m,name){
+  var isUs=name.indexOf("US_")===0;
+  var label=isUs?(US_FIELDS.filter(function(x){return x[0]===name})[0]||[,name])[1]:name;
+  var val=isUs?(us[name]||""):(fills[name]||"");
+  var size=Math.max(12,Math.min(40,label.length+4));
+  return '<input class="fill'+(isUs?" us":"")+'" data-fill="'+esc(name)+'" size="'+size+'" value="'+esc(val)+'" placeholder="'+esc(label.toLowerCase())+'">';
+ });
+ return out;
+}
+function openForm(id){
+ var fm=formById(id); if(!fm)return;
+ var h='<div class="mh"><span class="kind">'+esc(fm.kind)+'</span><h2>'+esc(fm.name)+'</h2>'+
+   '<button class="x" data-close="1">&#10005;</button></div><div class="mb">'+
+   '<div class="meta">'+
+   '<div><b>Who fills this in:</b> '+esc(fm.who)+'</div>'+
+   '<div><b>Why it matters:</b> '+esc(fm.why)+'</div>'+
+   '<div><b>When it comes back:</b> '+esc(fm.after)+'</div></div>'+
+   '<div class="doc" id="docbody">'+renderDoc(fm)+'</div>';
+ if(fm.phone) h+='<div class="tipbox">'+esc(fm.phone).replace(/\n/g,"<br>")+'</div>';
+ if(fm.tip) h+='<div class="tipbox">'+esc(fm.tip)+'</div>';
+ h+='</div><div class="mf">'+
+   '<button class="nb pri" data-copy="1">Copy as text</button>'+
+   '<button class="nb" data-print="1">Print or save as PDF</button>'+
+   '<button class="nb" data-close="1">Close</button></div>';
+ mod.innerHTML=h; ov.classList.add("on");
+ mod.setAttribute("data-cur",id);
+}
+function docText(){
+ var d=document.getElementById("docbody"); if(!d) return "";
+ var clone=d.cloneNode(true);
+ var ins=clone.querySelectorAll("input");
+ for(var i=0;i<ins.length;i++){
+  var live=d.querySelector('[data-fill="'+ins[i].getAttribute("data-fill")+'"]');
+  var v=(live&&live.value)||("["+ins[i].getAttribute("data-fill")+"]");
+  ins[i].replaceWith(document.createTextNode(v));
+ }
+ return clone.textContent;
+}
+function formsList(){
+ var h='<div class="mh"><h2>All forms and templates</h2><button class="x" data-close="1">&#10005;</button></div><div class="mb"><div class="forms">';
+ FORMS.forEach(function(fm){
+  h+='<button class="fm'+(fm.priority?" pri":"")+'" data-form="'+esc(fm.id)+'">'+
+    '<span class="ic">'+esc(fm.kind)+'</span>'+
+    '<span class="tx"><b>'+esc(fm.name)+'</b><span>'+esc(fm.who)+'</span></span>'+
+    '<span class="go">Open &#8594;</span></button>';
+ });
+ h+='</div></div><div class="mf"><button class="nb" data-close="1">Close</button></div>';
+ mod.innerHTML=h; ov.classList.add("on"); mod.removeAttribute("data-cur");
+}
+function setup(){
+ var h='<div class="mh"><h2>Your details</h2><button class="x" data-close="1">&#10005;</button></div><div class="mb">'+
+  '<p style="margin:0 0 1rem;color:var(--muted);font-size:.9rem">Fill these in once. They fill themselves into every form, in green, so the customer only has to complete their own parts.</p>'+
+  '<div class="setup">';
+ US_FIELDS.forEach(function(f){
+  h+='<div><label>'+esc(f[1])+'</label><input data-us="'+esc(f[0])+'" value="'+esc(us[f[0]]||"")+'"></div>';
+ });
+ h+='</div></div><div class="mf"><button class="nb pri" data-close="1">Done</button></div>';
+ mod.innerHTML=h; ov.classList.add("on"); mod.removeAttribute("data-cur");
+}
+
+/* ---------- events ---------- */
+document.addEventListener("click",function(ev){
+ var t=ev.target;
+ if(t.closest("[data-home]")){ov.classList.remove("on");home();return}
+ var fl=t.closest("[data-flow]"); if(fl){ov.classList.remove("on");show(fl.dataset.flow,0);return}
+ var sp=t.closest("[data-step]"); if(sp&&!sp.disabled){show(state.flow.id,+sp.dataset.step);return}
+ var fo=t.closest("[data-form]"); if(fo){openForm(fo.dataset.form);return}
+ if(t.closest("[data-close]")){ov.classList.remove("on");return}
+ if(t===ov){ov.classList.remove("on");return}
+ if(t.closest("[data-copy]")){
+  var txt=docText(); var b=t.closest("[data-copy]");
+  navigator.clipboard.writeText(txt).then(function(){b.textContent="Copied";setTimeout(function(){b.textContent="Copy as text"},1400)},function(){});
+  return;
+ }
+ if(t.closest("[data-print]")){window.print();return}
+});
+document.addEventListener("change",function(ev){
+ var c=ev.target.closest("[data-tick]");
+ if(c){
+  ticks[c.dataset.tick]=c.checked; save();
+  var lab=c.closest("label"); if(lab) lab.className=c.checked?"on":"";
+  var f=state.flow;
+  if(f){var n=document.querySelector(".nav .left");
+   if(n) n.textContent=stepDone(f,state.step)?"All checked":(f.steps[state.step].check.length+" to check");}
+  return;
+ }
+});
+document.addEventListener("input",function(ev){
+ var u=ev.target.closest("[data-us]");
+ if(u){us[u.dataset.us]=u.value;save();return}
+ var fi=ev.target.closest("[data-fill]");
+ if(fi){var n=fi.dataset.fill; if(n.indexOf("US_")===0){us[n]=fi.value;save()} else fills[n]=fi.value;}
+});
+document.getElementById("setupBtn").addEventListener("click",setup);
+document.getElementById("formsBtn").addEventListener("click",formsList);
+document.getElementById("theme").addEventListener("click",function(){
+ var cur=document.documentElement.getAttribute("data-theme");
+ var dark=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;
+ document.documentElement.setAttribute("data-theme",cur?(cur==="dark"?"light":"dark"):(dark?"light":"dark"));
+});
+document.addEventListener("keydown",function(ev){
+ if(ev.key==="Escape") ov.classList.remove("on");
+});
+window.addEventListener("hashchange",function(){
+ var p=location.hash.replace("#","").split("/");
+ if(p[0]&&flowById(p[0])) show(p[0],+(p[1]||0)); else if(!p[0]) home();
+});
+var p=location.hash.replace("#","").split("/");
+if(p[0]&&flowById(p[0])) show(p[0],+(p[1]||0)); else home();
+})();
+</script>
+</body>
+</html>

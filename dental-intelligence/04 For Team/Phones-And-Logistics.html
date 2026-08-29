@@ -1,0 +1,968 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Phones, Provisioning and Logistics</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+ --bg:#f6f7f9; --panel:#fff; --ink:#131c25; --mid:#5a6572; --line:#e2e6ea;
+ --accent:#0b5cab; --accentbg:#eaf2fb;
+ --ok:#1a7f4b; --okbg:#e7f5ed;
+ --warn:#9a6a00; --warnbg:#fdf3dd;
+ --bad:#a52929; --badbg:#fbeaea;
+ --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+body{font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+ background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+header{background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.hwrap{max-width:1180px;margin:0 auto;padding:14px 20px}
+.htop{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+h1{font-size:19px;font-weight:650;letter-spacing:-.2px}
+.sub{color:var(--mid);font-size:13px}
+#q{width:100%;margin-top:11px;padding:10px 13px;font-size:15px;border:1px solid var(--line);
+ border-radius:8px;background:#fafbfc;font-family:inherit}
+#q:focus{outline:none;border-color:var(--accent);background:#fff}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-top:11px}
+.tab{font:inherit;font-size:13.5px;padding:7px 13px;border-radius:7px;border:1px solid transparent;
+ background:none;cursor:pointer;color:var(--mid)}
+.tab:hover{background:#edf0f3;color:var(--ink)}
+.tab.on{background:var(--accentbg);color:var(--accent);font-weight:600}
+.tab .n{font-size:11px;opacity:.7;margin-left:5px;font-variant-numeric:tabular-nums}
+.main{max-width:1180px;margin:0 auto;padding:20px}
+@media(max-width:840px){.main{padding:14px}}
+.sechead{margin-bottom:16px}
+.sechead h2{font-size:18px;font-weight:650}
+.sechead p{color:var(--mid);font-size:13.5px;margin-top:3px;max-width:70ch}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin-bottom:11px;overflow:hidden}
+.row{padding:13px 16px;cursor:pointer;display:flex;gap:12px;align-items:flex-start;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:none}
+.row:hover{background:#fafbfc}
+.row .rt{flex:1;min-width:0}
+.row .rt h3{font-size:15px;font-weight:600;line-height:1.35}
+.row .rt p{color:var(--mid);font-size:13px;margin-top:2px}
+.pill{font-size:10.5px;font-weight:650;text-transform:uppercase;letter-spacing:.5px;
+ padding:2px 7px;border-radius:4px;flex:none;margin-top:3px;white-space:nowrap}
+.p-ok{background:var(--okbg);color:var(--ok)}
+.p-warn{background:var(--warnbg);color:var(--warn)}
+.p-bad{background:var(--badbg);color:var(--bad)}
+.p-acc{background:var(--accentbg);color:var(--accent)}
+.grp{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:#94a0ac;margin:20px 0 7px 4px}
+.grp:first-child{margin-top:0}
+.back{background:none;border:none;font:inherit;color:var(--accent);cursor:pointer;padding:0;margin-bottom:12px;font-size:13.5px}
+.det{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:24px 26px}
+@media(max-width:840px){.det{padding:17px}}
+.det h2{font-size:21px;font-weight:650;line-height:1.3;letter-spacing:-.2px}
+.det .lead{color:var(--mid);font-size:14px;margin-top:4px}
+.blk{margin-top:20px}
+.blk>h4{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:#94a0ac;margin-bottom:8px}
+.body p{font-size:14.5px;margin-bottom:11px}
+.body p:last-child{margin-bottom:0}
+.key{background:var(--accentbg);border-left:3px solid var(--accent);padding:12px 15px;border-radius:0 6px 6px 0;font-size:14.5px}
+.warnbox{background:var(--warnbg);border-left:3px solid var(--warn);padding:12px 15px;border-radius:0 6px 6px 0;font-size:14.5px;color:#5c4400}
+.badbox{background:var(--badbg);border-left:3px solid var(--bad);padding:12px 15px;border-radius:0 6px 6px 0;font-size:14.5px;color:#6d1f1f}
+.chk{list-style:none}
+.chk li{font-size:14px;color:#3d4a57;padding-left:24px;position:relative;margin-top:6px}
+.chk li::before{content:"";position:absolute;left:0;top:3px;width:14px;height:14px;border:1.5px solid #b6c0ca;border-radius:3px}
+.spec{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:var(--line);
+ border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-top:14px}
+.spec div{background:#fafbfc;padding:9px 12px}
+.spec dt{font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:#94a0ac;margin-bottom:2px}
+.spec dd{font-size:13.5px;font-weight:550;line-height:1.4}
+.spec div.hot{background:var(--warnbg)}
+.spec div.hot dt{color:var(--warn)}
+.spec div.hot dd{color:#5c4400}
+table.cmp{width:100%;border-collapse:collapse;font-size:13.5px}
+table.cmp th,table.cmp td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+table.cmp th{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:#94a0ac;font-weight:600;background:#fafbfc}
+table.cmp tr:last-child td{border-bottom:none}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+ol.sub{list-style:none;counter-reset:z;margin-top:6px}
+ol.sub>li{counter-increment:z;position:relative;padding-left:30px;margin-top:9px;font-size:14px}
+ol.sub>li::before{content:counter(z);position:absolute;left:0;top:0;width:20px;height:20px;border-radius:50%;
+ background:var(--accentbg);color:var(--accent);font-size:11.5px;font-weight:650;display:flex;align-items:center;justify-content:center}
+.cause{border:1px solid var(--line);border-radius:8px;padding:11px 14px;margin-bottom:7px}
+.cause b{display:block;font-weight:650;margin-bottom:3px;font-size:14.5px}
+.cause span{font-size:14px;color:#3d4a57}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px}
+@media(max-width:700px){.split{grid-template-columns:1fr}}
+.split div{border:1px solid var(--line);border-radius:8px;padding:11px 14px;font-size:14px}
+.split div b{display:block;font-family:var(--mono);font-size:13px;color:var(--accent);margin-bottom:4px}
+.who{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin-bottom:11px;overflow:hidden}
+.who>h3{font-size:14.5px;font-weight:650;padding:11px 16px;background:#fafbfc;border-bottom:1px solid var(--line)}
+.who>h3 span{float:right;font-size:12px;color:var(--mid);font-weight:500}
+.qrow{padding:12px 16px;border-bottom:1px solid var(--line)}
+.qrow:last-child{border-bottom:none}
+.qrow .qq{font-size:14.5px;line-height:1.45}
+.qrow .meta{font-size:12.5px;color:var(--mid);margin-top:4px}
+.regbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.btn{font:inherit;font-size:13px;padding:7px 13px;border-radius:7px;border:1px solid var(--line);
+ background:#fff;cursor:pointer;color:var(--ink)}
+.btn:hover{background:#f2f5f8}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+textarea.copyout{width:100%;height:200px;font:12.5px/1.5 var(--mono);border:1px solid var(--line);
+ border-radius:8px;padding:12px;margin-top:10px;background:#fafbfc}
+.empty{color:var(--mid);padding:26px;text-align:center;font-size:14px}
+mark{background:#ffe9a8;color:inherit;border-radius:2px}
+.note{font-size:12.5px;color:var(--mid);margin-top:10px;font-style:italic}
+@media print{header,.regbar,.back{display:none}.main{max-width:none;padding:0}
+ .det,.card,.who{border:none;page-break-inside:avoid}body{background:#fff}}
+</style>
+</head>
+<body>
+<header><div class="hwrap">
+ <div class="htop"><h1>Phones, Provisioning and Logistics</h1>
+ <span class="sub">Desk phone hardware, how to set one up, and how it gets there.</span></div>
+ <input id="q" type="search" placeholder="Search models, steps, faults and open questions" autocomplete="off">
+ <div class="tabs" id="tabs"></div>
+</div></header>
+<div class="main" id="view"></div>
+
+<script>/* ============================================================
+   PHONES, PROVISIONING AND LOGISTICS
+   Confidence marks used throughout:
+     ok    verified against the manufacturer's own datasheet or manual
+     2nd   verified against a reseller or a provider help center only
+     chk   sources disagree, or we could not confirm. Check before quoting.
+     ask   we do not know this about our own operation yet
+   ============================================================ */
+
+var PH_TABS=[
+ {k:"pick",  n:"Pick the phone",        note:"What each model is, what room it suits, and the two fields that cost money if you get them wrong."},
+ {k:"prov",  n:"Set one up",            note:"One step per screen. Zero touch first, then the manual path when zero touch is blocked."},
+ {k:"logi",  n:"Ordering and shipping", note:"From the signed order to a working phone on a desk, with the dates that matter."},
+ {k:"teams", n:"Working with the others",note:"Sales, logistics, and application support. Who owns what, and where it usually breaks."},
+ {k:"fault", n:"When it does not work", note:"What the front desk says, what it usually means, what to check."},
+ {k:"gaps",  n:"What we do not know",   note:"Questions to ask before any of this is real."}
+];
+
+/* ================= MODELS ================= */
+var MODELS=[
+
+/* ---------- YEALINK T3, entry ---------- */
+{id:"t31g",brand:"Yealink",fam:"T3 entry",name:"T31G",status:"current",
+ screen:"2.3 inch greyscale, backlit",keys:"2 line keys",sip:"2 accounts",
+ eth:"2 x gigabit",poe:"802.3af Class 1",psu:"NOT in the box",
+ wifi:"None",bt:"None",usb:"None",ehs:"RJ9 headset port. EHS35 adapter for a wireless headset.",
+ exp:"None",conf:"ok",
+ role:"Break room, lab bench, sterilisation, hallway. Anywhere somebody needs to dial out and nothing else.",
+ note:"The cheapest sane choice. The T31P is the same phone with 10/100 ethernet instead of gigabit, which matters only if a computer daisy chains through the phone.",
+ watch:"Two lines and a greyscale screen. Do not put this at a front desk."},
+
+{id:"t33g",brand:"Yealink",fam:"T3 entry",name:"T33G",status:"current",
+ screen:"2.4 inch color, 320x240",keys:"4 line keys, up to 12 across 4 pages",sip:"4 accounts",
+ eth:"2 x gigabit",poe:"802.3af Class 1",psu:"NOT in the box",
+ wifi:"None",bt:"None",usb:"None",ehs:"RJ9 headset port. EHS35 for wireless.",
+ exp:"None",conf:"ok",
+ role:"Private office, back office, a general staff desk. The most common non reception phone in a small practice.",
+ note:"Color screen and four lines for very little money. This is the volume model in most small deployments.",
+ watch:"No power supply in the box, and no USB port, so there is no way to add Wi-Fi later. If the desk has no ethernet, this is the wrong phone."},
+
+{id:"t34w",brand:"Yealink",fam:"T3 entry",name:"T34W",status:"current",
+ screen:"2.4 inch color, 320x240",keys:"4 line keys, up to 12 across 4 pages",sip:"4 accounts",
+ eth:"2 x gigabit",poe:"802.3af Class 2",psu:"Included, per Yealink's datasheet",
+ wifi:"Built in, dual band",bt:"Optional, BT50 or BT51A dongle",usb:"1 x USB 2.0",
+ ehs:"RJ9 headset port. EHS35 for wireless.",exp:"None",conf:"chk",
+ role:"A desk with no ethernet drop. Same job as the T33G, over Wi-Fi.",
+ note:"This is a real model. If somebody says T34, this is almost certainly what they mean. It is a T33G with built in Wi-Fi, a USB port, and a power supply in the box.",
+ watch:"One reseller omits the power supply from its contents list even though Yealink's datasheet includes it. Confirm by SKU before ordering in volume. And a phone on Wi-Fi will always be more prone to choppy audio than the same phone on a cable."},
+
+/* ---------- YEALINK T4U ---------- */
+{id:"t43u",brand:"Yealink",fam:"T4U",name:"T43U",status:"current",
+ screen:"3.7 inch greyscale, 360x160",keys:"8 line keys, up to 21 across 3 pages",sip:"12 accounts",
+ eth:"2 x gigabit",poe:"802.3af Class 2",psu:"NOT in the box. The T43U-PSU SKU includes one.",
+ wifi:"Optional, WF40 or WF50 USB dongle",bt:"Optional, BT40 or BT41 dongle",usb:"2 x USB 2.0",
+ ehs:"RJ9 headset port. EHS40 for wireless.",exp:"EXP43, see the warning",conf:"chk",
+ role:"Back office or a busy staff desk that needs to see a lot of extensions at once but does not need color.",
+ note:"Eight physical keys is the step up that matters. Greyscale keeps the price down.",
+ watch:"Yealink's own documents contradict each other on whether the T43U supports the EXP43 expansion module. The datasheet says yes, the comparison sheet says no. Do not promise expansion on a T43U without checking."},
+
+{id:"t46u",brand:"Yealink",fam:"T4U",name:"T46U",status:"current",
+ screen:"4.3 inch color, 480x272",keys:"10 line keys, up to 27 across 3 pages",sip:"16 accounts",
+ eth:"2 x gigabit",poe:"802.3af Class 3",psu:"Varies by SKU. T46U has none, T46U-PSU includes one.",
+ wifi:"Optional, WF40 or WF50 dongle",bt:"Optional, BT40, BT41 or BT52 dongle",usb:"2 x USB 2.0",
+ ehs:"RJ9 headset port. EHS40 for wireless.",exp:"Up to 3 x EXP43, 180 extra keys",conf:"ok",
+ role:"Front desk. Ten keys plus expansion means reception can see every operatory at a glance.",
+ note:"The standard small office reception phone. If the practice has one busy front desk and everything else is quiet, this is the phone that goes on it.",
+ watch:"This is the clearest example of the power supply trap. The same model is sold on Amazon twice, one listing saying adapter not included and one saying included. Order by the SKU suffix, not by the model name."},
+
+{id:"t48u",brand:"Yealink",fam:"T4U",name:"T48U",status:"current",
+ screen:"7 inch color touchscreen, 800x480",keys:"29 on screen keys, no physical line keys",sip:"16 accounts",
+ eth:"2 x gigabit",poe:"802.3af Class 3",psu:"NOT in the box",
+ wifi:"Optional dongle",bt:"Optional dongle",usb:"2 x USB 2.0",
+ ehs:"RJ9 headset port. EHS40 for wireless.",exp:"Up to 3 x EXP43",conf:"ok",
+ role:"An owner's desk, or a front desk that would rather scroll a big directory than press keys.",
+ note:"Everything is on the touchscreen.",
+ watch:"No physical line keys. Some receptionists strongly prefer tactile keys they can hit without looking. Ask before you specify this for a busy desk."},
+
+/* ---------- YEALINK T5 ---------- */
+{id:"t53",brand:"Yealink",fam:"T5",name:"T53",status:"current",
+ screen:"3.7 inch greyscale, adjustable angle",keys:"8 line keys, up to 21 across 3 pages",sip:"12 accounts",
+ eth:"2 x gigabit",poe:"802.3af Class 2",psu:"NOT in the box",
+ wifi:"Optional, WF40 or WF50 dongle",bt:"Optional dongle",usb:"1 x USB 2.0",
+ ehs:"RJ9 headset port. EHS40 for wireless.",exp:"Up to 3 x EXP50",conf:"ok",
+ role:"Back office desk where you want the better T5 audio and the option to expand, without paying for wireless.",
+ note:"The wired sibling of the T53W.",
+ watch:"Only one USB port on the whole T5 family, unlike the two on the T4U family. A Wi-Fi dongle and a USB headset cannot both go in."},
+
+{id:"t53w",brand:"Yealink",fam:"T5",name:"T53W",status:"current",
+ screen:"3.7 inch greyscale, adjustable angle",keys:"8 line keys, up to 21 across 3 pages",sip:"12 accounts",
+ eth:"2 x gigabit",poe:"802.3af Class 2",psu:"NOT in the box",
+ wifi:"Built in, dual band",bt:"Built in, Bluetooth 4.2",usb:"1 x USB 2.0",
+ ehs:"RJ9 headset port. EHS40 for wireless.",exp:"Up to 3 x EXP50",conf:"ok",
+ role:"Private office, or any desk that wants a Bluetooth headset without buying a dongle.",
+ note:"The most commonly recommended all round small office phone. Wi-Fi and Bluetooth built in, eight keys, good audio.",
+ watch:"Greyscale screen. If the practice expects color, they will be disappointed by the photo before they ever use it."},
+
+{id:"t54w",brand:"Yealink",fam:"T5",name:"T54W",status:"current",
+ screen:"4.3 inch color, 480x272, adjustable angle",keys:"10 line keys, up to 27 across 3 pages",sip:"16 accounts",
+ eth:"2 x gigabit",poe:"802.3af Class 3",psu:"NOT in the box",
+ wifi:"Built in, dual band, 802.11ac",bt:"Built in, Bluetooth 4.2",usb:"1 x USB 2.0",
+ ehs:"RJ9 headset port. EHS40 for wireless.",exp:"Up to 3 x EXP50, 180 extra keys",conf:"ok",
+ role:"Front desk with a lot of lines, or a practice manager. The best reception phone in the T5 line.",
+ note:"Color, ten keys, Wi-Fi and Bluetooth built in, adjustable screen, and it takes expansion modules. If you only learn one model properly, learn this one.",
+ watch:"Class 3 PoE. Ten of these on a cheap switch is where PoE budget problems start. See the PoE section."},
+
+{id:"t57w",brand:"Yealink",fam:"T5",name:"T57W",status:"current",
+ screen:"7 inch color touchscreen, adjustable",keys:"29 on screen keys",sip:"16 accounts",
+ eth:"2 x gigabit",poe:"802.3af, class not stated. Draw is 4.0 to 7.8 W, which suggests Class 3.",
+ psu:"NOT in the box",
+ wifi:"Built in, dual band",bt:"Built in, Bluetooth 4.2",usb:"1 x USB 2.0",
+ ehs:"RJ9 headset port. EHS40 assumed, not printed on this datasheet.",exp:"Up to 3 x EXP50",conf:"chk",
+ role:"Owner or office manager. A front desk that prefers a large touch directory.",
+ note:"The touchscreen flagship of the T5 line.",
+ watch:"Yealink does not print the PoE class for this model. If you are sizing a switch tightly, budget it as Class 3 and confirm."},
+
+/* ---------- CONFERENCE ---------- */
+{id:"cp925",brand:"Yealink",fam:"Conference",name:"CP925",status:"current",
+ screen:"4 inch color touchscreen",keys:"Touch interface",sip:"1 account",
+ eth:"1 x 10/100, not gigabit",poe:"802.3af Class 3",psu:"INCLUDED, 12V 1.25A",
+ wifi:"Built in",bt:"Built in 4.2",usb:"1 x USB C",
+ ehs:"No headset port, it is a conference phone",exp:"Optional CPW25 wireless mics",conf:"ok",
+ role:"Consult room, meeting room, staff room table.",
+ note:"Six or seven mic array, 360 degree pickup, about 20 feet of range, five way conference. One of the few models where the power adapter is genuinely in the box.",
+ watch:"10/100 ethernet only, so do not daisy chain a computer through it and expect gigabit."},
+
+{id:"cp935w",brand:"Yealink",fam:"Conference",name:"CP935W",status:"current",
+ screen:"4 inch color touchscreen",keys:"Touch interface",sip:"1 on the handset, up to 10 on the base",
+ eth:"None on the unit. The CP935W-Base bundle adds a W70B base with 1 x 10/100.",
+ poe:"Battery powered. The W70B base is 802.3af Class 1.",
+ psu:"INCLUDED, two of them, one for the cradle and one for the base",
+ wifi:"Built in",bt:"Built in 4.2",usb:"1 x USB C",
+ ehs:"No headset port",exp:"Optional CPW25 wireless mics",conf:"ok",
+ role:"A room with no network cable, or a room used for different things on different days.",
+ note:"Connects by DECT to the base, up to about 50 metres indoors, or over Wi-Fi. Around 20 hours talk time.",
+ watch:"Order the CP935W-Base bundle, not the bare CP935W, unless the practice already has a W70B base."},
+
+/* ---------- DECT ---------- */
+{id:"w73p",brand:"Yealink",fam:"Cordless",name:"W73P",status:"current",
+ screen:"1.8 inch color handset screen",keys:"Cordless keypad",sip:"Up to 10 accounts on the base",
+ eth:"1 x 10/100 on the base",poe:"802.3af Class 1 on the base",
+ psu:"INCLUDED, two, one for the base and one for the charging cradle",
+ wifi:"None, it is DECT",bt:"None",usb:"Cradle is USB powered",
+ ehs:"3.5mm headset jack on the handset. No RJ9, no EHS.",exp:"Base holds up to 10 handsets, 20 simultaneous calls",conf:"ok",
+ role:"Staff who move. Sterilisation, stock room, a practice manager who is never at their desk.",
+ note:"Best battery in the DECT range, around 35 hours talk and 400 hours standby. Base and cradle both wall mountable.",
+ watch:"The MAC address that gets provisioned belongs to the BASE, not the handset. Provisioning the handset MAC is a classic wasted afternoon."},
+
+{id:"w76p",brand:"Yealink",fam:"Cordless",name:"W76P",status:"current",
+ screen:"2.4 inch color handset screen",keys:"Cordless keypad",sip:"Up to 10 accounts on the base",
+ eth:"1 x 10/100 on the base",poe:"802.3af Class 1 on the base",psu:"INCLUDED, two",
+ wifi:"None, DECT",bt:"None",usb:"USB charger cradle",
+ ehs:"3.5mm jack",exp:"Up to 10 handsets per base",conf:"ok",
+ role:"Same roaming job as the W73P with a larger handset screen.",
+ note:"Around 30 hours talk, 400 hours standby.",
+ watch:"The older W56P bundle is end of life, but the W56H handset inside this bundle is current. Do not let a reseller talk you into a W56P."},
+
+{id:"dd10k",brand:"Yealink",fam:"Cordless",name:"DD10K DECT dongle",status:"current",
+ screen:"n/a",keys:"n/a",sip:"Uses the host phone's accounts",
+ eth:"n/a",poe:"n/a",psu:"None needed, USB powered",
+ wifi:"None, DECT",bt:"None",usb:"Plugs into the host phone's USB port",
+ ehs:"n/a",exp:"Up to 4 cordless handsets",conf:"ok",
+ role:"Adding one to four cordless handsets to a practice that already has a T5 series phone.",
+ note:"Turns a T53, T53W, T54W or T57W into a small DECT base. Much cheaper than buying a W70B base.",
+ watch:"It occupies the phone's only USB port, so that phone can no longer take a USB headset or a Wi-Fi dongle."},
+
+/* ---------- EXPANSION ---------- */
+{id:"exp43",brand:"Yealink",fam:"Expansion",name:"EXP43 module",status:"current",
+ screen:"4.3 inch color",keys:"20 physical keys x 3 pages = 60 per module",sip:"n/a",
+ eth:"None",poe:"n/a",psu:"Not needed for one module. REQUIRED for two or three, and not in the box.",
+ wifi:"None",bt:"None",usb:"Connects to the phone by USB",
+ ehs:"n/a",exp:"Up to 3 modules, 180 keys",conf:"ok",
+ role:"A front desk that needs to see more extensions than the phone has keys.",
+ note:"Goes with T4U phones: T46U and T48U for certain, T43U disputed.",
+ watch:"EXP43 is for T4U phones and EXP50 is for T5 phones. They are not interchangeable. Ordering the wrong one is a return, not a workaround."},
+
+{id:"exp50",brand:"Yealink",fam:"Expansion",name:"EXP50 module",status:"current",
+ screen:"4.3 inch color",keys:"20 physical keys x 3 pages = 60 per module",sip:"n/a",
+ eth:"None",poe:"n/a",psu:"Not needed for one. REQUIRED for two or three, sold separately.",
+ wifi:"None",bt:"None",usb:"Connects by USB",
+ ehs:"n/a",exp:"Up to 3 modules, 180 keys",conf:"ok",
+ role:"Same job, for T5 phones.",
+ note:"Goes with T53, T53W, T54W, T57W.",
+ watch:"Same warning as the EXP43. Match the module to the phone family."},
+
+/* ---------- POLY ---------- */
+{id:"e220",brand:"Poly",fam:"Edge E",name:"Edge E220",status:"current",
+ screen:"2.8 inch color, 320x240",keys:"4 line keys, 16 total assignments",sip:"See note",
+ eth:"2 x gigabit",poe:"802.3af Class 3, up to 13 W",psu:"NOT in the box",
+ wifi:"None",bt:"Built in 5.0",usb:"1 x USB C",
+ ehs:"RJ9 headset port, EHS capable",exp:"None",conf:"ok",
+ role:"Operatory, back office. The volume workhorse of the Poly range.",
+ note:"Poly's answer to the T33G. Bluetooth built in at this price is unusual. The console and handset carry an antimicrobial coating, which is a real selling point in a room where gloved hands touch the phone between patients.",
+ watch:"Poly SKUs ending 025 have no power supply, ending 001 include one. The base part number differs between the two, so you cannot just change the last three digits on a quote."},
+
+{id:"e450",brand:"Poly",fam:"Edge E",name:"Edge E450",status:"current",
+ screen:"3.5 inch color plus a second 2.4 inch color display",keys:"14 keys across two screens, 44 assignments, 86 with an expansion module",
+ sip:"See note",eth:"2 x gigabit",poe:"Poly prints 802.3af Class 4, up to 13 W",psu:"NOT in the box",
+ wifi:"Built in",bt:"Built in 5.0",usb:"1 x USB C",
+ ehs:"RJ9 headset port, APP-51 EHS adapter",exp:"1 expansion module",conf:"ok",
+ role:"Front desk in a practice with several providers. Fourteen keys means every operatory is visible without an expansion module.",
+ note:"The Poly equivalent of a T54W with an expansion module, in one unit.",
+ watch:"Poly labels this 802.3af Class 4, which is not a real combination since 802.3af only defines classes 0 to 3 and Class 4 belongs to 802.3at. Budget these on PoE+ ports with headroom."},
+
+{id:"trioc60",brand:"Poly",fam:"Conference",name:"Trio C60",status:"current",
+ screen:"5 inch color multitouch",keys:"Touch",sip:"See note",
+ eth:"2 x gigabit",poe:"802.3at PoE+ required on the input port",psu:"NOT in the box",
+ wifi:"Built in 802.11ac",bt:"Built in 5.0",usb:"1 x Type A, 1 x micro B",
+ ehs:"n/a",exp:"Optional expansion mics, daisy chains up to 3 units",conf:"ok",
+ role:"Consult room or conference room.",
+ note:"About 20 feet of pickup, 360 degrees. The only Trio worth specifying new.",
+ watch:"Needs PoE+, not plain PoE. A switch that runs ten desk phones happily may refuse this."},
+
+{id:"vvx",brand:"Poly",fam:"VVX legacy",name:"VVX 150, 250, 350, 450",status:"legacy",
+ screen:"Varies by model",keys:"Varies",sip:"Varies",
+ eth:"Varies, the VVX 150 is 10/100 only",poe:"802.3af",psu:"NOT in the box",
+ wifi:"Optional",bt:"Varies",usb:"Varies",
+ ehs:"RJ9 headset port",exp:"VVX expansion module is end of life",conf:"chk",
+ role:"Only relevant if a practice already owns them.",
+ note:"Still listed and still sold, but the last firmware release was April 2023 and the line has been superseded twice. There is no published end of sale notice, which is not the same as a commitment.",
+ watch:"Do not specify VVX for a new install. If a practice brings VVX phones with them, they will work, but you are inheriting a frozen platform. The older VVX 101 through 411 and 501 and 601 are fully end of support as of late 2025."},
+
+{id:"snom",brand:"Snom",fam:"D series",name:"Snom D7xx and D8xx",status:"niche",
+ screen:"Varies by model",keys:"Varies",sip:"Varies",
+ eth:"Varies",poe:"Varies",psu:"NOT in the box, across the whole range",
+ wifi:"Varies",bt:"Varies",usb:"Varies",
+ ehs:"Varies",exp:"D7C and D8C expansion modules",conf:"2nd",
+ role:"Only if a practice already runs Snom, or if our platform explicitly supports it.",
+ note:"Good hardware and the best warranty of the three, three year replacement. Snom's redirection service is called SRAPS and does the same job as Yealink RPS.",
+ watch:"A distant third in US hosted deployments. SIP compatible and having a tested provisioning template are very different things. Confirm our platform supports Snom before anybody promises it. The D785 is end of sale as of June 2026."}
+];
+
+/* ================= WHAT GOES WHERE IN A PRACTICE ================= */
+var ROOMS=[
+ {r:"A desk with only one network socket",need:"A phone and a computer both need to reach the network, but there is one socket.",
+  pick:"Almost any business desk phone with two ethernet ports. The wall goes into the phone, and the computer plugs into the phone second port.",
+  why:"That second port exists precisely for this and it is the normal way it is done, so a shortage of sockets is rarely a reason to run new cable. Check both ports are gigabit if the computer needs gigabit, because a few entry models are still 10/100 and will throttle the machine behind them."},
+ {r:"Front desk, reception",need:"Sees every extension at once, takes the most calls, transfers constantly.",
+  pick:"Yealink T54W or T46U, or Poly Edge E450. Add an expansion module if there are more than about ten extensions to watch.",
+  why:"Ten physical keys is the threshold. Below that, reception ends up navigating menus while a patient waits on the line."},
+ {r:"Operatory, treatment room",need:"Occasional use, often with gloved hands, rarely more than one call at a time.",
+  pick:"Yealink T33G, or Poly Edge E220.",
+  why:"Four keys is plenty. Poly's antimicrobial coating is a genuine argument in this room specifically."},
+ {r:"Private office, practice manager",need:"Regular calls, wants a headset, may not be at the desk.",
+  pick:"Yealink T53W or T54W. Add a cordless handset if they move around.",
+  why:"Built in Bluetooth means a wireless headset with nothing extra to order."},
+ {r:"Sterilisation, lab, stock room",need:"Dial out, hear the intercom, nothing else.",
+  pick:"Yealink T31G.",
+  why:"Cheapest thing that works. Do not spend color screen money here."},
+ {r:"Staff who move around",need:"Reachable anywhere in the building.",
+  pick:"Yealink W73P cordless. Or a DD10K dongle in an existing T5 phone if only one or two handsets are needed.",
+  why:"The dongle route is much cheaper than a base station for a small number of handsets."},
+ {r:"Consult room, conference room",need:"Several people round a table on one call.",
+  pick:"Yealink CP925 if the room has a network cable. CP935W if it does not. Poly Trio C60 if audio quality is the deciding factor.",
+  why:"A desk phone on speaker in a meeting room sounds bad and everybody blames the phone system."}
+];
+
+/* ================= PROVISIONING WALKTHROUGH ================= */
+var PROV=[
+{id:"p-zero",group:"Before you touch anything",title:"Step zero. Confirm the phone service is actually ours",
+ mins:"Two minutes",
+ body:"Nothing else on this page applies unless the practice's calls are carried on our platform. Software, messaging and phone service are sold and held separately, and a practice can have any combination of the three. Dental Intelligence's own published help material says it does not provide phone service directly and supports any VoIP provider, so a practice keeping their existing phone company is not the exception. Historically it is the common case.\n\nSo before you order a phone, before you touch a redirect portal, and certainly before you promise an install date, confirm which of these you are looking at.\n\nTHEIR PHONE SERVICE IS OURS. Their numbers sit on our platform. Everything on this page applies. We specify the hardware, we provision it, we own the outcome.\n\nTHEIR PHONE SERVICE IS THEIR OWN. They have the software, and possibly the messaging, but the calls run through their own provider. We do not provision their handsets and we do not order them hardware. Their provider does. What we do own is the Screen Pop integration, which runs on a simultaneous ring setting configured at their end.\n\nMID MIGRATION. Some numbers have moved to us and some have not. Both of the above are true at the same time, on different lines, in the same building. This is where the expensive mistakes live.",
+ key:"A hardware order placed for a practice whose calls are not with us is not a small error. It is a purchase somebody has to unwind, and it usually surfaces on the day of a cutover that was never going to happen.",
+ check:["I have confirmed which numbers, if any, are hosted on our platform",
+        "I have confirmed whether messaging is separate from the calls here",
+        "If they are on their own provider, I know that hardware and provisioning belong to that provider, not to us",
+        "If Screen Pops are in scope, I know the simultaneous ring setting lives at their provider"],
+ warn:"Do not take the answer from the practice alone. A front desk person will tell you in good faith that their phones are with Dental Intelligence because everything on their desk says Dental Intelligence. Check the number, not the impression."},
+
+{id:"p-what",group:"Before you touch anything",title:"Understand what provisioning actually is",
+ mins:"Read once",
+ body:"A desk phone arrives from the factory knowing nothing. It has no phone number, no extension, no idea what company it belongs to. Provisioning is the process of a phone finding out where to get its settings, and then getting them.\n\nThere are two ways that happens.\n\nZERO TOUCH. The phone is plugged in, it works out where to go on its own, downloads its settings, and comes up ready. Nobody types anything into the phone. This is what you want, because it is the only method that scales past about five phones.\n\nMANUAL. Somebody logs into the phone through a web browser and types in the settings by hand. Always works, never scales, and the settings get wiped the next time the platform pushes an update.\n\nThe thing that makes zero touch work is a redirection service. Yealink calls theirs RPS. Poly calls theirs ZTP. Snom calls theirs SRAPS. They all do exactly the same job and it is a very small job.",
+ key:"A redirection service is a change of address card at the post office. The phone is the letter. It holds no settings, no password, no phone number. It answers one question: for this MAC address, which server should this phone go and get its settings from?",
+ check:["I can explain the difference between zero touch and manual",
+        "I know the redirect service holds no settings, only a forwarding address",
+        "I know our platform's provisioning server is the thing that holds the real settings"]},
+
+{id:"p-mac",group:"Before you touch anything",title:"Find the MAC address",
+ mins:"One minute",
+ body:"The MAC address is the phone's permanent hardware serial. Twelve characters, letters A to F and numbers. It never changes, a factory reset does not clear it, and it is how every system in this process identifies one specific physical phone.\n\nThere are three places to find it.\n\nON THE SHIPPING BOX. There is a label on the side of the box with the MAC printed on it. This is the important one, because it means you can provision a whole order without opening a single box. If you are staging twenty phones, you read twenty box labels.\n\nON THE PHONE ITSELF. Turn the phone over. There is a label on the underside, near the power and network ports, marked MAC.\n\nFROM THE PHONE'S SCREEN. Press the round OK button in the middle of the navigation pad while the phone is idle. The status screen appears showing the IP address, the MAC address, and the firmware version. The longer path is Menu, then Status.",
+ key:"On a cordless system the MAC that matters belongs to the BASE STATION, not the handset. Provisioning a handset MAC is a wasted afternoon and it is a very common mistake.",
+ check:["I can find a MAC on a box label without opening it",
+        "I can find a MAC from the phone screen using the OK button",
+        "I know that for cordless, the base MAC is the one that counts"],
+ warn:"Yealink prints the MAC on the label without separators, like 805EC0A1B2C3, but the phone screen shows it with dashes. They are the same address. Typing it with the wrong separators into a portal that wants a specific format is a five minute mistake that looks like a broken phone."},
+
+{id:"p-order",group:"Zero touch",title:"Step 1. Create the device on our platform first",
+ mins:"Five minutes",
+ body:"Before the redirect service can send a phone anywhere useful, the destination has to exist. Create the device record on our own platform, attached to the right practice and the right user, with the MAC address entered exactly.\n\nThis ordering is not optional and it is the most common cause of a phone that redirects perfectly and then sits there doing nothing. The phone asks the redirect service where to go, gets the right answer, goes there, asks for its config file, and gets a not found error because nobody created the record.",
+ where:"DialStack. Exact screen path unknown, see the gaps list.",
+ key:"Redirect entry without a matching device record produces a phone that redirects successfully and then fails silently. The logs will say delivered. The phone will say No Service.",
+ check:["Device created on the platform","MAC entered and double checked character by character",
+        "Attached to the right practice","Attached to the right user or extension"],
+ gap:true,
+ warn:"DialStack allows at most ONE physical device per user, a desk phone or a cordless handset. Softphone sessions are separate and unlimited. All registered endpoints ring at the same time and whoever answers first gets the call. If somebody needs two desk phones, they need two users, and that is a licensing conversation before it is a hardware one."},
+
+{id:"p-rps",group:"Zero touch",title:"Step 2. Put the MAC into the redirect service",
+ mins:"Two minutes per phone, or one bulk upload",
+ body:"Now tell the redirect service where this phone should go. You enter the MAC address and pick the server profile that points at our provisioning URL.\n\nFor Yealink this is done in Yealink's device management portal at dm.yealink.com. You need a partner account, which Yealink issues. There is no self service signup and a dental practice can never do this themselves.\n\nFor Poly this is done at partner.ztp.poly.com, under Devices, then Register Devices. Poly's access is gated harder than Yealink's, to partner program members only.\n\nMost platforms automate this. If our platform has a redirect integration, adding the device in step 1 pushes the MAC to the redirect service automatically and this step disappears. Whether ours does is one of the things we need to find out.",
+ where:"Yealink: dm.yealink.com. Poly: partner.ztp.poly.com.",
+ key:"Both portals accept a CSV upload. For an order of more than about five phones, do not type MACs one at a time. Read them off the box labels into a spreadsheet and upload the file.",
+ check:["MAC entered into the redirect service, or confirmed that our platform does it automatically",
+        "Correct server profile selected","Entry confirmed saved"],
+ gap:true,
+ warn:"Yealink permits around 20 devices per day per account. That figure comes from one provider's documentation rather than from Yealink, but if it holds, a large migration cannot be staged in an afternoon."},
+
+{id:"p-boot",group:"Zero touch",title:"Step 3. Plug it in and leave it alone",
+ mins:"Five minutes, sometimes thirty",
+ body:"Connect the network cable to the port marked internet or with a network symbol, not the port marked PC. If the switch supplies power over the network cable, that is all you need. If not, connect the power adapter.\n\nThen leave it alone. Here is what is happening while you wait.\n\n1. The phone gets an IP address from the network.\n2. It contacts the redirect service and presents its MAC.\n3. The redirect service replies with our provisioning server address.\n4. The phone stores that address and goes there.\n5. It downloads two config files. A common one for its model, and one named after its own MAC holding its specific settings.\n6. It applies them and reboots.\n7. It may then discover it needs different firmware, download that, and reboot again.\n8. It registers, and the extension appears on the screen.",
+ key:"A phone that has sat in a cupboard for three years may reboot four or five times over twenty to thirty minutes on its first startup, because Yealink firmware sometimes cannot jump straight from an old version to the current one and has to step through intermediate versions. This is normal. It is not broken.",
+ check:["Cable in the network port, not the PC port","Powered, by the network cable or the adapter",
+        "Left undisturbed until it settles","Extension number showing on the screen"],
+ warn:"Never unplug a phone during this. An interrupted firmware update is the one way to genuinely break a phone rather than just misconfigure it. If somebody at the practice is impatient, tell them plainly: unplugging it now could turn a twenty minute wait into a replacement order."},
+
+{id:"p-verify",group:"Zero touch",title:"Step 4. Prove it works before you leave",
+ mins:"Five minutes",
+ body:"A phone showing an extension number is not a working phone. Test it properly, because the alternative is finding out from a patient.",
+ key:"Test audio in both directions on an outside call. A phone can register perfectly and still have no sound, because call setup and the actual voice travel on completely separate paths.",
+ check:["Call out to a mobile, confirm both people can hear each other clearly",
+        "Call in from a mobile, confirm the right phone rings",
+        "Transfer a call to another extension","Check the extension label on the screen is the right person",
+        "Confirm the emergency address for this phone is registered and provisioned",
+        "Voicemail reachable"],
+ warn:"The emergency address check belongs here, not later. A phone that can call out but has no emergency address on file is a phone that can call for help and not be found."},
+
+{id:"p-ip",group:"Manual setup",title:"Step 5. Find the phone's IP address",
+ mins:"One minute",
+ body:"Use the manual path when zero touch is blocked, when you need one phone working right now, or when you are diagnosing something.\n\nPress the round OK button while the phone is idle. The status screen shows the IPv4 address. The longer route is Menu, then Status, then Network, then IPv4 Status.\n\nOn a touchscreen model like the T57W, swipe down from the top of the screen, then Settings, then Status, then IPv4 Status.\n\nOn a Poly Edge E, the path is Home, then Settings, then Status, then System Information.",
+ key:"If the screen says Network Unavailable, or the address is 0.0.0.0 or blank, stop. This is not a provisioning problem, it is a cable, a switch port, or a network problem. No amount of typing settings will fix it.",
+ check:["IP address obtained and written down","It is a real address, not 0.0.0.0"]},
+
+{id:"p-web",group:"Manual setup",title:"Step 6. Log into the phone through a browser",
+ mins:"One minute",
+ body:"From a computer on the same network as the phone, open a browser and go to the phone's IP address. So if the phone said 192.168.1.42, go to http://192.168.1.42.\n\nThe default login on a Yealink is admin and admin.\n\nOn newer Yealink firmware the default password is instead the last six characters of the MAC address, and some firmware forces you to change it at first login.\n\nOn a Poly VVX the admin password after a reset is 456.",
+ key:"If admin and admin is rejected on a phone that is supposed to be new, that phone is not new. Somebody's provisioning system has already changed the password, which means the MAC is probably still claimed by another provider. Go to the stuck phone procedure.",
+ check:["Logged into the phone's web interface","Noted whether the default password had been changed"]},
+
+{id:"p-sip",group:"Manual setup",title:"Step 7. Type in the account by hand",
+ mins:"Five minutes",
+ body:"Go to the Account tab, then the Register page, and pick Account 1. These are the fields that matter.\n\nLine Active. Set to Enabled. Nothing works until this is on, and it is the field people miss.\n\nLabel. Cosmetic text next to the line key, for example Reception.\n\nDisplay Name. The caller ID name on outbound calls. Most hosted platforms override this at the carrier and ignore whatever the phone sends.\n\nRegister Name. The authentication ID from the platform.\n\nUser Name. The SIP username or extension. On some platforms this is the same as Register Name and on others it is not. Use exactly what the credential sheet says rather than assuming.\n\nPassword. The device password from the platform. This is not the web admin password and it is not the user's voicemail PIN.\n\nSIP Server Host and Port. The platform's address. 5060 is typical for unencrypted, 5061 for encrypted, but some providers deliberately use something else.\n\nTransport. UDP, TCP or TLS. Whatever the platform specifies.\n\nSave, and Register Status on the same page should change to Registered.",
+ key:"Switching Transport from UDP to TCP is one of the highest yield fixes in this whole document. If a phone registers and then drops every few minutes, try TCP before you try anything else.",
+ check:["Line Active enabled","Credentials entered exactly as supplied",
+        "Register Status shows Registered","Test call both directions"],
+ warn:"If the platform manages this phone, the next provisioning cycle will overwrite everything you just typed. Manual registration is a diagnostic and a stopgap. It is not a way to deploy phones."},
+
+{id:"p-reset",group:"Fixing a phone",title:"Factory reset a phone",
+ mins:"Ten minutes including the reboots",
+ body:"Three ways, in order of how likely you are to be able to use them.\n\nHOLD THE OK KEY. With the phone idle, press and hold the round OK button until a reset prompt appears on screen, roughly ten seconds. Confirm. This needs no password and no computer, which makes it the one to teach a front desk person over the phone.\n\nOn the T57W, T58 and VP59 the key is Redial instead, held about five seconds. On CP conference phones it is Home or Mute, held ten to twenty seconds. On a cordless base, unplug the power, hold the paging button, plug the power back in, and release when the lights go solid. Handsets then have to be paired again.\n\nFROM THE PHONE MENU. Menu, then Advanced, password admin, then Reset Config, then Reset to Factory Settings.\n\nFROM THE BROWSER. Log in, then Settings, then Upgrade, then Reset to Factory Setting.",
+ key:"A factory reset clears the settings, the SIP account, the local directory, and the web password. It does NOT clear the firmware, and critically it does NOT clear the redirect claim. If the MAC is registered to another provider, you can reset the phone a hundred times and it will go back to the same wrong place every time.",
+ check:["Reset confirmed","Phone left alone through all of its reboots","Came back registered, or escalated"],
+ warn:"Check with whoever manages the phone before resetting anything. If the MAC has been removed from the platform, or is still claimed elsewhere, a reset turns a partly working phone into a dead one until a support ticket clears."},
+
+{id:"p-stuck",group:"Fixing a phone",title:"The phone is claimed by another provider",
+ mins:"Days, not minutes. Start immediately.",
+ pri:true,
+ body:"This is the single most common reason a brand new deployment silently fails, and the single most common reason an install day goes wrong.\n\nWHAT THE PRACTICE SAYS. I plugged it in, it restarted a few times by itself, and now it says No Service. Or it came up with some other company's name on it. Or it is asking for a password nobody has.\n\nWHAT IS ACTUALLY HAPPENING. The MAC is still registered in the previous provider's redirect account. Every time the phone boots it asks the redirect service where to go, and the redirect service sends it back to the old provider. The phone then either pulls the old provider's settings, which can change the admin password and point it at a server it has no valid credentials for, or hits a dead address and lands nowhere.\n\nWHY RESETTING DOES NOT HELP. The claim lives on a server at Yealink or Poly, not on the phone. Resetting the phone just makes it ask the same question again and get the same wrong answer.\n\nTHREE WAYS OUT.\n\n1. Ask the previous provider to release it. Fastest by far when you can reach them. They delete the device from their redirect account.\n\n2. Raise a ticket with the manufacturer. For Yealink, go to ticket.yealink.com/portal/mac-removal and raise an RPS MAC Removal ticket with the MAC and the serial number. If you have no account, register and submit a general question instead, with a photograph of the MAC sticker on the underside of the phone as proof you physically have it. For Poly, open a case at support.hp.com, product Poly, titled ZTP-Remove MAC Address, again with a photo of the sticker. Then factory reset the phone so it asks again.\n\n3. Bypass the redirect entirely. A setting on the practice's own network called DHCP option 66 outranks the cloud redirect service, so you can point the phones at our provisioning server locally and the stale claim never gets consulted. This is the on site fix when you cannot wait.",
+ key:"Nobody publishes a turnaround time for a release ticket. Plan for days. Never schedule a cutover on the assumption that a release will come through the same day.",
+ check:["Identified that the MAC is claimed elsewhere","Previous provider asked to release it, if reachable",
+        "Manufacturer ticket raised with MAC, serial, and a photo of the sticker",
+        "Considered the local bypass as an interim","Customer told this is days rather than hours"],
+ warn:"This is the reason to buy new phones from an authorized channel rather than second hand. It is also the reason that when a practice leaves a previous provider, getting the MACs released should be part of the exit, not something discovered on install day."}
+];
+
+/* ================= LOGISTICS ================= */
+var LOGI=[
+{id:"l-count",title:"Work out what they actually need, before anybody orders",
+ who:"Sales, with support",when:"During the sales conversation, not after it",
+ body:"A phone count is not a headcount and it is not a room count. Walk it room by room.\n\nAsk what is in each room now, and whether it works. Ask who takes calls and who only makes them. Ask whether anybody uses a headset today, because that is an accessory order with its own lead time and its own compatibility trap. Ask whether anybody moves around the building, because that is a cordless handset rather than a desk phone.\n\nThen ask the two questions that decide whether this is a simple order or a project. Does the building have network cable to every place a phone needs to go. And does the practice have a switch that supplies power over those cables.",
+ out:["A room by room list with a model against each room",
+      "Headset requirements, by person",
+      "A yes or no on network cable to every phone position",
+      "A yes or no on power over ethernet"],
+ fail:"If the answer to network cable is no, that is a cabling job by an outside contractor with its own timeline, and it belongs in the schedule before any phone ships."},
+
+{id:"l-psu",title:"Decide the power question, and get it right",
+ who:"Support",when:"Before the order is placed",pri:true,
+ body:"Almost no business desk phone includes a power adapter. Not Yealink, not Poly, not Snom. The exceptions are the conference phones and the cordless bundles.\n\nThat leaves two paths.\n\nPOWER OVER THE NETWORK CABLE. One switch feeds every phone down the cable that is already there. Cleaner, cheaper past about four phones, and it removes a power brick from every operatory where outlets are already scarce. This is almost always the right answer.\n\nINDIVIDUAL ADAPTERS. One adapter per phone, ordered as a separate line item, and one more thing plugged in at every desk. Only makes sense for one or two phones.\n\nIf you go the switch route, size it properly, because this is where small deployments go wrong.",
+ out:["Power method decided and written on the order",
+      "If adapters, the correct part number for each model, ordered as separate lines",
+      "If a switch, the total power budget checked against the phones going on it"],
+ key:"A phone's class decides how much power the switch RESERVES, not how much the phone draws. A Class 3 phone may only use 4 watts but causes the switch to hold back 15.4 watts at that port. Twelve Class 3 phones can reserve about 185 watts on a switch rated 190, and the switch starts refusing power while its actual consumption is under 50 watts. The practice then reports that a phone in a completely different room started rebooting after they added one more handset.",
+ fail:"Order the wrong SKU and the phones arrive with no way to power them. If the practice has no power over ethernet and nobody checked, install day becomes a trip to buy adapters."},
+
+{id:"l-order",title:"Place the order",
+ who:"Logistics, on our request",when:"Once the deal is closed and the count is agreed",
+ body:"Order by SKU, never by model name. The same model number is sold in a version with a power supply and a version without, and the base part number is different between them, so you cannot simply change a suffix on a quote.\n\nGet the MAC addresses at the point of shipment if the supplier can provide them. Some distributors will send a manifest listing the MAC of every phone in the order. If ours will, ask for it as standard, because it means every phone can be provisioned before it arrives and the practice can plug them in themselves.",
+ out:["Order placed by exact SKU","Accessories on the order as separate lines: adapters, headsets, EHS adapters, expansion modules, wall mount brackets",
+      "MAC manifest requested","Ship to address confirmed with the practice, including who signs for it"],
+ gap:true,
+ key:"Ask for the MAC manifest even if you think you do not need it. Provisioning from a manifest turns install day from an engineer visit into a phone call.",
+ fail:"An accessory left off the order arrives a week after the phones. Headsets and EHS adapters are the usual casualties, and an EHS adapter is model specific, so the wrong one is a return rather than a workaround."},
+
+{id:"l-dates",title:"Agree the dates, and work backwards from the cutover",
+ who:"Support, with logistics and sales",when:"As soon as the order is placed",pri:true,
+ body:"There are four dates and they are not the same date. Confusing them is how a practice ends up with a live phone number and no phones.\n\nORDER DATE. When we place it.\n\nSHIP DATE. When it leaves the supplier. This is the one the supplier commits to and the only one they control.\n\nDELIVERY DATE. When it arrives at the practice. Add transit time to the ship date, and add a buffer, because a delivery to a dental practice that is closed on Fridays does not arrive on a Friday.\n\nCUTOVER DATE. When the numbers actually move and the old system stops. This one is set by the carrier, not by us.\n\nBuild the schedule backwards from the cutover. Hardware on site at least a week before, so that a wrong item or a damaged box can be fixed without moving the cutover. Never the day before.",
+ out:["All four dates recorded separately","Hardware on site at least a week before cutover",
+      "Practice told the delivery date and who needs to sign","Tracking number recorded on the account"],
+ key:"Never let the cutover date be the first day the phones are needed. If a box goes missing, the cutover is a carrier date that costs real effort to move, while the delivery is not.",
+ fail:"If hardware will not arrive a week before the cutover, say so immediately and move the cutover rather than hoping. Discovering this on the day is the version that loses a customer."},
+
+{id:"l-stage",title:"Provision the phones before they arrive, if you can",
+ who:"Support",when:"Between order and delivery",
+ body:"If you have the MAC manifest, everything in the zero touch procedure can be done while the boxes are still in transit. Create the devices on the platform, load the MACs into the redirect service, and assign each phone to a room and a person.\n\nThen label. If the supplier ships to the practice directly, send a labeling sheet mapping each MAC to a room, so whoever unpacks knows which box goes where. If the phones come to us first, physically label each box before it goes out.",
+ out:["Every device created on the platform","Every MAC in the redirect service",
+      "Each phone assigned to a room and a person","Labels applied or a labeling sheet sent"],
+ key:"The MAC is on the outside of the box. Nothing needs to be opened to stage an order.",
+ fail:"If no manifest is available, the phones have to be staged after they arrive, which means either a site visit or walking somebody at the practice through reading box labels to you over the phone. Plan for the extra day."},
+
+{id:"l-arrive",title:"Confirm the delivery and check it before install day",
+ who:"Support, with the practice",when:"The day it arrives",
+ body:"Do not assume a delivery notification means the right things arrived. Call the practice and have somebody count the boxes and read you what is on them.\n\nCheck the count, the models, and specifically whether the accessories arrived. Power adapters, headsets and expansion modules ship as separate items and separately go missing.\n\nCheck for physical damage. A crushed box gets photographed now, not after somebody opens it on install day.",
+ out:["Box count confirmed against the order","Models confirmed","Accessories confirmed present",
+      "Any damage photographed and reported the same day","Boxes stored somewhere they will not walk off"],
+ fail:"Something missing or wrong found now leaves a week to fix it. Found on install day, it moves the cutover."},
+
+{id:"l-install",title:"Install day",
+ who:"Support, with the practice",when:"Ahead of the cutover, not on it",
+ body:"Phones can be installed and registered before the numbers move. Do that. Installing hardware and cutting over numbers on the same day means that when something goes wrong you do not know which of the two caused it.\n\nUnbox by room using the labels. Plug into the network port, not the PC port. Leave each phone alone through its reboots. Then test each one properly.",
+ out:["Every phone registered and showing the right extension",
+      "Every phone tested for audio in both directions",
+      "Emergency address registered and confirmed provisioned for every phone",
+      "Staff shown the basics: answer, transfer, hold, voicemail",
+      "Spare phone left on site if we have one"],
+ key:"Separate hardware install from number cutover by at least a day. It halves the number of things that can be blamed when something does not work.",
+ fail:"A phone that will not come up on install day is a normal event, not a crisis, precisely because you did this ahead of the cutover. Work the fault, and if it is a stale redirect claim, start the ticket immediately."},
+
+{id:"l-rma",title:"A phone is faulty or wrong",
+ who:"Support, with logistics",when:"As soon as it is identified",
+ body:"Separate three different things, because they have three different paths.\n\nWRONG ITEM SENT. Our ordering error or the supplier's. Goes back for exchange and somebody needs to say which it was, because that is the difference between a free swap and a restocking charge.\n\nDAMAGED IN TRANSIT. Photograph it, report within whatever the carrier's window is, and do not throw away the packaging.\n\nFAULTY IN USE. This is a warranty claim and it needs proof that it is actually the phone. Move it to a known good network port and a known good cable first. A phone that works on another port was never faulty.",
+ out:["Category identified","Photos taken where relevant","Replacement requested with a date",
+      "Practice given a working interim, a spare phone or a softphone",
+      "The redirect entry updated when the MAC changes"],
+ gap:true,
+ key:"When a phone is replaced, the MAC changes. The old MAC has to come off the platform and the new one has to go on, in both the platform and the redirect service. A swap that skips this produces a phone that will never provision and an old record that confuses everybody later.",
+ fail:"Never leave a person without a phone while a replacement ships. A softphone on their computer is a two minute fix and it buys a week."},
+
+{id:"l-spare",title:"Keep spares, and know where they are",
+ who:"Team Lead",when:"Ongoing",
+ body:"A small stock of spare phones is the cheapest reliability improvement available. A failed phone at a front desk goes from a week long problem to a ten minute one.\n\nHold spares of the models actually deployed, weighted towards reception, because that is the phone whose failure costs the most. Keep them provisioned and ready where possible, or at least have their MACs already known.",
+ out:["Spare stock level agreed","Spares held for the models actually deployed",
+      "A record of what is in stock and where","A process for replenishing after one is used"],
+ gap:true,
+ fail:"If there is no spare stock and no budget for it, say so as a known risk rather than discovering it during an outage."}
+];
+
+/* ================= WORKING WITH OTHER TEAMS ================= */
+var TEAMS=[
+{id:"t-sales",team:"Sales",
+ they:"Own the relationship and the commitment. They decide what the practice is told and when.",
+ we:"Own whether that commitment is deliverable, and we own it after they hand it over.",
+ need:["A phone count by room, not a headcount",
+       "Whether every phone position has a network cable",
+       "Whether the practice has a switch that powers phones over the cable",
+       "Every published phone number the practice uses, not just the main one",
+       "Whether this practice is buying phone service from us at all, or keeping their own provider",
+       "Who the authorized contact is, and who is allowed to sign",
+       "Whether anybody uses a headset today"],
+ give:["A yes or no on portability before the deal is closed, not after",
+       "A plain answer on what changes for them if they keep their own phone provider, and what Screen Pops still need from that provider",
+       "A realistic date range rather than a date",
+       "Early warning when something in a deal will not work"],
+ break:"The classic failure is a promise made in the sales conversation that support then has to break. A date, a number that turns out not to be portable, a phone count that did not include the two phones nobody mentioned. The fix is not to complain about sales, it is to give them a check they can run themselves during the conversation. A rep who can verify a number in thirty seconds will do it. A rep who has to email support and wait a day will guess.",
+ rule:"Anything sales promises becomes our problem. So the useful work is upstream, making the right answer easy to get at the moment they need it."},
+
+{id:"t-logi",team:"Logistics and shipping",
+ they:"Own placing orders, tracking, receiving, returns, and stock.",
+ we:"Own specifying exactly what to order and by when.",
+ need:["Confirmed ship date, and notice the moment it moves",
+       "Tracking number as soon as it exists",
+       "A MAC manifest for the order if the supplier provides one",
+       "Confirmation of what actually shipped, line by line, including accessories",
+       "Current stock levels for the models we deploy",
+       "Lead times, so we can quote dates instead of guessing"],
+ give:["Exact SKUs, never model names",
+       "Accessories as explicit separate lines",
+       "The ship to address and who signs",
+       "The cutover date, so they understand what the deadline actually is",
+       "As much notice as we can give"],
+ break:"Two failures repeat. First, ordering by model name and getting the version without a power supply. Second, nobody telling support that a ship date moved, so a cutover stays booked against hardware that will not arrive. Both are fixed by the same thing: agree that a ship date change is a notification, not something to be discovered by asking.",
+ rule:"Logistics can only hit a date they were told about. If they do not know the cutover, they are optimising for cost rather than for the date that matters.",
+ gap:true},
+
+{id:"t-appsupport",team:"Customer support, the application side",
+ they:"Own the Dental Intelligence product itself. Scheduling, patient records, reminders, reporting, logins to the software.",
+ we:"Own calls, texting, numbers and hardware.",
+ need:["A clear handoff when a ticket is actually ours",
+       "A heads up when a product release changes something that touches messaging",
+       "Their read on whether a practice is already unhappy, before we walk into it"],
+ give:["A clear handoff when a ticket is actually theirs",
+       "Early warning of an outage that will generate calls to them",
+       "Plain language about what our systems do, so their team can route correctly"],
+ break:"The boundary looks obvious and is not. A practice calls to say patient reminders are not going out. Is that ours because it is messaging, or theirs because it is a product feature? The honest answer is that it depends on where it broke, and neither team can tell from the description. Both teams then either fight over it or, worse, both drop it.",
+ rule:"Route on the symptom, not on the topic, and only after you know what they hold with us. Ask which one broke: can they make calls, can they send texts, or is the software not doing something. Calls are ours only when the calls are hosted with us, otherwise they belong to the practice\'s own provider. Texts are ours when the messaging is hosted with us. The software is theirs, even when the thing it failed to do involves a message. Screen Pops are the odd one, because the integration is ours while the simultaneous ring setting that feeds it sits at whoever provides their phone service.",
+ gap:true},
+
+{id:"t-carrier",team:"The carrier and the platform",
+ they:"Bandwidth holds the numbers and the messaging. DialStack runs the voice service. Yealink and Poly hold the redirect claims on phones.",
+ we:"Own knowing which one to go to, and going with evidence.",
+ need:["An escalation path and a named contact at each",
+       "Their support hours",
+       "A status page we can subscribe to, so we hear about outages from them rather than from customers"],
+ give:["Specific failing examples rather than descriptions",
+       "The numbers on both ends, the exact time with the time zone, and what we already ruled out"],
+ break:"Going to the wrong one costs a day. A phone that will not provision is not a carrier problem. A number that will not port is not a platform problem. A stale redirect claim is neither, it is a manufacturer ticket.",
+ rule:"Before you escalate anywhere, say out loud which system you believe is at fault and why, including the possibility that it is the practice\'s own provider and not one of ours at all. If you cannot, you are not ready to escalate.",
+ gap:true}
+];
+
+/* ================= FAULTS ================= */
+var FAULTS=[
+{id:"f-nosvc",says:"The phone says No Service",
+ first:"Read the exact message first, because two different messages get called this and they are different problems.",
+ split:[{a:"Network Unavailable",b:"The phone has no IP address at all. This is a cable, a switch port, or a network problem. Nothing about phone settings will fix it."},
+        {a:"No Service or Account Unregistered",b:"The phone has an IP address but cannot register. This is a settings, credentials or firewall problem."}],
+ causes:[{c:"No IP address",k:"Press OK on the phone and read the IPv4 line. Blank or 0.0.0.0 means no address."},
+         {c:"Cable or port fault",k:"Reseat both ends. Swap the cable with one from a working phone. Move to a different switch port."},
+         {c:"Wrong network segment",k:"Compare the phone's IP to a working phone. If the first three number groups differ, it landed in the wrong place."},
+         {c:"MAC claimed by another provider",k:"Did it reboot several times on its own and then land here? Did the default password not work? That is the signature. Go to the stuck phone procedure."},
+         {c:"Device not created on our platform",k:"The phone redirects fine, asks for its config, and gets a not found. Check the device record exists and the MAC has no typos."},
+         {c:"Wrong credentials",k:"On a manually configured phone, check Register Name against User Name. They are not always the same value."}]},
+
+{id:"f-oneway",says:"I can hear them but they cannot hear me",
+ first:"The call connected, so signaling is working. This is purely an audio path problem. Note which direction is broken, because it points at which end is at fault.",
+ causes:[{c:"SIP ALG turned on in the practice's router",k:"This is the most common cause by a wide margin. It is a feature in consumer and small business routers that tries to help with phone calls by rewriting the addresses inside the packets. It was a reasonable idea in 2005 and it is now actively harmful, because modern phones already handle this themselves and the two fixes conflict. Turn it off in the router's firewall or NAT settings, reboot the router, retest. It hides under names like SIP Transformations, VoIP passthrough, and SIP helper."},
+         {c:"Firewall not passing the return audio",k:"The audio uses a wide range of ports chosen per call, so it cannot be handled by fixed rules. The firewall must be stateful and allow the replies to outbound traffic. Do not port forward."},
+         {c:"Two routers in series",k:"An internet provider's router feeding a second customer router. Count how many devices have a public address. Bridge one of them."},
+         {c:"Codecs do not match",k:"If the two ends share no common audio format, the call connects and no audio flows at all."},
+         {c:"It is the handset, not the network",k:"Before blaming anything, try speakerphone. If speakerphone works and the handset does not, it is a curly cord."}],
+ iso:["Does it happen on every call, or only outside calls? Internal only working means the fault is at the internet edge.",
+      "Does it happen on one phone or all of them? One phone is the phone, the cable or the port. All phones is the router, the firewall or the internet connection.",
+      "Speakerphone test.","Turn off SIP ALG."]},
+
+{id:"f-choppy",says:"They sound like a robot, it keeps cutting out",
+ first:"The audio is arriving, but late, out of order, or incomplete. This is a timing problem rather than a connection problem.",
+ causes:[{c:"Not enough upload bandwidth",k:"Upload is almost always the constraint, not download. A connection with 500 down and 10 up can fail on calls while every speed test looks fine. Test during business hours, not at seven in the morning."},
+         {c:"No traffic prioritization",k:"One computer uploading a large imaging study will saturate the upload and ruin every call on the network. Bandwidth without prioritization is not capacity."},
+         {c:"The phone is on Wi-Fi",k:"Wi-Fi adds timing variation and packet loss. Every provider gives the same advice: use a cable."},
+         {c:"Packet loss on the line",k:"Aim for under one percent. Above that, it is an internet provider conversation and it needs evidence."},
+         {c:"A computer running through the phone second port",k:"This is normal and expected, not a fault. It does mean the phone is passing that computer traffic, so if the machine is uploading something large it can affect the call. Split them onto separate ports briefly to rule it in or out."},
+         {c:"Bad cable or a failing switch port",k:"Produces errors and retransmissions. Move the phone to another port."}],
+ num:"Budget about 100 kilobits per second per simultaneous call, in each direction. Ten phones at a realistic peak of four simultaneous calls is 0.4 megabits. Worst case with all ten talking at once is 1 megabit. Then never plan to use more than eighty percent of what is available, and remember dental imaging is upload heavy and bursty."},
+
+{id:"f-reboot",says:"The phone keeps restarting on its own",
+ first:"Ask one question first: did this start after something else was plugged in? That single question identifies the most under diagnosed cause in this whole list.",
+ causes:[{c:"The switch has run out of power budget",k:"A switch has a total power budget separate from its per port maximum. Add one more phone, or an access point, or a camera, and the switch starts refusing power, often to a completely different port. The signature is exactly this: everything was fine until one more device was added, and then an apparently unrelated phone started rebooting."},
+         {c:"Power class reservation",k:"A Class 3 phone causes the switch to reserve 15.4 watts even though it may only draw 4. Twelve of them reserve about 185 watts on a switch rated 190, while actual consumption is under 50. The switch's own budget page will show allocated versus available."},
+         {c:"An accessory pushed it over the limit",k:"An expansion module, a USB Wi-Fi dongle, or a USB headset drawing power from the phone can take it past what the port will give."},
+         {c:"Cable length or quality",k:"Power over a long or poor cable loses voltage and the phone browns out. Keep runs under 100 metres and use proper solid core cable for permanent runs."},
+         {c:"It is not a power problem, it is a provisioning loop",k:"Watch the screen. A provisioning loop shows a full startup with the manufacturer logo each time. A power fault shows a black screen or a startup that cuts off partway."}],
+ iso:["Move the phone to a known good port on a different switch. Still restarting means the phone or its firmware. Stopped means power.",
+      "Power it from an adapter instead of the network cable. If it stops, the power over ethernet supply is confirmed as the problem.",
+      "Read the switch's power budget page: total allocated against total available.",
+      "Count everything on power over ethernet, not just phones."]},
+
+{id:"f-drops",says:"It works first thing and then stops, and people cannot get through",
+ first:"This is the most misleading fault in the set, because outgoing calls keep working while incoming calls silently fail. That single detail identifies it.",
+ causes:[{c:"The connection back in has timed out",k:"When the phone registers, the router opens a temporary path for replies. Consumer routers close that after thirty seconds to a few minutes. If the phone only re registers every hour, incoming calls have nowhere to go for the other fifty nine minutes, even though the phone still believes it is registered."},
+         {c:"Registration interval too long",k:"Shorten Server Expires on the account. Roughly half the carrier's value, and 300 seconds is a common working figure."},
+         {c:"Keep alive off or too slow",k:"Under Account, then Advanced. Keep Alive Type and the interval, typically around thirty seconds."},
+         {c:"SIP ALG again",k:"It mangles the header that tells the platform where to send incoming calls."},
+         {c:"Switch the transport to TCP",k:"A TCP connection is held open by the firewall and is far more stable through routers. This is one of the highest yield single changes available."}],
+ iso:["If they can call out fine but nobody can call in after a while, it is almost certainly this and not the internet connection."]},
+
+{id:"f-noprov",says:"It is on but it never finishes setting itself up",
+ first:"Press OK and confirm it has an IP address. If it does, the network is fine and the configuration is not arriving.",
+ causes:[{c:"MAC claimed elsewhere",k:"The number one cause. Go to the stuck phone procedure."},
+         {c:"Device not created on our platform",k:"It asks for a config file named after its own MAC and gets a not found. Check for typos in the MAC."},
+         {c:"Wrong network segment",k:"It landed somewhere with no route to the provisioning server. Compare its address to a working phone."},
+         {c:"Name lookup failing",k:"The provisioning address is a name that has to be resolved. Set a public resolver as a test."},
+         {c:"Firewall blocking the download",k:"The phone reaches out over HTTPS. If that is blocked, nothing arrives."},
+         {c:"A stale local setting overriding everything",k:"A DHCP option on the practice's own network outranks the cloud redirect. If somebody set one for a previous provider and never removed it, it is still winning."}],
+ iso:["From a computer on the same network as the phone, paste the provisioning address into a browser. If the computer cannot reach it either, it is a network problem. If the computer reaches it fine, it is the phone, the segment, or the credentials.",
+      "Then force a retry: Settings, Auto Provision, Autoprovision Now."]}
+];
+
+/* ================= GAPS ================= */
+var PH_GAPS=[
+{q:"Which phone models do we actually sell and support? Is there a published hardware list, and who decides what goes on it?",who:"Your manager",when:"Day one",
+ blocks:"Everything in the pick a phone section. The models here are the ones commonly deployed in US hosted VoIP, not a confirmed Dental Intelligence list."},
+{q:"Do we sell hardware at all, or does the practice buy their own phones and we just support them? This changes the whole logistics section.",who:"Your manager",when:"Day one",
+ blocks:"Whether ordering and shipping is our process or somebody else's"},
+{q:"Do we hold a Yealink partner account for the redirect service, and a Poly ZTP partner account? If not, who stages phones for us?",who:"Your manager",when:"Day one",
+ blocks:"Whether we can provision phones ourselves or depend on a distributor for every order"},
+{q:"Does DialStack automatically push a MAC to the manufacturer's redirect service when we add a device, or does somebody enter it by hand?",who:"DialStack administrator",when:"First week",
+ blocks:"Whether step 2 of the zero touch procedure exists at all"},
+{q:"Where in DialStack do we create a device and enter a MAC address? Screen by screen.",who:"DialStack administrator",when:"Day one",
+ blocks:"Every provisioning procedure in this document"},
+{q:"Who is our hardware distributor, what are their standard lead times by model, and do they provide a MAC manifest with an order?",who:"Logistics",when:"First week",
+ blocks:"Being able to quote a delivery date instead of guessing, and being able to stage phones before they arrive"},
+{q:"What is the returns process, and what is the difference in handling between a wrong item, transit damage, and a warranty failure?",who:"Logistics",when:"First week",
+ blocks:"Knowing what to promise a practice with a dead phone"},
+{q:"Do we hold spare phone stock, where is it, and who can release one?",who:"Logistics",when:"First week",
+ blocks:"Whether a failed reception phone is a ten minute problem or a week long one"},
+{q:"Who ships to the practice, us or the supplier direct? And who confirms the delivery arrived complete?",who:"Logistics",when:"First week",
+ blocks:"Whether the delivery check in this document is our step or somebody else's"},
+{q:"Does anybody install on site, or is every deployment done remotely with the practice unboxing their own phones?",who:"Your manager",when:"Day one",
+ blocks:"How much detail the customer facing instructions need, and whether install day is a visit or a phone call"},
+{q:"Is there a network readiness check before a practice is sold a phone system? Who runs it, and what happens when a practice fails it?",who:"Your manager",when:"First week",
+ blocks:"Whether we are inheriting deployments that were never going to work"},
+{q:"Where is the boundary between our team and application support? Specifically, if a practice says patient reminders are not going out, whose ticket is that?",who:"Your manager",when:"First week",
+ blocks:"Ticket routing, and whether anything falls between the two teams"},
+{q:"Do we supply headsets, and which models are certified against the phones we sell? EHS adapters are model specific and the wrong one is a return.",who:"Logistics or your manager",when:"First week",
+ blocks:"Accessory ordering"},
+{q:"What does the Dental Intelligence website actually say about phone hardware today? Is there a published list of supported handsets a customer could be reading?",who:"Marketing, or read it yourself",when:"Day one",
+ blocks:"Knowing what a customer has already been told before they call us"}
+];
+</script>
+<script>
+var TAB="pick", OPEN=null, QRY="";
+try{var s=localStorage.getItem('ph-tab'); if(s) TAB=s;}catch(e){}
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function hi(s){s=esc(s);if(!QRY)return s;
+ try{return s.replace(new RegExp('('+QRY.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig'),'<mark>$1</mark>');}catch(e){return s;}}
+function para(t){return String(t||'').split('\n\n').map(function(p){return '<p>'+hi(p).replace(/\n/g,'<br>')+'</p>';}).join('');}
+function bag(o){var p=[];(function w(v){ if(v==null)return;
+  if(typeof v==='string'){p.push(v);return;}
+  if(Array.isArray(v)){v.forEach(w);return;}
+  if(typeof v==='object'){for(var k in v){if(k[0]!=='_')w(v[k]);}}})(o);
+ return p.join(' ').toLowerCase();}
+[MODELS,PROV,LOGI,TEAMS,FAULTS,PH_GAPS,ROOMS].forEach(function(a){a.forEach(function(x){x._t=bag(x);});});
+/* spec field labels live in the template rather than the data, so fold them in
+   or a search for "power adapter" finds nothing */
+MODELS.forEach(function(x){
+ x._t+=' power adapter power supply psu screen keys sip accounts ethernet '+
+       'power over ethernet poe wi-fi wifi bluetooth usb headset ehs expansion module '+x.brand.toLowerCase();
+});
+function m(x){return !QRY||x._t.indexOf(QRY.toLowerCase())>-1;}
+function counts(){return {pick:MODELS.filter(m).length,prov:PROV.filter(m).length,logi:LOGI.filter(m).length,
+ teams:TEAMS.filter(m).length,fault:FAULTS.filter(m).length,gaps:PH_GAPS.filter(m).length};}
+
+function drawTabs(){
+ var c=counts();
+ document.getElementById('tabs').innerHTML=PH_TABS.map(function(t){
+  return '<button class="tab'+(TAB===t.k?' on':'')+'" data-t="'+t.k+'">'+esc(t.n)+'<span class="n">'+c[t.k]+'</span></button>';
+ }).join('');
+ document.querySelectorAll('.tab').forEach(function(b){
+  b.onclick=function(){TAB=b.dataset.t;OPEN=null;try{localStorage.setItem('ph-tab',TAB);}catch(e){}draw();window.scrollTo(0,0);};});
+}
+function head(){var t=PH_TABS.filter(function(x){return x.k===TAB;})[0];
+ return '<div class="sechead"><h2>'+esc(t.n)+'</h2><p>'+esc(t.note)+'</p></div>';}
+function blk(t,inner){return '<div class="blk"><h4>'+esc(t)+'</h4>'+inner+'</div>';}
+function chk(a){return '<ul class="chk">'+a.map(function(x){return '<li>'+hi(x)+'</li>';}).join('')+'</ul>';}
+
+/* ---------- PICK ---------- */
+var CONF={ok:['p-ok','Verified'],'2nd':['p-acc','Second hand source'],chk:['p-warn','Check before quoting'],'ask':['p-warn','Unknown']};
+function pickView(){
+ var h=head();
+ h+='<div class="card" style="padding:18px 20px"><h3 style="font-size:15.5px;font-weight:650;margin-bottom:9px">'+
+   'The two fields that cost money</h3>'+
+  '<div class="warnbox" style="margin-bottom:11px"><b>Almost no business desk phone includes a power adapter.</b> '+
+  'Not Yealink, not Poly, not Snom. The conference phones and the cordless bundles are the exceptions. '+
+  'The same model is sold in a version with a supply and a version without, and the base part number differs between them, '+
+  'so you cannot change a suffix on a quote and get the other one. Order by SKU, never by model name.</div>'+
+  '<div class="warnbox"><b>Power class decides what the switch reserves, not what the phone draws.</b> '+
+  'A Class 3 phone may only use 4 watts but causes the switch to hold back 15.4 watts at that port. Twelve of them reserve about 185 watts '+
+  'on a switch rated 190, while actual consumption is under 50. The switch starts refusing power, and the practice reports that a phone '+
+  'in a completely different room began rebooting after they plugged in one more handset.</div></div>';
+
+ var rooms=ROOMS.filter(m);
+ if(rooms.length){
+  h+='<div class="grp">What goes where in a dental practice</div><div class="card"><div class="scroll"><table class="cmp">'+
+   '<tr><th style="width:20%">Room</th><th style="width:26%">What it needs</th><th style="width:27%">Pick</th><th>Why</th></tr>'+
+   rooms.map(function(r){return '<tr><td><b>'+hi(r.r)+'</b></td><td>'+hi(r.need)+'</td><td>'+hi(r.pick)+'</td><td>'+hi(r.why)+'</td></tr>';}).join('')+
+   '</table></div></div>';
+ }
+ var fams=[],byf={};
+ MODELS.filter(m).forEach(function(x){var k=x.brand+' '+x.fam;if(!byf[k]){byf[k]=[];fams.push(k);}byf[k].push(x);});
+ if(!fams.length) return h+'<div class="card"><div class="empty">Nothing matches that.</div></div>';
+ fams.forEach(function(f){
+  h+='<div class="grp">'+esc(f)+'</div><div class="card">'+byf[f].map(function(x){
+   var st=x.status==='current'?['p-ok','Current']:x.status==='legacy'?['p-warn','Legacy']:['p-acc','Niche'];
+   return '<div class="row" data-id="'+x.id+'"><div class="rt"><h3>'+hi(x.name)+'</h3><p>'+hi(x.role)+'</p></div>'+
+     '<span class="pill '+st[0]+'">'+st[1]+'</span></div>';
+  }).join('')+'</div>';
+ });
+ return h;
+}
+function modelDet(x){
+ var st=x.status==='current'?['p-ok','Current']:x.status==='legacy'?['p-warn','Legacy, do not specify new']:['p-acc','Niche'];
+ var cf=CONF[x.conf]||CONF.ok;
+ var psuHot=/not in the box|varies|sold separately|required/i.test(x.psu);
+ var h='<button class="back" id="bk">Back to the model list</button><div class="det">';
+ h+='<h2>'+hi(x.brand+' '+x.name)+'</h2><div class="lead">'+hi(x.role)+'</div>';
+ h+='<div style="margin-top:11px"><span class="pill '+st[0]+'">'+st[1]+'</span> <span class="pill '+cf[0]+'">'+cf[1]+'</span></div>';
+ h+='<div class="spec">'+
+   sp('Screen',x.screen)+sp('Keys',x.keys)+sp('SIP accounts',x.sip)+
+   sp('Ethernet',x.eth)+sp('Power over ethernet',x.poe)+sp('Power adapter',x.psu,psuHot)+
+   sp('Wi-Fi',x.wifi)+sp('Bluetooth',x.bt)+sp('USB',x.usb)+
+   sp('Headset',x.ehs)+sp('Expansion',x.exp)+'</div>';
+ if(x.note) h+=blk('What it is','<div class="body">'+para(x.note)+'</div>');
+ if(x.watch) h+=blk('Watch out','<div class="warnbox">'+hi(x.watch)+'</div>');
+ h+='</div>';return h;
+}
+function sp(a,b,hot){return '<div'+(hot?' class="hot"':'')+'><dt>'+esc(a)+'</dt><dd>'+hi(b)+'</dd></div>';}
+
+/* ---------- PROV ---------- */
+function provView(){
+ var h=head(),items=PROV.filter(m);
+ if(!items.length) return h+'<div class="card"><div class="empty">Nothing matches that.</div></div>';
+ var gs=[],byg={};
+ items.forEach(function(x){if(!byg[x.group]){byg[x.group]=[];gs.push(x.group);}byg[x.group].push(x);});
+ gs.forEach(function(g){
+  h+='<div class="grp">'+esc(g)+'</div><div class="card">'+byg[g].map(function(x){
+   return '<div class="row" data-id="'+x.id+'"><div class="rt"><h3>'+hi(x.title)+'</h3><p>'+hi(x.mins)+'</p></div>'+
+    (x.pri?'<span class="pill p-bad">Read this one</span>':'')+
+    (x.gap?'<span class="pill p-warn">Has a gap</span>':'')+'</div>';
+  }).join('')+'</div>';
+ });
+ return h;
+}
+function provDet(x){
+ var h='<button class="back" id="bk">Back to the steps</button><div class="det">';
+ h+='<h2>'+hi(x.title)+'</h2><div class="lead">'+esc(x.group)+'. '+hi(x.mins)+'</div>';
+ h+='<div class="blk"><div class="body">'+para(x.body)+'</div></div>';
+ if(x.where) h+=blk('Where','<div class="key">'+hi(x.where)+(x.gap?' <b>We do not know the exact screen path yet. See the open questions.</b>':'')+'</div>');
+ if(x.key) h+=blk('The thing to remember','<div class="key">'+hi(x.key)+'</div>');
+ if(x.warn) h+=blk('Watch out','<div class="warnbox">'+hi(x.warn)+'</div>');
+ if(x.check) h+=blk('Before you move on',chk(x.check));
+ h+='</div>';return h;
+}
+
+/* ---------- LOGI ---------- */
+function logiView(){
+ var h=head(),items=LOGI.filter(m);
+ if(!items.length) return h+'<div class="card"><div class="empty">Nothing matches that.</div></div>';
+ h+='<div class="card">'+items.map(function(x){
+  return '<div class="row" data-id="'+x.id+'"><div class="rt"><h3>'+hi(x.title)+'</h3><p>'+hi(x.who)+'. '+hi(x.when)+'</p></div>'+
+   (x.pri?'<span class="pill p-bad">Priority</span>':'')+(x.gap?'<span class="pill p-warn">Has a gap</span>':'')+'</div>';
+ }).join('')+'</div>';
+ return h;
+}
+function logiDet(x){
+ var h='<button class="back" id="bk">Back to the list</button><div class="det">';
+ h+='<h2>'+hi(x.title)+'</h2><div class="lead">'+hi(x.who)+'. '+hi(x.when)+'</div>';
+ h+='<div class="blk"><div class="body">'+para(x.body)+'</div></div>';
+ if(x.key) h+=blk('The thing to remember','<div class="key">'+hi(x.key)+'</div>');
+ if(x.out) h+=blk('What comes out of this step',chk(x.out));
+ if(x.fail) h+=blk('When it goes wrong','<div class="warnbox">'+hi(x.fail)+'</div>');
+ h+='</div>';return h;
+}
+
+/* ---------- TEAMS ---------- */
+function teamsView(){
+ var h=head(),items=TEAMS.filter(m);
+ if(!items.length) return h+'<div class="card"><div class="empty">Nothing matches that.</div></div>';
+ h+='<div class="card">'+items.map(function(x){
+  return '<div class="row" data-id="'+x.id+'"><div class="rt"><h3>'+hi(x.team)+'</h3><p>'+hi(x.they)+'</p></div>'+
+   (x.gap?'<span class="pill p-warn">Has a gap</span>':'')+'</div>';
+ }).join('')+'</div>';
+ return h;
+}
+function teamDet(x){
+ var h='<button class="back" id="bk">Back to the list</button><div class="det">';
+ h+='<h2>'+hi(x.team)+'</h2>';
+ h+='<div class="split" style="margin-top:16px"><div><b>They own</b>'+hi(x.they)+'</div><div><b>We own</b>'+hi(x.we)+'</div></div>';
+ h+=blk('What we need from them',chk(x.need));
+ h+=blk('What they need from us',chk(x.give));
+ h+=blk('Where it usually breaks','<div class="warnbox">'+hi(x.break)+'</div>');
+ h+=blk('The rule','<div class="key">'+hi(x.rule)+'</div>');
+ h+='</div>';return h;
+}
+
+/* ---------- FAULTS ---------- */
+function faultView(){
+ var h=head(),items=FAULTS.filter(m);
+ if(!items.length) return h+'<div class="card"><div class="empty">Nothing matches that.</div></div>';
+ h+='<div class="card">'+items.map(function(x){
+  return '<div class="row" data-id="'+x.id+'"><div class="rt"><h3>'+hi('"'+x.says+'"')+'</h3><p>'+hi(x.first)+'</p></div></div>';
+ }).join('')+'</div>';
+ return h;
+}
+function faultDet(x){
+ var h='<button class="back" id="bk">Back to the symptoms</button><div class="det">';
+ h+='<h2>'+hi('"'+x.says+'"')+'</h2>';
+ h+=blk('Start here','<div class="key">'+hi(x.first)+'</div>');
+ if(x.split) h+=blk('Two different messages, two different problems',
+   '<div class="split">'+x.split.map(function(s){return '<div><b>'+esc(s.a)+'</b>'+hi(s.b)+'</div>';}).join('')+'</div>');
+ h+=blk('Causes, and how to check each one',
+   x.causes.map(function(c){return '<div class="cause"><b>'+hi(c.c)+'</b><span>'+hi(c.k)+'</span></div>';}).join(''));
+ if(x.iso) h+=blk('How to narrow it down','<ol class="sub">'+x.iso.map(function(i){return '<li>'+hi(i)+'</li>';}).join('')+'</ol>');
+ if(x.num) h+=blk('The numbers','<div class="key">'+hi(x.num)+'</div>');
+ h+='</div>';return h;
+}
+
+/* ---------- GAPS ---------- */
+var ORD={'Day one':0,'First week':1,'First month':2};
+function gapsView(){
+ var h=head(),gs=PH_GAPS.filter(m),by={};
+ gs.forEach(function(g){(by[g.when]=by[g.when]||[]).push(g);});
+ var ordv=function(k){return (k in ORD)?ORD[k]:9;};
+ var keys=Object.keys(by).sort(function(a,b){return ordv(a)-ordv(b);});
+ h+='<div class="regbar"><button class="btn pri" id="copyq">Copy as a list</button>'+
+    '<button class="btn" id="printq">Print</button></div><div id="copyarea"></div>';
+ if(!gs.length) return h+'<div class="card"><div class="empty">Nothing matches that.</div></div>';
+ keys.forEach(function(k){
+  h+='<div class="who"><h3>'+esc(k)+'<span>'+by[k].length+' question'+(by[k].length===1?'':'s')+'</span></h3>'+
+   by[k].map(function(g){
+    return '<div class="qrow"><div class="qq">'+hi(g.q)+'</div>'+
+     '<div class="meta"><b>Ask:</b> '+hi(g.who)+'</div>'+
+     '<div class="meta"><b>Blocks:</b> '+hi(g.blocks)+'</div></div>';
+   }).join('')+'</div>';
+ });
+ return h;
+}
+
+/* ---------- render ---------- */
+function find(a,id){return a.filter(function(x){return x.id===id;})[0];}
+function draw(){
+ drawTabs();
+ var v=document.getElementById('view');
+ if(OPEN){
+  var x,html;
+  if(TAB==='pick'&&(x=find(MODELS,OPEN))) html=modelDet(x);
+  else if(TAB==='prov'&&(x=find(PROV,OPEN))) html=provDet(x);
+  else if(TAB==='logi'&&(x=find(LOGI,OPEN))) html=logiDet(x);
+  else if(TAB==='teams'&&(x=find(TEAMS,OPEN))) html=teamDet(x);
+  else if(TAB==='fault'&&(x=find(FAULTS,OPEN))) html=faultDet(x);
+  if(html){ v.innerHTML=html;
+   var b=document.getElementById('bk'); if(b) b.onclick=function(){OPEN=null;draw();window.scrollTo(0,0);};
+   return; }
+  OPEN=null;
+ }
+ v.innerHTML = TAB==='pick'?pickView():TAB==='prov'?provView():TAB==='logi'?logiView():
+               TAB==='teams'?teamsView():TAB==='fault'?faultView():gapsView();
+ v.querySelectorAll('.row[data-id]').forEach(function(r){
+  r.onclick=function(){OPEN=r.dataset.id;draw();window.scrollTo(0,0);};});
+ var cq=document.getElementById('copyq');
+ if(cq) cq.onclick=function(){
+  var by={};PH_GAPS.filter(m).forEach(function(g){(by[g.when]=by[g.when]||[]).push(g);});
+  var out='PHONES AND LOGISTICS, QUESTIONS TO ASK\n\n';
+  var ov=function(k){return (k in ORD)?ORD[k]:9;};
+  Object.keys(by).sort(function(a,b){return ov(a)-ov(b);}).forEach(function(k){
+   out+=k.toUpperCase()+'\n';
+   by[k].forEach(function(g,i){out+='  '+(i+1)+'. '+g.q+'\n     ask: '+g.who+'\n';});
+   out+='\n';});
+  document.getElementById('copyarea').innerHTML='<textarea class="copyout" readonly></textarea>';
+  var ta=document.querySelector('.copyout');ta.value=out;ta.focus();ta.select();
+  try{document.execCommand('copy');}catch(e){}
+ };
+ var pq=document.getElementById('printq'); if(pq) pq.onclick=function(){window.print();};
+}
+document.getElementById('q').addEventListener('input',function(e){
+ QRY=e.target.value.trim(); if(QRY&&OPEN) OPEN=null; draw();});
+draw();
+</script>
+</body>
+</html>

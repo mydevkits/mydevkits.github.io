@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Training program, for the trainer</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--bg:#fbfbfc;--panel:#fff;--ink:#111a23;--mid:#5c6773;--soft:#8b96a2;--line:#e6e9ed;
+ --accent:#0b5cab;--accentbg:#eef4fb;--ok:#1a7f4b;--okbg:#e9f6ef;--warn:#9a6a00;--warnbg:#fdf4de;--bad:#a52929;--badbg:#fbeaea;
+ --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+body{font:17px/1.68 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+.wrap{max-width:830px;margin:0 auto;padding:0 22px}
+@media(max-width:600px){.wrap{padding:0 17px}body{font-size:16px}}
+.hero{padding:66px 0 44px;border-bottom:1px solid var(--line)}
+@media(max-width:600px){.hero{padding:40px 0 32px}}
+.kicker{font-size:13px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--accent)}
+h1{font-size:38px;line-height:1.16;font-weight:680;letter-spacing:-.8px;margin-top:14px}
+@media(max-width:600px){h1{font-size:28px}}
+.who{font-size:16.5px;color:var(--mid);margin-top:15px}
+.lede{font-size:19.5px;line-height:1.6;margin-top:26px;color:#26313c}
+.lede b{font-weight:660;color:var(--ink)}
+@media(max-width:600px){.lede{font-size:17.5px}}
+section{padding:52px 0;border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:none}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--soft);margin-bottom:12px}
+h2{font-size:26px;line-height:1.28;font-weight:670;letter-spacing:-.4px}
+@media(max-width:600px){h2{font-size:22px}}
+section>p{margin-top:16px;color:#2c3843}
+section>p+p{margin-top:14px}
+.crit{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin-top:18px;overflow:hidden}
+.crit .ch{padding:19px 24px 17px;border-bottom:1px solid var(--line)}
+@media(max-width:600px){.crit .ch{padding:16px 17px}}
+.crit .quo{font-size:17.5px;line-height:1.55;font-weight:640}
+.crit .quo:before{content:"\201C"}.crit .quo:after{content:"\201D"}
+.crit .src{font-size:12.5px;color:var(--soft);margin-top:6px}
+.crit .cb{padding:19px 24px 21px}
+@media(max-width:600px){.crit .cb{padding:16px 17px}}
+.crit .cb p{font-size:16.5px;color:#2c3843;margin-bottom:13px}
+.crit .cb p:last-child{margin-bottom:0}
+.crit .cb a,section a.lk{color:var(--accent);text-decoration:none;font-weight:600;border-bottom:1px solid rgba(11,92,171,.3)}
+.crit .cb a:hover,section a.lk:hover{border-bottom-color:var(--accent)}
+.badge{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+ padding:4px 10px;border-radius:6px;margin-bottom:12px;background:var(--okbg);color:var(--ok)}
+.badge.p{background:var(--warnbg);color:var(--warn)}
+.map{margin-top:20px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel)}
+.mr{display:grid;grid-template-columns:215px 1fr;border-bottom:1px solid var(--line)}
+.mr:last-child{border-bottom:none}
+@media(max-width:640px){.mr{grid-template-columns:1fr}}
+.mr .ml{padding:17px 20px;background:#fafbfc;border-right:1px solid var(--line);font-weight:640;font-size:16px;line-height:1.4}
+@media(max-width:640px){.mr .ml{border-right:none;border-bottom:1px solid var(--line);padding:13px 17px}}
+.mr .mv{padding:17px 20px;font-size:16px;color:#2c3843;line-height:1.6}
+@media(max-width:640px){.mr .mv{padding:14px 17px}}
+.mr .mv a{color:var(--accent);text-decoration:none;font-weight:600;border-bottom:1px solid rgba(11,92,171,.28)}
+.wk{margin-top:20px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel)}
+.wr{display:grid;grid-template-columns:112px 1fr;border-bottom:1px solid var(--line)}
+.wr:last-child{border-bottom:none}
+@media(max-width:600px){.wr{grid-template-columns:1fr}}
+.wr .wl{padding:15px 18px;background:#fafbfc;border-right:1px solid var(--line);font:12px var(--mono);
+ font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.6px}
+@media(max-width:600px){.wr .wl{border-right:none;border-bottom:1px solid var(--line);padding:11px 16px}}
+.wr .wv{padding:15px 18px;font-size:16px;color:#2c3843;line-height:1.55}
+.wr .wv b{font-weight:640;color:var(--ink)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
+@media(max-width:680px){.grid{grid-template-columns:1fr}}
+a.w{display:block;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px;
+ text-decoration:none;color:inherit;transition:border-color .15s,transform .15s,box-shadow .15s}
+a.w:hover{border-color:#c4d3e4;transform:translateY(-2px);box-shadow:0 6px 20px rgba(17,26,35,.06)}
+a.w h3{font-size:18px;font-weight:650;line-height:1.35}
+a.w .st{font-size:13px;color:var(--accent);font-weight:600;margin-top:5px}
+a.w p{font-size:15.5px;color:var(--mid);margin-top:10px;line-height:1.55}
+a.w .go{font-size:14px;color:var(--accent);font-weight:600;margin-top:12px}
+.need{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin-top:20px;overflow:hidden}
+.need .ni{padding:17px 22px;border-bottom:1px solid var(--line);display:flex;gap:15px;align-items:flex-start}
+.need .ni:last-child{border-bottom:none}
+@media(max-width:600px){.need .ni{padding:14px 17px;gap:12px}}
+.need .nn{width:25px;height:25px;border-radius:50%;background:var(--accentbg);color:var(--accent);flex:none;
+ font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.need .nt b{display:block;font-weight:640;font-size:16.5px;line-height:1.4}
+.need .nt span{display:block;font-size:15.5px;color:var(--mid);margin-top:4px;line-height:1.55}
+.pull{border-left:3px solid var(--accent);padding:4px 0 4px 20px;margin-top:22px;font-size:18px;line-height:1.6;color:#26313c}
+.pull b{font-weight:660;color:var(--ink)}
+.foot{padding:44px 0 66px;color:var(--soft);font-size:14.5px;line-height:1.65}
+</style>
+</head>
+<body><div class="wrap">
+<div class="hero">
+ <div class="kicker">For the trainer</div>
+ <h1>The training program, as a starting point</h1>
+ <p class="lede">This is a proposed program, not a script. <b>You own it.</b> I have written it so there is
+ something in place from day one rather than a blank page, and I expect you to change it once you have run it
+ with a real person and seen where it does not hold.</p>
+</div>
+
+<section>
+ <div class="eyebrow">How I would like to work</div>
+ <h2>You own the method, I look at the outcome</h2>
+ <p>If I specify how you train, you end up executing my program rather than building yours, and it stops
+ improving the moment I stop paying attention. So the arrangement I would like is that the curriculum, the
+ material, the delivery and the assessment are yours, and what we discuss is whether it is working.</p>
+ <p>The four things I would look at:</p>
+ <div class="map">
+  <div class="mr"><div class="ml">Time to independent</div><div class="mv">How long somebody takes to reach
+   handling tickets on their own, and whether that is trending down as the program matures.</div></div>
+  <div class="mr"><div class="ml">Residual questions</div><div class="mv">What newly ramped people still have to
+   ask, and about what. Clusters point at a gap in the material rather than in the person.</div></div>
+  <div class="mr"><div class="ml">Where mistakes cluster</div><div class="mv">Same principle. Three people making
+   the same mistake is a training gap, not three individual failures.</div></div>
+  <div class="mr"><div class="ml">Whether it changes</div><div class="mv">Material updated after an incident,
+   without me asking. A program that has not changed in three months has stopped learning.</div></div>
+ </div>
+ <div class="pull">The question worth asking yourself regularly: <b>what did the last new starter have to ask me
+ that they should have been able to find?</b> That answer is your backlog and it keeps the program honest.</div>
+</section>
+
+<section>
+ <div class="eyebrow">The proposal</div>
+ <h2>Two weeks to Level 1, then widening</h2>
+ <p>Every week below is counted from that person own first day, not from mine and not from the department. The program is identical whether somebody starts next month or next year, because when these seats get filled is not something either of us controls. Gated on what somebody can do rather than time served, so it may run faster or slower for different people
+ and neither is a problem. The gates are published in advance so nobody is assessed against criteria they have
+ not seen, which I feel strongly about.</p>
+ <div class="wk">
+  <div class="wr"><div class="wl">Their week 1</div><div class="wv"><b>Foundations, then first tickets.</b> The training
+   manual and the drills. Sitting on real calls and reading real tickets, saying nothing. The output of this
+   stage is questions, not knowledge.</div></div>
+  <div class="wr"><div class="wl">Their week 2</div><div class="wv"><b>Level 1 with support.</b> They take Level 1 tickets from the queue. Somebody listens and debriefs after each one, and the prompting reduces day by day. The gate at the end of this week is independence on Level 1, which is the target the role sets.</div></div>
+  <div class="wr"><div class="wl">Their weeks 3 to 6</div><div class="wv"><b>Widening the scope.</b> They are already carrying Level 1 on their own throughout this. What is still being added is porting, rejections and cutovers, and that takes four more weeks because a port runs ten to fifteen business days. The constraint is the carrier calendar rather than the person, and it is worth saying that to them plainly so the period does not read as being held back.</div></div>
+ </div>
+ <p style="margin-top:20px"><a class="lk" href="Training-Program.html">The full program, week by week, with
+ the gate criteria and the ongoing cadence</a></p>
+</section>
+
+<section>
+ <div class="eyebrow">One request</div>
+ <h2>Protect the widening period</h2>
+ <p>Weeks three to six are what gets cut when the queue is deep, because by then they are already productive on
+ Level 1 and it is tempting to leave them there. That produces somebody who is permanently a Level 1 specialist,
+ which is not what was hired, and it leaves porting concentrated in too few hands.</p>
+ <p>If you are ever under pressure to compress the ramp, come to me rather than absorbing it. That is my problem
+ to handle, not yours.</p>
+</section>
+
+<section>
+ <div class="eyebrow">What you will be working from</div>
+ <h2>The material that already exists</h2>
+ <div class="grid">
+  <a class="w" href="../04%20For%20Team/Training-Manual.html">
+   <h3>Training manual</h3><div class="st">14 modules</div>
+   <p>The written half. Written for somebody with no VoIP background. Change anything in it that turns out to be
+   wrong or unclear, and tell me so the source gets corrected.</p>
+   <div class="go">Open it</div></a>
+  <a class="w" href="../04%20For%20Team/Training.html">
+   <h3>Practice tools</h3><div class="st">85 cards &middot; 6 drills &middot; 8 scenarios</div>
+   <p>Flash cards for recall, order of operations drills for sequence, scenario tests for judgement. Reading
+   alone does not stick.</p>
+   <div class="go">Open it</div></a>
+  <a class="w" href="../04%20For%20Team/Step-By-Step.html">
+   <h3>Step by step</h3><div class="st">22 scenarios</div>
+   <p>What they will keep open while working. Useful as training material because it is the real thing rather
+   than a simplified version.</p>
+   <div class="go">Open it</div></a>
+  <a class="w" href="../04%20For%20Team/index.html">
+   <h3>Everything the team has</h3><div class="st">The team handbook</div>
+   <p>What a new starter sees on their first day, and the order I have suggested they work through it.</p>
+   <div class="go">Open it</div></a>
+ </div>
+</section>
+
+<div class="foot">Anything here that is wrong, unclear or missing: tell me and it gets corrected rather than
+worked around. That applies to the program as much as to the material.</div>
+</div></body></html>

@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Training</title>
+<style>
+:root{
+ --paper:#F5F7F8;--surface:#FFFFFF;--surface-2:#EDF1F3;--surface-3:#E3E9EC;
+ --ink:#131C25;--ink-2:#3A4A57;--muted:#5E6E7A;--faint:#8496A2;
+ --rule:#D8E0E5;--rule-soft:#E7ECEF;
+ --accent:#0D6670;--accent-2:#0A4E56;--accent-wash:#DFEDEE;--accent-line:#7FBCC2;
+ --crit:#9C3128;--crit-wash:#F6E6E4;--crit-line:#E3BFBA;
+ --warn:#7E5A0E;--warn-wash:#F7EFDD;--warn-line:#E2D0A5;
+ --ok:#26603F;--ok-wash:#E1EFE7;--ok-line:#BBD9C7;
+ --shadow:0 1px 2px rgba(19,28,37,.05),0 12px 30px -20px rgba(19,28,37,.4);
+ --ui:ui-sans-serif,"Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,Arial,sans-serif;
+ --mono:ui-monospace,"Cascadia Mono","Cascadia Code",Consolas,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+ --paper:#0C1319;--surface:#141D25;--surface-2:#1B262F;--surface-3:#22303A;
+ --ink:#E7EDF1;--ink-2:#C2CED6;--muted:#8B9BA7;--faint:#6D7E8B;
+ --rule:#26333D;--rule-soft:#1E2A33;
+ --accent:#4CBAC4;--accent-2:#7FD3DA;--accent-wash:#0F2C31;--accent-line:#1E4E55;
+ --crit:#E58A81;--crit-wash:#2E1A18;--crit-line:#4A2A26;
+ --warn:#D9AC4E;--warn-wash:#2B2413;--warn-line:#463A1B;
+ --ok:#69BE8C;--ok-wash:#12261B;--ok-line:#24422F;
+ --shadow:0 1px 2px rgba(0,0,0,.4),0 14px 34px -22px rgba(0,0,0,.95);
+}}
+:root[data-theme="dark"]{
+ --paper:#0C1319;--surface:#141D25;--surface-2:#1B262F;--surface-3:#22303A;
+ --ink:#E7EDF1;--ink-2:#C2CED6;--muted:#8B9BA7;--faint:#6D7E8B;
+ --rule:#26333D;--rule-soft:#1E2A33;
+ --accent:#4CBAC4;--accent-2:#7FD3DA;--accent-wash:#0F2C31;--accent-line:#1E4E55;
+ --crit:#E58A81;--crit-wash:#2E1A18;--crit-line:#4A2A26;
+ --warn:#D9AC4E;--warn-wash:#2B2413;--warn-line:#463A1B;
+ --ok:#69BE8C;--ok-wash:#12261B;--ok-line:#24422F;
+ --shadow:0 1px 2px rgba(0,0,0,.4),0 14px 34px -22px rgba(0,0,0,.95);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:none;text-align:left}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+
+header{background:var(--surface);border-bottom:1px solid var(--rule);position:sticky;top:0;z-index:30}
+.hin{max-width:880px;margin:0 auto;padding:.65rem 1.2rem;display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}
+.mark{font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.hin .sp{margin-left:auto;display:flex;gap:.4rem;align-items:center}
+.tb{padding:.32rem .6rem;border:1px solid var(--rule);border-radius:6px;font-size:.78rem;color:var(--muted);background:var(--surface-2)}
+.tb:hover{color:var(--accent);border-color:var(--accent-line)}
+#bar{height:3px;background:var(--rule-soft)}
+#fill{height:100%;background:var(--accent);width:0;transition:width .25s}
+
+main{max-width:880px;margin:0 auto;padding:1.5rem 1.2rem 6rem}
+h1{font-size:1.45rem;font-weight:650;letter-spacing:-.02em;margin:0 0 .3rem;line-height:1.22}
+.lede{color:var(--muted);font-size:.94rem;margin:0 0 1.6rem;max-width:66ch}
+h2.sec{font-size:.67rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:1.8rem 0 .1rem}
+.sn{font-size:.84rem;color:var(--muted);margin:0 0 .7rem}
+
+.modes{display:grid;gap:.6rem;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-bottom:.6rem}
+.mode{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:1rem 1.1rem;box-shadow:var(--shadow)}
+.mode:hover{border-color:var(--accent)}
+.mode b{display:block;font-size:1.02rem;font-weight:650;margin-bottom:.2rem}
+.mode span{display:block;font-size:.86rem;color:var(--muted);line-height:1.45}
+.mode .n{font-family:var(--mono);font-size:.68rem;color:var(--faint);margin-top:.4rem;display:block}
+
+.decks{display:grid;gap:.5rem;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.dk{background:var(--surface);border:1px solid var(--rule);border-radius:9px;padding:.75rem .9rem;box-shadow:var(--shadow)}
+.dk:hover{border-color:var(--accent)}
+.dk b{display:block;font-size:.95rem;font-weight:650}
+.dk span{display:block;font-size:.83rem;color:var(--muted);line-height:1.4}
+.dk .st{font-family:var(--mono);font-size:.67rem;margin-top:.35rem;display:flex;gap:.7rem;color:var(--faint)}
+.dk .good{color:var(--ok)}.dk .bad{color:var(--crit)}
+
+.crumb{display:flex;align-items:center;gap:.6rem;margin-bottom:1.2rem;flex-wrap:wrap}
+.crumb button{font-size:.83rem;color:var(--accent)}
+.crumb .of{font-family:var(--mono);font-size:.72rem;color:var(--faint);margin-left:auto}
+
+/* flash */
+.flash{background:var(--surface);border:1px solid var(--rule);border-radius:12px;box-shadow:var(--shadow);
+ min-height:230px;display:flex;flex-direction:column;justify-content:center;padding:2rem 1.6rem;cursor:pointer;text-align:center}
+.flash .side{font-family:var(--mono);font-size:.6rem;letter-spacing:.13em;text-transform:uppercase;color:var(--faint);margin-bottom:.9rem}
+.flash .q{font-size:1.3rem;font-weight:650;line-height:1.35;letter-spacing:-.014em}
+.flash .a{font-size:1.02rem;color:var(--ink-2);line-height:1.6;text-align:left}
+.flash.back{background:var(--accent-wash);border-color:var(--accent-line)}
+.tapme{text-align:center;font-size:.78rem;color:var(--faint);margin-top:.6rem}
+.rate{display:flex;gap:.5rem;margin-top:1.1rem}
+.rate button{flex:1;padding:.7rem;border-radius:9px;border:1px solid var(--rule);background:var(--surface);
+ text-align:center;font-size:.92rem;font-weight:600}
+.rate .no{color:var(--crit);border-color:var(--crit-line)}
+.rate .no:hover{background:var(--crit-wash)}
+.rate .yes{color:var(--ok);border-color:var(--ok-line)}
+.rate .yes:hover{background:var(--ok-wash)}
+
+/* quiz */
+.qh{font-size:1.15rem;font-weight:650;line-height:1.4;margin:0 0 .3rem}
+.setup{background:var(--surface-2);border-left:3px solid var(--accent-line);border-radius:0 8px 8px 0;
+ padding:.8rem 1rem;font-size:.95rem;color:var(--ink-2);margin:0 0 1.2rem;line-height:1.6}
+.opts{display:grid;gap:.45rem;margin:1rem 0}
+.opt{display:grid;grid-template-columns:26px 1fr;gap:.6rem;align-items:start;background:var(--surface);
+ border:1px solid var(--rule);border-radius:9px;padding:.75rem .9rem;font-size:.95rem;color:var(--ink-2)}
+.opt:hover{border-color:var(--accent-line)}
+.opt .bx{font-family:var(--mono);font-size:.72rem;color:var(--faint);border:1px solid var(--rule);
+ border-radius:4px;width:22px;height:22px;display:flex;align-items:center;justify-content:center}
+.opt.sel{background:var(--accent-wash);border-color:var(--accent)}
+.opt.sel .bx{background:var(--accent);color:#fff;border-color:var(--accent)}
+.opt.right{background:var(--ok-wash);border-color:var(--ok)}
+.opt.right .bx{background:var(--ok);color:#fff;border-color:var(--ok)}
+.opt.wrong{background:var(--crit-wash);border-color:var(--crit)}
+.opt.wrong .bx{background:var(--crit);color:#fff;border-color:var(--crit)}
+.opt.miss{border-color:var(--ok-line);border-style:dashed}
+
+.why{border-radius:9px;padding:.85rem 1rem;font-size:.93rem;line-height:1.6;margin-top:1rem}
+.why.ok{background:var(--ok-wash);border-left:3px solid var(--ok);color:var(--ink-2)}
+.why.no{background:var(--crit-wash);border-left:3px solid var(--crit);color:var(--ink-2)}
+.why b{display:block;font-family:var(--mono);font-size:.63rem;letter-spacing:.11em;text-transform:uppercase;margin-bottom:.25rem}
+.why.ok b{color:var(--ok)}.why.no b{color:var(--crit)}
+
+/* order */
+.pool,.built{display:grid;gap:.4rem;margin:.6rem 0 1.1rem}
+.pool button{background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:.65rem .85rem;font-size:.93rem;color:var(--ink-2)}
+.pool button:hover{border-color:var(--accent)}
+.built .row{display:grid;grid-template-columns:28px 1fr auto;gap:.6rem;align-items:center;
+ background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:.6rem .85rem;font-size:.93rem}
+.built .row .i{font-family:var(--mono);font-size:.75rem;color:var(--accent);font-weight:700}
+.built .row.right{background:var(--ok-wash);border-color:var(--ok-line)}
+.built .row.wrong{background:var(--crit-wash);border-color:var(--crit-line)}
+.built .row .x{color:var(--faint);font-size:1.1rem;padding:0 .2rem}
+.built .row .x:hover{color:var(--crit)}
+.emptyhint{font-size:.85rem;color:var(--faint);padding:.8rem;text-align:center;border:1px dashed var(--rule);border-radius:8px}
+
+.nav{display:flex;gap:.6rem;align-items:center;margin-top:1.6rem;flex-wrap:wrap}
+.nb{padding:.62rem 1.15rem;border-radius:9px;border:1px solid var(--rule);background:var(--surface-2);font-size:.93rem;text-align:center}
+.nb:hover{border-color:var(--accent-line);color:var(--accent)}
+.nb.pri{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
+.nb.pri:hover{background:var(--accent-2);color:#fff}
+.nb[disabled]{opacity:.4;cursor:not-allowed}
+
+/* results */
+.score{text-align:center;padding:2rem 1rem 1.2rem}
+.score .big{font-family:var(--mono);font-size:3rem;font-weight:700;line-height:1;letter-spacing:-.02em}
+.score .big.good{color:var(--ok)}.score .big.mid{color:var(--warn)}.score .big.bad{color:var(--crit)}
+.score .of{font-size:.9rem;color:var(--muted);margin-top:.4rem}
+.score .msg{font-size:1rem;color:var(--ink-2);margin-top:.9rem;max-width:52ch;margin-left:auto;margin-right:auto}
+.missed{margin-top:1.4rem}
+.missed .m{background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--crit);
+ border-radius:0 8px 8px 0;padding:.7rem .9rem;margin-bottom:.45rem}
+.missed .m b{display:block;font-size:.93rem;margin-bottom:.2rem}
+.missed .m span{font-size:.87rem;color:var(--muted);line-height:1.5}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+ <div class="hin">
+  <span class="mark">Training</span>
+  <div class="sp"><button class="tb" id="reset">Reset progress</button><button class="tb" id="theme">&#9680;</button></div>
+ </div>
+ <div id="bar"><div id="fill"></div></div>
+</header>
+<main id="app"></main>
+
+<script>var DECKS=[
+ {k:"names",  label:"Names and documents",  note:"What each thing is actually called."},
+ {k:"systems",label:"Which system does what",note:"Three systems, plus their own provider. Establish what they have, then route it."},
+ {k:"port",   label:"Porting",              note:"Moving numbers, and why they get rejected."},
+ {k:"text",   label:"Texting and registration",note:"Hosted messaging, toll free, 10DLC."},
+ {k:"e911",   label:"Emergency calling",    note:"The one that cannot be got wrong."},
+ {k:"fix",    label:"Troubleshooting",      note:"Symptom to cause."},
+ {k:"time",   label:"Timelines",            note:"What to promise, and what never to."},
+ {k:"fail",   label:"When it goes wrong",   note:"Recovery, in the right order."},
+ {k:"comp",   label:"Patient and card information",note:"HIPAA and PCI, in the parts this job touches."}
+];
+
+/* ---------------- FLASH CARDS ---------------- */
+var CARDS=[
+/* names */
+{d:"names",f:"LOA",b:"Letter of Authorization. The customer's signed permission to move their numbers. We send the template, they sign it, it gets attached to the port order. Many carriers reject one older than thirty days."},
+{d:"names",f:"CSR",b:"Customer Service Record. The losing carrier's own file on the account: exact business name, service address, account number and every working number. The customer has to request it, carriers will not give it to us."},
+{d:"names",f:"LSR",b:"Local Service Request. The industry form that actually asks the losing carrier to release the numbers. The platform generates it from your port order. You never fill one in by hand."},
+{d:"names",f:"FOC",b:"Firm Order Commitment. Not a document. It is the date the losing carrier commits to releasing the numbers."},
+{d:"names",f:"BTN",b:"Billing Telephone Number. The number the account is billed under, the account anchor. If it ports while other numbers stay, you need a replacement anchor or the order rejects."},
+{d:"names",f:"Port out PIN",b:"A security code on the phone account. Almost never printed on the CSR, so it has to be asked for separately, and usually only the account holder can get it. The most commonly missed item in the whole process."},
+{d:"names",f:"Port order",b:"A record you create in a portal, not a document. Bandwidth calls the API resource portins, DialStack calls it port_order."},
+{d:"names",f:"Hosted messaging order",b:"The request to add texting to a number you do not carry voice for. Bandwidth: Numbers, then Hosted Messaging. Their API calls it an importTnOrder."},
+{d:"names",f:"Brand and campaign",b:"The two 10DLC registrations. A brand is the business. A campaign is what you send. The brand has to be registered first."},
+{d:"names",f:"Messaging LOA",b:"A separate signed permission to add texting to a number. Different document from the voice LOA, does not cover voice, and must be under thirty days old."},
+{d:"names",f:"Say the whole sequence out loud",b:"You create a port order, attach the LOA, and the platform turns it into an LSR which it sends to the losing carrier. The carrier replies with an FOC date, or a rejection."},
+{d:"names",f:"Rate center",b:"The small local calling zone a number belongs to. Whether our carrier covers that zone decides whether we can take the number. Nothing about the number tells you which zone it is in."},
+{d:"names",f:"RespOrg",b:"Responsible Organization. The carrier that controls a toll free number in the toll free registry. Moving a toll free number is a RespOrg change, not a port."},
+
+/* systems */
+{d:"systems",f:"Before you route anything, what do you establish first?",b:"What this practice actually has with us. Software, messaging and phone service are sold and held separately. Plenty of practices have the software and keep their own phone provider. Check the number before you assume it is ours."},
+{d:"systems",f:"Calls are broken, and the number is hosted with us. Which system?",b:"DialStack. When the phone service is ours, the voice platform owns calls, handsets, dial plans, emergency addresses and voice porting."},
+{d:"systems",f:"Calls are broken, and the number is not hosted with us. Then what?",b:"It is their own provider's fault to fix, not ours. Tell them plainly who to call. The exception is Screen Pops, because that integration is ours even when the phone service is not."},
+{d:"systems",f:"Texts are not sending, and the messaging is hosted with us. Which system?",b:"Bandwidth, unless it is a template or a permission problem. Bandwidth carries the messages, does toll free verification and 10DLC. Note that a practice can host messaging with us while their calls stay with their own provider."},
+{d:"systems",f:"A feature stopped working. Which system?",b:"Dental Intelligence. Check Settings, Services for quota usage first, they have often simply run out."},
+{d:"systems",f:"Where does the SMS permission on a number live?",b:"DialStack. Every number starts locked against messaging. A platform admin opens the SMS port out window on that specific number."},
+{d:"systems",f:"Where do you see which number patients see when we text?",b:"Dental Intelligence: Settings, Practice Setup, Practice Info, in the SMS phone number field."},
+{d:"systems",f:"Where do you turn screen pops on for one person?",b:"Dental Intelligence: Settings, Users, Edit, Integrations, then enter their extension or an asterisk."},
+{d:"systems",f:"Where is the screen pop triggering number?",b:"Dental Intelligence: Settings, Partners, VoIP Integrations. You give that number to the practice's own phone provider as a simultaneous ring destination."},
+{d:"systems",f:"Does Dental Intelligence document anything about 911?",b:"No. Nothing at all. No emergency addresses, no handsets, no dial plans, no voice porting. Those live on whichever phone platform is actually carrying the calls, ours or theirs."},
+{d:"systems",f:"Screen Pops stopped working. Where do you look first?",b:"The simultaneous ring setting at whoever provides their phone service. Their provider has to ring our integration number at the same time it rings their desks. If that setting was lost, Screen Pops go quiet while calls stay perfectly fine."},
+{d:"systems",f:"The one symptom that crosses systems",b:"We moved to DI phones and our texts stopped. A DialStack setting causing a Bandwidth failure, presenting as a texting problem."},
+{d:"systems",f:"First place to look on any it stopped working ticket",b:"Settings, Services in Dental Intelligence. Shows bridge connection, sync status, and monthly quota for texts, emails, voicemail drops and AI receptionist minutes."},
+
+/* porting */
+{d:"port",f:"What decides whether a number can port to us?",b:"Whether our carrier covers that number's rate center. Same number can be portable for one provider and impossible for another, one town apart."},
+{d:"port",f:"Why is the CSR the most valuable document?",b:"Almost every rejection is a data mismatch against it. Getting it first prevents most failures."},
+{d:"port",f:"Most common rejection causes",b:"Business name missing a suffix like PC or DDS, billing address used instead of service address, account number formatted differently, missing PIN, port freeze or a pending order on the account."},
+{d:"port",f:"What is the catastrophic porting failure?",b:"The customer canceling their old service before the port completes. A disconnected number usually cannot be recovered."},
+{d:"port",f:"Can a mobile number be ported into a business phone system?",b:"Yes for voice in most cases, but a mobile number cannot be text enabled through hosted messaging."},
+{d:"port",f:"What is a partial port?",b:"Moving some numbers off an account and leaving others. If the billing telephone number is one of the ones leaving, a replacement anchor must be designated or the order rejects."},
+{d:"port",f:"What is off net porting?",b:"Your carrier reaching a rate center it does not serve itself, through a partner carrier. Slower, sometimes manual, but the customer keeps their number."},
+{d:"port",f:"The trap in the portability check",b:"The quick check only shows zones the carrier serves itself. You have to ask for the full off net check to see partner coverage. Never say cannot be ported off a quick check."},
+{d:"port",f:"Is a toll free number ported?",b:"No. Its RespOrg is changed in the toll free registry. No rate center, no CSR, no address validation, usually a few business days."},
+{d:"port",f:"What genuinely blocks a toll free move?",b:"Wrong status, shared use arrangements where the practice does not actually own it, snapback if the transfer is incomplete, and messaging verification not following the move."},
+{d:"port",f:"Which lines must never be ported into a phone system?",b:"Fire alarm panels and elevator phones. Life safety equipment governed by code. They stay where they are."},
+{d:"port",f:"The number that passes every check and still cannot move",b:"A marketing tracking number. Technically portable, perfectly active, and controlled by an agency that is losing the account."},
+{d:"port",f:"What is the composite fix when nothing covers the number?",b:"New number in the nearest covered zone, forward the old number to it, and add hosted messaging to the old number. Live in about a day."},
+
+/* texting */
+{d:"text",f:"What is hosted messaging?",b:"Adding texting to a number whose voice stays with another carrier. Messaging routing is a separate registry from number portability, which is why a landline can text."},
+{d:"text",f:"Does a toll free number need registration?",b:"Yes, just a different one. Toll free verification rather than 10DLC. Unverified toll free traffic is blocked outright, not slowed."},
+{d:"text",f:"What actually blocks most texting approvals?",b:"The practice's website. Not live, on http instead of https, no privacy policy, or a privacy policy missing the line about not sharing phone numbers for marketing."},
+{d:"text",f:"The exact privacy policy wording carriers look for",b:"That the business does not sell or share mobile phone numbers or text opt in information with third parties for marketing purposes."},
+{d:"text",f:"Inbound only versus full registration",b:"Inbound only means patients can text the office number but our messages still go out from the toll free number. Full registration makes their number the sending number too."},
+{d:"text",f:"Even after full 10DLC registration, what still comes from the toll free number?",b:"Bulk and automated messages. Only inbound and manual conversations use the office number."},
+{d:"text",f:"How old can a messaging LOA be?",b:"Under thirty days. Older than that and it is rejected as stale."},
+{d:"text",f:"What does hosted away mean?",b:"Another carrier or vendor currently holds the messaging route on that number. It has to be released before we can host it."},
+{d:"text",f:"What silently breaks hosted messaging?",b:"A later voice port on the same number. Nothing errors, the texting simply stops."},
+{d:"text",f:"Which numbers cannot be text enabled at all?",b:"Mobile numbers. Also some carriers and areas are not supported."},
+
+/* e911 */
+{d:"e911",f:"What is a dispatchable location?",b:"A validated street address plus the detail needed to actually find the caller, such as suite, floor and room. The address alone is not enough."},
+{d:"e911",f:"The most common real world 911 mistake",b:"One account level address covering every extension in a multi suite building. It passes the address check and a dispatcher cannot use it."},
+{d:"e911",f:"Submitted versus provisioned",b:"Submitted is not provisioned. Check the status field actually reached provisioned before a go live, and never accept anything else."},
+{d:"e911",f:"What happens if no emergency address resolves on DialStack?",b:"The 911 call still connects, with no dispatch address attached. Nothing errors. Only a webhook field tells you it went out unprovisioned, and watching for that is our job."},
+{d:"e911",f:"What silently breaks emergency addresses?",b:"A network change. Location is often inferred from switch port, MAC or subnet, so a new switch, VLAN or access point breaks it with no error anywhere."},
+{d:"e911",f:"Does 911 need a prefix?",b:"No. It must dial direct with no 9 first. Keeping a dial 9 habit alongside prefix free 911 creates exactly the muscle memory hazard the law exists to remove."},
+{d:"e911",f:"When must an emergency address be registered again?",b:"Practice relocates, new operatory or suite, a phone physically moved, any network change, a new softphone user, or a platform migration or number port."},
+{d:"e911",f:"A practice is moving buildings. When do you update the address?",b:"Before they move in. If someone dials 911 from the new office with the old address on file, help goes to the wrong building."},
+
+/* troubleshooting */
+{d:"fix",f:"Calls drop after about thirty seconds, every time",b:"SIP ALG on the router. It breaks the acknowledgement path and the call tears down on a timer. Disable SIP ALG."},
+{d:"fix",f:"Connected but no audio one way",b:"An RTP problem, not a signaling problem. Usually NAT or a firewall. The call signaled fine, the audio path did not."},
+{d:"fix",f:"Phone will not register",b:"A SIP problem. Credentials, wrong VLAN, no DHCP, firewall, or a provisioning failure."},
+{d:"fix",f:"Choppy or robotic audio",b:"Packet loss or jitter. Check wired versus wireless first, then upload saturation, then QoS."},
+{d:"fix",f:"Why does upload speed matter more than download?",b:"Voice is symmetric, and a practice's imaging, scans and backups all push up a circuit whose upload is a fraction of its download. They will quote you their download speed."},
+{d:"fix",f:"The four questions before any troubleshooting",b:"Who is affected, when does it happen, which direction, and which specific call. Directional asymmetry is the highest information single data point in voice."},
+{d:"fix",f:"Outbound works but inbound does not. What does that tell you?",b:"The problem is in the return path or the routing, not the phone system. The PBX and network are broadly fine because outbound signaling works."},
+{d:"fix",f:"Quality numbers worth knowing",b:"Jitter under 30 ms, packet loss under 1 percent, one way latency under 150 ms, MOS 4.0 or better. Budget 100 kbps per concurrent call each direction."},
+{d:"fix",f:"Can a dashboard MOS score prove a call was fine?",b:"No. It is a computed estimate from network metrics and it cannot detect echo, one way audio or a bad headset. Use it as a trend signal only."},
+
+/* timelines */
+{d:"time",f:"Texting on a new toll free number",b:"A few days, if the website is already compliant."},
+{d:"time",f:"Hosted messaging on their own number",b:"5 to 7 business days for inbound."},
+{d:"time",f:"Full 10DLC campaign registration",b:"5 to 6 weeks on top of the porting time."},
+{d:"time",f:"A voice port, end to end",b:"Four to six weeks from signature to live. The FOC date itself lands 5 to 30 days after submission."},
+{d:"time",f:"When can you give a customer a cutover date?",b:"Only after the FOC comes back from their old carrier. Before that you give a range and explain what would move it."},
+{d:"time",f:"Which is usually the longer pole, phones or texting?",b:"Texting, if the practice's website needs work. That is why registration starts on day one rather than after the port."},
+{d:"time",f:"How long does the old service stay alive after a cutover?",b:"About three days. It is the only real rollback, so nobody cancels until we send written confirmation."},
+{d:"time",f:"Days never to schedule a cutover",b:"Friday, the day before a holiday, and the middle of clinical hours. If it goes wrong you want a support desk on the other side."},
+
+/* failure */
+{d:"fail",f:"How do you test that emergency calling works?",b:"Dial 933 from the handset. It reads back the address and callback number registered against that phone. Never test by dialing 911, and never ask a customer to."},
+{d:"comp",f:"What makes a phone system carry patient information at all?",b:"Voicemails where a patient says their name and why they are calling, call recordings, texts to patients, a fax moved to email, a call log with a patient's number next to a time. None of it is in the software. All of it is in the phone system."},
+{d:"comp",f:"What is a business associate agreement, in one sentence?",b:"The document Dental Intelligence signs with each practice that commits the company to safeguarding patient information, reporting anything that goes wrong within a set window, and holding anyone it subcontracts to the same standard. It is published at dentalintel.com/terms/baa."},
+{d:"comp",f:"What do you almost always need to diagnose a voice fault?",b:"The calling number, the called number, and the time with the time zone. You very rarely need to know who the patient was. Asking narrowly is both faster and safer."},
+{d:"comp",f:"Where is patient information most likely to leave the company?",b:"The vendor escalation. Sending audio to DialStack or Bandwidth to prove a fault is the moment. Send the call records, not the recording."},
+{d:"comp",f:"Why is a recorded call plus a card payment a problem?",b:"Taking a card over the phone is ordinary and allowed. Keeping a recording of it is the part that creates the obligation, because a recording is storage. The short security code on the back of the card must not be kept once the payment has gone through, and a saved recording keeps it."},
+{d:"comp",f:"A practice wants call recording and takes cards over the phone. What do you do?",b:"Do not enable it. Raise it as the compliance question it is, and give them text to pay as the interim answer. A recording made today does not become allowed later."},
+{d:"comp",f:"What is the answer that removes the card problem rather than managing it?",b:"Text to pay, which the company already sells. The patient gets a link and types the card into a payment page on their own phone, so the number is never spoken and never recorded."},
+{d:"comp",f:"A patient leaves a card number on a voicemail. Whose fault is that?",b:"Nobody's, and it happens anyway. Flag it to the practice and to compliance. Do not download it and do not forward it."},
+{d:"comp",f:"You realize patient information was pasted into a ticket yesterday. First move?",b:"Change nothing and delete nothing, then tell the lead the same hour. Deleting it destroys the record of what went where, and the reporting clock started when the company knew."},
+{d:"comp",f:"Why verify a caller before discussing an account?",b:"Changing where a number rings is one of the most damaging things that can be done to a practice, and it can be requested by anybody who knows the practice name. On a healthcare customer this is a bigger problem than a slow answer."},
+{d:"comp",f:"Which three things does the job description put in this role's hands?",b:"Emergency address registration accuracy, and PCI and HIPAA handling standards for call recording and patient information, across the team."},
+{d:"fail",f:"A practice reports a call problem. What comes before diagnosis?",b:"Check the number is actually hosted with us. We have mixed customers and some are on their own carrier. A number that is not on our platform is not a call we can fix."},
+{d:"fail",f:"First question on cutover day when something is wrong",b:"Is emergency calling affected. If yes, tell the practice to use mobiles for emergencies until it is confirmed working."},
+{d:"fail",f:"A number has not cut over. First move?",b:"Wait out the settling period. Numbers do not all switch at the same moment, and escalating at minute two wastes the hour you may need later."},
+{d:"fail",f:"Order of priority when a cutover goes wrong",b:"Emergency calling, then get them taking calls somehow, then diagnose the cause, then escalate with a specific failing call."},
+{d:"fail",f:"Two port rejections in a row means what?",b:"Our process failed, not bad luck. Escalate rather than trying a third time."},
+{d:"fail",f:"Can you forward a disconnected number?",b:"No. Forwarding is configured at the carrier that owns the number, and once the account is canceled there is nothing to forward from. A temporary number gives them a working phone, it does not rescue their inbound calls."},
+{d:"fail",f:"Their number is dead. What is the highest impact thing in the first ten minutes?",b:"Update their Google Business Profile. It is where most new patients find them and it can be changed immediately. The website is second."},
+{d:"fail",f:"The customer canceled their old service early. What is the one thing that actually fixes it?",b:"Getting the old carrier to switch the number back on. The customer has to make that call, because the carrier will not discuss a closed account with us. Everything else is damage control."},
+{d:"fail",f:"Why is a disconnected number a race?",b:"The carrier holds it for a short period, then it goes back into the pool and can be handed to another subscriber. While it is in the hold it can usually be reinstated. After it is reassigned it is gone permanently. Nobody will quote you the hold length, so treat it as days."},
+{d:"fail",f:"The front line says the number cannot be reconnected. Next move?",b:"Ask for the retention department or the porting department by name before you hang up. They handle this regularly and have authority the first person does not."},
+{d:"fail",f:"The number is reconnected. What is the trap?",b:"Two of them. The customer cancels again when the next bill arrives, and the number dies for good. And reconnection often issues a new account number, so the LOA and details you already have are stale and will be rejected. Fresh bill, fresh LOA, dated today."},
+{d:"fail",f:"The carrier will only reconnect on a two year contract. What do you ask for?",b:"Month to month, because the number is being ported away in a few weeks. If they will not budge, price the fee against losing the number and let the customer decide with real numbers."},
+{d:"fail",f:"What do you give the platform when escalating?",b:"An exact failing call, the numbers involved, and the time with the timezone. A description gets you a request for details and costs an hour."},
+{d:"fail",f:"How often do you update a practice during an outage?",b:"Every thirty minutes, whether or not there is news. Silence turns a bad morning into a lost customer."},
+{d:"fail",f:"Texting stopped after the phones moved. Where do you look?",b:"The SMS permission on that specific number in DialStack. Numbers are locked by default and the permission does not follow a port."}
+];
+
+/* ---------------- ORDER OF OPERATIONS ---------------- */
+var ORDERS=[
+{d:"port",title:"New customer moving phones only",
+ setup:"A practice signs up to move all their numbers to us. Put the work in the order it has to happen.",
+ steps:["Check every published number and who the bill is in the name of",
+        "Check their internet upload speed and network",
+        "Get the Customer Service Record from their carrier",
+        "Get the port out PIN from their carrier",
+        "Get the Letter of Authorization signed",
+        "Build the phone system and register emergency addresses",
+        "Submit the port order",
+        "Get the FOC date and confirm it to the customer",
+        "Train the staff",
+        "Cutover day and test everything",
+        "Leave the old service running for three days",
+        "Send written confirmation it is safe to cancel"],
+ why:"The paperwork comes before the build only in the sense that it takes longer. The real rule is that nothing gets submitted until the CSR, the PIN and the LOA are all in hand, and nothing gets scheduled until the FOC comes back."},
+
+{d:"text",title:"Texting on a brand new toll free number",
+ setup:"The practice wants to text patients and does not mind what number it comes from.",
+ steps:["Confirm they are happy patients will see an 855 number",
+        "Collect legal business name, EIN, address and website",
+        "Check the website is live, https, and has the right privacy wording",
+        "Submit the toll free verification application",
+        "Wait for approval, the number cannot send while it is pending",
+        "Send and receive a real test message"],
+ why:"The website check comes before submission. Submitting first and discovering the site is on http costs you the whole cycle."},
+
+{d:"text",title:"Texting on their own office number",
+ setup:"The practice wants patients to text the number on their sign. Their phones stay where they are.",
+ steps:["Explain inbound only versus full registration, and the two timelines",
+        "Check the number can be text enabled at all",
+        "Ask who sends their texts today",
+        "Get the messaging Letter of Authorization signed and dated",
+        "Submit the hosted messaging order",
+        "Test a real message in and out"],
+ why:"Asking who holds the texting today comes before the paperwork. If another vendor has it, the whole thing is a coordination job rather than a form."},
+
+{d:"fail",title:"Cutover day and a number is not working",
+ setup:"The port window has passed and calls are not coming through on one number.",
+ steps:["Ask whether emergency calling is affected",
+        "Wait out the settling period before escalating",
+        "Get the practice taking calls, using the old path if needed",
+        "Escalate with a specific failing call and timestamp",
+        "Update the practice, and keep updating every thirty minutes"],
+ why:"Emergency calling first, service second, diagnosis third. Diagnosing before the practice can answer the phone is the wrong order."},
+
+{d:"fail",title:"A port order came back rejected",
+ setup:"The losing carrier sent it back.",
+ steps:["Read the exact rejection reason",
+        "Go back to the Customer Service Record, not the customer's memory",
+        "Identify the one field that was wrong",
+        "Fix that field and resubmit",
+        "Tell the customer the same day with a new expected range"],
+ why:"Resubmitting with everything double checked is not a fix. Find the single wrong field, because the rejection reason names it."},
+
+{d:"port",title:"Everything, phones and texting together",
+ setup:"A new practice wants us to take over calls and texting.",
+ steps:["Run the full number check before the deal closes",
+        "Start the texting registration on day one",
+        "Collect the port paperwork and the PIN",
+        "Build the phone system and register emergency addresses",
+        "Submit the port order and get the FOC date",
+        "Plan the messaging permission to follow the port",
+        "Cutover, then test calls, 933 for the emergency address, and texts"],
+ why:"Texting registration starts first even though phones feel more urgent, because website problems take weeks and nobody can shorten them."}
+];
+
+/* ---------------- SCENARIOS ---------------- */
+var SCENARIOS=[
+{id:"sc-voice-only",d:"port",title:"Customer wants to port their phones only",
+ setup:"Riverbend Dental calls. They want us to take over their phone service. They already text patients through a different company and want to leave that alone.",
+ parts:[
+ {type:"multi",q:"Which systems are involved?",
+  options:["DialStack","Bandwidth","Dental Intelligence settings","The practice's current phone carrier","The practice's current texting vendor"],
+  correct:[0,3],
+  why:"Voice only means DialStack and the losing carrier. Bandwidth is not involved because we are not touching messaging. Their texting vendor is not involved either, but you must confirm the port will not disturb the messaging route on those numbers."},
+ {type:"multi",q:"Which documents do you need?",
+  options:["Customer Service Record (CSR)","Letter of Authorization (LOA), phone numbers","Messaging Letter of Authorization (LOA)","Port out PIN","Do not cancel acknowledgement","Toll free verification application"],
+  correct:[0,1,3,4],
+  why:"Voice port needs the CSR, the voice LOA, the PIN and the do not cancel confirmation. The messaging LOA is a different document for a different job. No toll free verification because we are not doing texting."},
+ {type:"multi",q:"What information must you collect from the customer?",
+  options:["Legal business name exactly as the carrier has it","Service address, not billing address","Account number and billing telephone number","Their EIN","Every published number and what each is for","Their website address","Whose name is on the phone bill","What else is plugged into a phone line"],
+  correct:[0,1,2,4,6,7],
+  why:"EIN and website are texting registration items, not porting items. Everything else is needed for the port or for the install."},
+ {type:"pick",q:"They mention their reminder software texts from the main line. What do you do?",
+  options:["Nothing, we are only moving voice",
+           "Warn them the port may break their texting, and coordinate before scheduling",
+           "Tell them to cancel the texting vendor",
+           "Submit the port and see what happens"],
+  correct:1,
+  why:"A voice port can silently sever the messaging route on that number. Nothing errors. Coordinate before scheduling or their reminders stop the morning after cutover."}
+]},
+
+{id:"sc-text-own",d:"text",title:"Customer wants texting on their existing number",
+ setup:"Smile Dental wants patients to be able to text the number printed on their sign. Their phone service stays with Spectrum.",
+ parts:[
+ {type:"multi",q:"Which systems are involved?",
+  options:["DialStack","Bandwidth","Dental Intelligence","Spectrum, their voice carrier"],
+  correct:[1,2],
+  why:"Bandwidth does the hosted messaging and Dental Intelligence is where the conversations happen. DialStack is not involved because we are not carrying their voice. Spectrum keeps the voice and is not a party to a hosted messaging order."},
+ {type:"pick",q:"Which document do they sign?",
+  options:["Letter of Authorization, phone numbers","Messaging Letter of Authorization","Both","Neither, hosted messaging needs no paperwork"],
+  correct:1,
+  why:"Hosted messaging uses its own authorization. The voice LOA is for moving numbers and does not cover messaging."},
+ {type:"pick",q:"How old can that document be when you submit?",
+  options:["Any age, as long as it is signed","Under ninety days","Under thirty days","It must be signed the same day"],
+  correct:2,
+  why:"Carriers reject a messaging authorization signed more than thirty days ago. If it is getting close, get a fresh one rather than risking the cycle."},
+ {type:"pick",q:"They ask whether their automated reminders will now come from their own number. What is the honest answer?",
+  options:["Yes, immediately",
+           "Yes, once the hosted messaging order completes",
+           "No. Inbound only. Automated and bulk messages still come from the toll free number unless we do full registration",
+           "No, and it can never be changed"],
+  correct:2,
+  why:"This is the single most confusing part of texting for practices. Inbound only lets patients text in. Full 10DLC registration is a separate five to six week job, and even then bulk and automated messages still go out from the toll free number."}
+]},
+
+{id:"sc-both",d:"port",title:"New customer wants everything",
+ setup:"A three operatory practice signs for phones and texting. They have a main line, two direct numbers, a fax line and a number on their Google listing.",
+ parts:[
+ {type:"multi",q:"Which numbers need a decision before you can quote a date?",
+  options:["The main line","The two direct numbers","The fax line","The number on their Google listing","All of them"],
+  correct:[4],
+  why:"Every published number needs a decision. The Google listing number is the one most likely to belong to a marketing agency rather than the practice."},
+ {type:"pick",q:"Which task should start on day one, even though phones feel more urgent?",
+  options:["Building the phone system","Ordering the handsets","Texting registration","Submitting the port order"],
+  correct:2,
+  why:"If the practice's website is not compliant, fixing it takes as long as their web person takes, and that becomes the real critical path rather than the port."},
+ {type:"multi",q:"Which forms will this customer sign or complete?",
+  options:["Customer information sheet","Text registration information sheet","Letter of Authorization, phone numbers","Messaging Letter of Authorization","Do not cancel acknowledgement","Website requirements checklist"],
+  correct:[0,1,2,3,4,5],
+  why:"A full onboarding touches all of them. The website checklist goes to their web person rather than the practice, but it is still something you send."},
+ {type:"pick",q:"The fax line. What do you normally recommend?",
+  options:["Port it with everything else","Fax to email","Leave it with the old carrier forever","Delete it"],
+  correct:1,
+  why:"Fax over VoIP is unreliable. Fax to email is the usual answer, and it needs to be a decision rather than an assumption."}
+]},
+
+{id:"sc-rec-card",d:"comp",title:"Caller: can you turn on call recording for us?",
+ setup:"An office manager calls. She wants every call recorded for training purposes. In passing she mentions the front desk takes card payments over the phone most afternoons.",
+ parts:[
+ {type:"pick",q:"What has she actually just told you?",
+  options:["Nothing relevant, the payments are a separate system",
+           "That recording here would capture card numbers, which changes this from a configuration task into a compliance decision",
+           "That she needs the payments product",
+           "That the recording should be set to delete weekly"],
+  correct:1,
+  why:"Taking cards over the phone is fine. Recording it is the part that creates the obligation, because a recording is storage and the security code on the card must not be kept once the payment has gone through."},
+ {type:"pick",q:"What do you do with the request today?",
+  options:["Enable it, then raise the question afterwards",
+           "Enable it but set the retention to thirty days",
+           "Do not enable it. Raise it as a compliance question and give her a date you will come back",
+           "Refuse and close the ticket"],
+  correct:2,
+  why:"A recording made today does not become allowed later, so enabling first is not a neutral choice. Refusing flatly is also wrong, because she has a legitimate need. Say you are checking rather than guessing, and commit to a date."},
+ {type:"pick",q:"What is the useful thing to tell her in the meantime?",
+  options:["To stop taking card payments",
+           "To use text to pay, so the card is typed into a payment page rather than spoken on the call",
+           "To write the card numbers down instead",
+           "To use a personal mobile for payment calls"],
+  correct:1,
+  why:"Text to pay removes the problem rather than managing it, and the company already sells it. The number is never spoken, so it never reaches a recording."},
+ {type:"pick",q:"She also mentions a patient left a card number on their voicemail last week. What now?",
+  options:["Download it so you have a copy of the evidence",
+           "Delete it quietly for her",
+           "Leave it alone, flag it to her and to compliance, and do not copy or forward it",
+           "Email it to DialStack to ask what to do"],
+  correct:2,
+  why:"Do not create a second copy and do not destroy the first. Who removes it, and how, is a compliance decision. Emailing it to a vendor would take it outside the company."}
+]},
+
+{id:"sc-call-nosms",d:"fail",title:"Caller: our reminders stopped going out",
+ setup:"A practice that went live on our phones nine days ago calls in. Calls are working perfectly. No text reminders have gone out since the cutover.",
+ parts:[
+ {type:"pick",q:"Which system does this belong to?",
+  options:["DialStack, because it started after the phone cutover",
+           "Bandwidth, because it is a messaging problem",
+           "Dental Intelligence, because reminders are a DI feature",
+           "It is the seam. A DialStack setting is causing a Bandwidth failure"],
+  correct:3,
+  why:"It presents as a texting fault and is actually a voice platform setting. Numbers are locked against messaging by default and the permission does not follow a port."},
+ {type:"pick",q:"What is the specific thing to check?",
+  options:["Their message templates","The SMS port out window on that specific number in DialStack",
+           "Their 10DLC campaign status","Whether they have run out of message quota"],
+  correct:1,
+  why:"Open the number in DialStack and look at the SMS port out card. If the window is closed, Bandwidth cannot host the messaging and nothing errors anywhere."},
+ {type:"pick",q:"Before you close the ticket, what do you do?",
+  options:["Confirm the setting is changed","Send a real test message in and out",
+           "Ask the practice to check tomorrow","Email them the confirmation"],
+  correct:1,
+  why:"Never close a messaging ticket on a configuration change alone. Test a real message in both directions."},
+ {type:"pick",q:"What should happen so this does not recur?",
+  options:["Note it on the account",
+           "Add it as a checked item on every cutover",
+           "Tell the team to remember it",
+           "Raise it with DialStack"],
+  correct:1,
+  why:"If it happened once it will happen again. Things people are told to remember get forgotten. Things on a checklist get done."}
+]},
+
+{id:"sc-call-drops",d:"fix",title:"Caller: our calls keep dropping",
+ setup:"A practice calls to say calls drop partway through. You ask when and they say it feels like about half a minute, every time, on every phone.",
+ parts:[
+ {type:"pick",q:"What does that timing point at?",
+  options:["Internet outage","SIP ALG on their router","Packet loss","A carrier problem"],
+  correct:1,
+  why:"Dropping at almost exactly thirty seconds is the signature of SIP ALG breaking the acknowledgement path. The call tears down on a timer."},
+ {type:"pick",q:"What is the first thing you ask them to do?",
+  options:["Reboot the phones","Run a speed test","Find their router make and model and disable SIP ALG","Replace the router"],
+  correct:2,
+  why:"Identify the router first, because the setting is named differently on every make. Disabling SIP ALG is the correct default first move on nearly every install."},
+ {type:"pick",q:"They say it also happens on their softphone at home. Does that change your answer?",
+  options:["No, same cause","Yes, that suggests the problem is not their office router",
+           "No, softphones always drop","Yes, softphones are unsupported"],
+  correct:1,
+  why:"If it happens on a completely different network, the office router is not the only cause. Scope always beats assumption. Ask again who, when and which direction."}
+]},
+
+{id:"sc-call-911",d:"e911",title:"Caller: we dialed 911 and they asked where we were",
+ setup:"A practice calls to say a staff member dialed 911 during a medical incident and the dispatcher had to ask for the address.",
+ parts:[
+ {type:"pick",q:"What severity is this?",
+  options:["Low, only one call was affected","Medium, it is a configuration issue",
+           "P1, immediately, regardless of how many endpoints are affected",
+           "Depends how many practices are affected"],
+  correct:2,
+  why:"Any emergency calling failure is an automatic P1 that bypasses scope based triage. It affects few users and is the one that can end a company."},
+ {type:"pick",q:"What do you tell the practice to do right now?",
+  options:["Nothing, we will fix it",
+           "Use mobile phones for emergencies until we confirm it is working",
+           "Redial 911 and test",
+           "Wait for our email"],
+  correct:1,
+  why:"Mobiles are the safe fallback while it is broken. Never ask a practice to test by dialing 911, and never do it yourself. If a verification is needed, 933 is the emergency address test line and it reads the registered address back to you."},
+ {type:"multi",q:"What are the likely causes?",
+  options:["One account level address covering every phone",
+           "The address was submitted but never reached provisioned",
+           "A network change moved the phones onto a different subnet",
+           "A phone was physically moved to another room",
+           "The practice dialed 9 first"],
+  correct:[0,1,2,3],
+  why:"All four are real and common. Dialing 9 first would be a different failure, and 911 must work without a prefix anyway."},
+ {type:"pick",q:"How do you confirm the fix?",
+  options:["Check the configuration screen","Ask the practice to try again",
+           "Dial 933 from each handset and confirm the address it reads back",
+           "Wait for the next emergency"],
+  correct:2,
+  why:"Submitted is not provisioned, and provisioned is not verified. Test and confirm the address that is read back."}
+]},
+
+{id:"sc-noport",d:"port",title:"Caller: sales promised a date and the number will not move",
+ setup:"A rep closed a deal last week. The coverage check has come back saying the practice's main number is not portable to us.",
+ parts:[
+ {type:"pick",q:"What is the first thing to verify?",
+  options:["That the customer gave us the right number",
+           "That the full off net check was run, not just the quick one",
+           "That the number is still active",
+           "That the account is in their name"],
+  correct:1,
+  why:"The quick check only shows zones our carrier serves itself. Partner coverage does not appear unless you ask for the full check, and a number that looks unportable very often is not."},
+ {type:"pick",q:"The full check confirms no coverage at all. What is the next best option?",
+  options:["Tell them we cannot help",
+           "Port it through a second carrier first",
+           "New number in the nearest covered zone, forward the old number, host messaging on the old number",
+           "Ask them to change their phone number"],
+  correct:2,
+  why:"The composite fix is live in about a day, keeps the number ringing and keeps it texting. Two hop porting and second carrier accounts are for volume problems, not one number."},
+ {type:"pick",q:"What should change so this does not happen again?",
+  options:["Train the rep",
+           "A required portability result on the opportunity before it can be marked Closed Won",
+           "Have onboarding check every deal",
+           "Nothing, it is rare"],
+  correct:1,
+  why:"Optional fields are not gates. The check has to block the stage, and it has to live in the tool the reps already use."}
+]},
+
+{id:"sc-canceled",d:"fail",title:"Caller: we canceled our old phone service",
+ setup:"A practice mid port calls to say they canceled their old service yesterday to save a month of billing. The port has not completed.",
+ parts:[
+ {type:"pick",q:"How urgent is this?",
+  options:["Not urgent, the port will still complete",
+           "Act within hours. The old carrier holds the number for a short period before it is reassigned, and while it is in that hold they can usually switch it back on",
+           "It can wait until the port date",
+           "Nothing can be done"],
+  correct:1,
+  why:"A canceled number is not deleted straight away, it sits in the carrier's hold before going back into the pool. While it is in there, reinstating it is usually possible. Once it is handed to another subscriber it is gone permanently. Nobody will quote you a hold length, so treat it as days."},
+ {type:"pick",q:"Who has to make the call to the old carrier?",
+  options:["Us. We are the gaining provider so we have standing",
+           "The customer, because the carrier will not discuss a closed account with us. We stay on the line while they do it",
+           "Either one, it does not matter",
+           "Bandwidth, on our behalf"],
+  correct:1,
+  why:"The account is closed and we were never on it. The carrier will only talk to the account holder. Do not send the customer off to call alone and report back tomorrow, stay on the line so you hear the answer yourself while there is still time to escalate."},
+ {type:"multi",q:"What do you do in the next hour?",
+  options:["Get the customer on the phone with the old carrier and listen in",
+           "Ask for the existing number to be reinstated on the existing account",
+           "Forward the dead number to a temporary number",
+           "Provision a new number so the practice has a working phone",
+           "Change their Google listing and website straight away",
+           "Ask the carrier for forwarding to the temporary number while the port runs"],
+  correct:[0,1,3,5],
+  why:"You cannot forward a disconnected number, because the account that owned it is gone and there is no setting that redirects it. Only the old carrier can, by switching it back on. And hold the listings work until reconnection is genuinely dead, otherwise you change everything and then change it all back."},
+ {type:"pick",q:"The front line representative says no, it cannot be reconnected. What now?",
+  options:["Accept it and move to damage control",
+           "Ask for the retention department or the porting department by name before hanging up",
+           "Call back later and hope for a different person",
+           "Escalate to Bandwidth"],
+  correct:1,
+  why:"The first person who answers handles billing questions. Retention and porting handle this exact situation regularly and have authority the front line does not. Ask by name, on the same call."},
+ {type:"pick",q:"The carrier offers to reconnect but wants a two year contract. What do you say?",
+  options:["Take it, the number is worth it",
+           "Ask for month to month, because the number is being ported away in a few weeks",
+           "Refuse and go to damage control",
+           "Have the customer decide without input"],
+  correct:1,
+  why:"Signing a two year term for a number you are moving in three weeks leaves the practice paying for a service they will not use, or paying a cancellation fee later. Ask for month to month first. If the carrier will not budge, price the fee against the cost of losing the number and let the customer choose with real numbers in front of them."},
+ {type:"multi",q:"The number is back on. What has to happen before you resubmit the port?",
+  options:["Tell the customer, in writing, not to cancel again",
+           "Get a fresh bill or account record from after the reconnection",
+           "Reuse the LOA they already signed, it is only a week old",
+           "Confirm the new account number",
+           "Check whether a new PIN or passcode was set on reconnection",
+           "Submit immediately, speed matters more than paperwork"],
+  correct:[0,1,3,4],
+  why:"Reconnecting often issues a new account number, and sometimes changes which number is the main billing number on the account. Everything you collected before the cancellation is now stale, and submitting it is a guaranteed rejection. The old LOA carries the old details, so it has to be signed again, dated today."},
+ {type:"pick",q:"What is the single most likely way this recovery still gets thrown away?",
+  options:["The carrier reassigns the number while we are on hold",
+           "The customer cancels a second time when the next bill arrives, and this time the number does not come back",
+           "The port gets rejected once",
+           "The FOC date slips a week"],
+  correct:1,
+  why:"They canceled once to save a month of billing, so the next bill triggers the same instinct. Say it out loud and put it in writing on the same call: the port itself ends the old service, so leave the account open and keep paying until we confirm the port completed."},
+ {type:"pick",q:"Which of these genuinely cannot be fixed if the number is gone for good?",
+  options:["Their Google listing","Their website",
+           "Printed signage, business cards, and the number saved in patients' phones",
+           "Their voicemail greeting"],
+  correct:2,
+  why:"Everything published online can be changed today. Print and the contact already saved in a patient's phone cannot. Those calls are lost, and saying so on day one beats them discovering it in week three."},
+ {type:"pick",q:"If the number is genuinely gone, what is the right approach?",
+  options:["Avoid the subject until they ask",
+           "Say so early and help them update signage, listings and insurance directories",
+           "Blame the carrier","Offer a refund"],
+  correct:1,
+  why:"Being honest early is the only recoverable path. Continuing to say we are working on it costs them the weeks they needed to be rebuilding their listings."}
+]}
+];
+</script>
+<script>
+(function(){
+"use strict";
+var app=document.getElementById("app"), fill=document.getElementById("fill");
+var st={};
+function save(){try{localStorage.setItem("train",JSON.stringify(st))}catch(e){}}
+function load(){try{st=JSON.parse(localStorage.getItem("train")||"{}")}catch(e){st={}}}
+load();
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function deck(k){for(var i=0;i<DECKS.length;i++)if(DECKS[i].k===k)return DECKS[i];return{label:k,note:""}}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+var S={mode:null,deck:null,items:[],i:0,sel:[],shown:false,score:0,missed:[],built:[],pool:[],flipped:false};
+
+/* ---------- home ---------- */
+function home(){
+ fill.style.width="0";
+ var seen=Object.keys(st).filter(function(k){return k.indexOf("card:")===0}).length;
+ var h='<h1>Training</h1><p class="lede">Four ways to practice. Flash cards to learn the facts, ordering drills to learn the sequence, scenarios to put it together, and error calls to practice triage.</p>'+
+ '<div class="modes">'+
+  '<button class="mode" data-mode="flash"><b>Flash cards</b><span>Learn the facts one at a time. Flip, then say whether you knew it.</span><span class="n">'+CARDS.length+' cards, '+seen+' rated</span></button>'+
+  '<button class="mode" data-mode="order"><b>Order of operations</b><span>Put the steps of a job into the right sequence.</span><span class="n">'+ORDERS.length+' drills</span></button>'+
+  '<button class="mode" data-mode="scenario"><b>Scenarios</b><span>A customer wants something. Which systems, which forms, what information.</span><span class="n">'+SCENARIOS.length+' scenarios</span></button>'+
+  '<button class="mode" data-mode="mixed"><b>Mixed test</b><span>Everything at once, scored. Use this to find your weak spots.</span><span class="n">20 questions</span></button>'+
+ '</div>';
+ h+='<h2 class="sec">Or pick a topic</h2><p class="sn">Flash cards for one subject only.</p><div class="decks">';
+ DECKS.forEach(function(d){
+  var n=CARDS.filter(function(c){return c.d===d.k}).length;
+  var kn=CARDS.filter(function(c){return c.d===d.k&&st["card:"+c.f]==="y"}).length;
+  var un=CARDS.filter(function(c){return c.d===d.k&&st["card:"+c.f]==="n"}).length;
+  h+='<button class="dk" data-deck="'+esc(d.k)+'"><b>'+esc(d.label)+'</b><span>'+esc(d.note)+'</span>'+
+    '<span class="st"><span>'+n+' cards</span>'+(kn?'<span class="good">'+kn+' known</span>':'')+
+    (un?'<span class="bad">'+un+' to review</span>':'')+'</span></button>';
+ });
+ h+='</div>';
+ app.innerHTML=h; window.scrollTo(0,0);
+}
+
+/* ---------- flash ---------- */
+function startFlash(dk){
+ var pool=CARDS.filter(function(c){return !dk||c.d===dk});
+ var due=pool.filter(function(c){return st["card:"+c.f]!=="y"});
+ S={mode:"flash",deck:dk,items:shuffle(due.length?due:pool),i:0,flipped:false};
+ flash();
+}
+function flash(){
+ if(S.i>=S.items.length) return flashDone();
+ var c=S.items[S.i];
+ fill.style.width=((S.i/S.items.length)*100)+"%";
+ var h='<div class="crumb"><button data-home="1">&#8592; Back</button>'+
+   '<span class="of">'+(S.i+1)+' of '+S.items.length+' &middot; '+esc(deck(c.d).label)+'</span></div>'+
+   '<div class="flash'+(S.flipped?' back':'')+'" id="card">'+
+   '<div class="side">'+(S.flipped?"Answer":"Term")+'</div>'+
+   (S.flipped?'<div class="a">'+esc(c.b)+'</div>':'<div class="q">'+esc(c.f)+'</div>')+'</div>';
+ h+= S.flipped
+  ? '<div class="rate"><button class="no" data-rate="n">Review again</button><button class="yes" data-rate="y">I knew it</button></div>'
+  : '<p class="tapme">Click the card to see the answer</p>';
+ app.innerHTML=h; window.scrollTo(0,0);
+}
+function flashDone(){
+ fill.style.width="100%";
+ app.innerHTML='<div class="score"><div class="big good">Done</div>'+
+  '<p class="of">'+S.items.length+' cards reviewed</p>'+
+  '<p class="msg">Cards you marked review again will come back first next time. Cards you knew drop out until you reset.</p></div>'+
+  '<div class="nav"><button class="nb pri" data-home="1">Back to training</button>'+
+  '<button class="nb" data-again="flash">Go again</button></div>';
+}
+
+/* ---------- quiz building ---------- */
+function qFromScenario(sc){
+ return sc.parts.map(function(p,i){
+  return {type:p.type,q:p.q,options:p.options,correct:p.correct,why:p.why,
+          ctx:i===0?sc.setup:null,head:sc.title,deck:sc.d};
+ });
+}
+function startScenario(){
+ var all=[]; SCENARIOS.forEach(function(sc){all=all.concat(qFromScenario(sc))});
+ S={mode:"scenario",items:all,i:0,sel:[],shown:false,score:0,missed:[]};
+ quiz();
+}
+function startMixed(){
+ var qs=[];
+ SCENARIOS.forEach(function(sc){qs=qs.concat(qFromScenario(sc))});
+ qs=shuffle(qs).slice(0,20);
+ S={mode:"mixed",items:qs,i:0,sel:[],shown:false,score:0,missed:[]};
+ quiz();
+}
+function isMulti(q){return q.type==="multi"}
+function correctSet(q){return isMulti(q)?q.correct.slice().sort():[q.correct]}
+function quiz(){
+ if(S.i>=S.items.length) return results();
+ var q=S.items[S.i];
+ fill.style.width=((S.i/S.items.length)*100)+"%";
+ var h='<div class="crumb"><button data-home="1">&#8592; Back</button>'+
+  '<span class="of">'+(S.i+1)+' of '+S.items.length+'</span></div>';
+ if(q.head) h+='<p class="sn" style="font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:.35rem">'+esc(q.head)+'</p>';
+ if(q.ctx) h+='<div class="setup">'+esc(q.ctx)+'</div>';
+ h+='<p class="qh">'+esc(q.q)+'</p>';
+ if(isMulti(q)) h+='<p class="sn">Select all that apply.</p>';
+ h+='<div class="opts">';
+ q.options.forEach(function(o,i){
+  var cls="opt", mark=isMulti(q)?"":"";
+  if(S.shown){
+   var inCorrect=correctSet(q).indexOf(i)>-1, picked=S.sel.indexOf(i)>-1;
+   if(picked&&inCorrect) cls+=" right";
+   else if(picked&&!inCorrect) cls+=" wrong";
+   else if(!picked&&inCorrect) cls+=" miss";
+  } else if(S.sel.indexOf(i)>-1) cls+=" sel";
+  var bx = S.shown ? (correctSet(q).indexOf(i)>-1?"&#10003;":(S.sel.indexOf(i)>-1?"&#10007;":"")) : (S.sel.indexOf(i)>-1?"&#10003;":"");
+  h+='<button class="'+cls+'" data-opt="'+i+'"'+(S.shown?" disabled":"")+'><span class="bx">'+bx+'</span><span>'+esc(o)+'</span></button>';
+ });
+ h+='</div>';
+ if(S.shown){
+  var ok=sameSet(S.sel,correctSet(q));
+  h+='<div class="why '+(ok?"ok":"no")+'"><b>'+(ok?"Correct":"Not quite")+'</b>'+esc(q.why)+'</div>';
+  h+='<div class="nav"><button class="nb pri" data-next="1">'+(S.i===S.items.length-1?"See results":"Next question")+'</button></div>';
+ } else {
+  h+='<div class="nav"><button class="nb pri" data-check="1"'+(S.sel.length?"":" disabled")+'>Check answer</button></div>';
+ }
+ app.innerHTML=h; window.scrollTo(0,0);
+}
+function sameSet(a,b){
+ if(a.length!==b.length) return false;
+ var x=a.slice().sort(), y=b.slice().sort();
+ for(var i=0;i<x.length;i++) if(x[i]!==y[i]) return false;
+ return true;
+}
+
+/* ---------- order drills ---------- */
+function startOrder(){
+ S={mode:"order",items:shuffle(ORDERS),i:0,built:[],pool:[],shown:false,score:0,missed:[]};
+ S.pool=shuffle(S.items[0].steps.map(function(_,i){return i}));
+ order();
+}
+function order(){
+ if(S.i>=S.items.length) return results();
+ var o=S.items[S.i];
+ fill.style.width=((S.i/S.items.length)*100)+"%";
+ var h='<div class="crumb"><button data-home="1">&#8592; Back</button>'+
+  '<span class="of">'+(S.i+1)+' of '+S.items.length+'</span></div>'+
+  '<p class="qh">'+esc(o.title)+'</p><div class="setup">'+esc(o.setup)+'</div>';
+ h+='<h2 class="sec">Your order</h2><div class="built">';
+ if(!S.built.length) h+='<div class="emptyhint">Click the steps below in the order they should happen.</div>';
+ S.built.forEach(function(idx,pos){
+  var cls="row";
+  if(S.shown) cls+= (idx===pos?" right":" wrong");
+  h+='<div class="'+cls+'"><span class="i">'+(pos+1)+'</span><span>'+esc(o.steps[idx])+'</span>'+
+     (S.shown?'':'<button class="x" data-un="'+pos+'">&#10005;</button>')+'</div>';
+ });
+ h+='</div>';
+ if(!S.shown&&S.pool.length){
+  h+='<h2 class="sec">Steps</h2><div class="pool">';
+  S.pool.forEach(function(idx){h+='<button data-pick="'+idx+'">'+esc(o.steps[idx])+'</button>'});
+  h+='</div>';
+ }
+ if(S.shown){
+  var right=S.built.every(function(idx,pos){return idx===pos});
+  h+='<div class="why '+(right?"ok":"no")+'"><b>'+(right?"Correct order":"Not the right order")+'</b>'+esc(o.why)+'</div>';
+  if(!right){
+   h+='<h2 class="sec">The right order</h2><div class="built">';
+   o.steps.forEach(function(s,i){h+='<div class="row right"><span class="i">'+(i+1)+'</span><span>'+esc(s)+'</span></div>'});
+   h+='</div>';
+  }
+  h+='<div class="nav"><button class="nb pri" data-nexto="1">'+(S.i===S.items.length-1?"See results":"Next drill")+'</button></div>';
+ } else {
+  h+='<div class="nav"><button class="nb pri" data-checko="1"'+(S.pool.length?" disabled":"")+'>Check order</button>'+
+     '<button class="nb" data-reseto="1">Start over</button></div>';
+ }
+ app.innerHTML=h; window.scrollTo(0,0);
+}
+
+/* ---------- results ---------- */
+function results(){
+ fill.style.width="100%";
+ var tot=S.items.length, pct=tot?Math.round((S.score/tot)*100):0;
+ var cls=pct>=80?"good":(pct>=55?"mid":"bad");
+ var msg=pct>=80?"Solid. The gaps below are worth one more pass."
+   :(pct>=55?"Reasonable. Work the missed items and go again."
+   :"Worth going back to the flash cards for these topics before trying again.");
+ var h='<div class="score"><div class="big '+cls+'">'+pct+'%</div>'+
+  '<p class="of">'+S.score+' of '+tot+' correct</p><p class="msg">'+esc(msg)+'</p></div>';
+ if(S.missed.length){
+  h+='<h2 class="sec">What to review</h2><div class="missed">';
+  S.missed.forEach(function(m){h+='<div class="m"><b>'+esc(m.q)+'</b><span>'+esc(m.why)+'</span></div>'});
+  h+='</div>';
+ }
+ h+='<div class="nav"><button class="nb pri" data-home="1">Back to training</button>'+
+   '<button class="nb" data-again="'+S.mode+'">Try again</button></div>';
+ app.innerHTML=h; window.scrollTo(0,0);
+}
+
+/* ---------- events ---------- */
+document.addEventListener("click",function(ev){
+ var t=ev.target;
+ if(t.closest("[data-home]")){home();return}
+ var m=t.closest("[data-mode]");
+ if(m){var k=m.dataset.mode;
+  if(k==="flash")startFlash(null);
+  else if(k==="order")startOrder();
+  else if(k==="scenario")startScenario();
+  else startMixed();
+  return}
+ var ag=t.closest("[data-again]");
+ if(ag){var k2=ag.dataset.again;
+  if(k2==="flash")startFlash(S.deck);
+  else if(k2==="order")startOrder();
+  else if(k2==="scenario")startScenario();
+  else startMixed();
+  return}
+ var dk=t.closest("[data-deck]"); if(dk){startFlash(dk.dataset.deck);return}
+ if(t.closest("#card")){S.flipped=!S.flipped;flash();return}
+ var r=t.closest("[data-rate]");
+ if(r){st["card:"+S.items[S.i].f]=r.dataset.rate;save();S.i++;S.flipped=false;flash();return}
+ var op=t.closest("[data-opt]");
+ if(op&&!S.shown){
+  var i=+op.dataset.opt, q=S.items[S.i];
+  if(isMulti(q)){var p=S.sel.indexOf(i); if(p>-1)S.sel.splice(p,1); else S.sel.push(i)}
+  else S.sel=[i];
+  quiz();return}
+ if(t.closest("[data-check]")){
+  S.shown=true;
+  var q2=S.items[S.i];
+  if(sameSet(S.sel,correctSet(q2))) S.score++;
+  else S.missed.push({q:q2.q,why:q2.why});
+  quiz();return}
+ if(t.closest("[data-next]")){S.i++;S.sel=[];S.shown=false;quiz();return}
+ var pk=t.closest("[data-pick]");
+ if(pk){var idx=+pk.dataset.pick;S.built.push(idx);
+  S.pool.splice(S.pool.indexOf(idx),1);order();return}
+ var un=t.closest("[data-un]");
+ if(un){var pos=+un.dataset.un;S.pool.push(S.built[pos]);S.built.splice(pos,1);order();return}
+ if(t.closest("[data-reseto]")){S.pool=shuffle(S.items[S.i].steps.map(function(_,i){return i}));S.built=[];order();return}
+ if(t.closest("[data-checko]")){
+  S.shown=true;
+  var o=S.items[S.i];
+  var right=S.built.every(function(idx,pos){return idx===pos});
+  if(right)S.score++; else S.missed.push({q:o.title,why:o.why});
+  order();return}
+ if(t.closest("[data-nexto]")){
+  S.i++;S.built=[];S.shown=false;
+  if(S.i<S.items.length) S.pool=shuffle(S.items[S.i].steps.map(function(_,i){return i}));
+  order();return}
+});
+document.getElementById("reset").addEventListener("click",function(){
+ if(confirm("Clear all flash card progress?")){st={};save();home()}
+});
+document.getElementById("theme").addEventListener("click",function(){
+ var cur=document.documentElement.getAttribute("data-theme");
+ var dark=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;
+ document.documentElement.setAttribute("data-theme",cur?(cur==="dark"?"light":"dark"):(dark?"light":"dark"));
+});
+home();
+})();
+</script>
+</body>
+</html>

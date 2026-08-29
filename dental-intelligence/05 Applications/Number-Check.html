@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Number Check</title>
+<style>
+:root{
+ --paper:#F5F7F8; --surface:#FFFFFF; --surface-2:#EDF1F3;
+ --ink:#131C25; --ink-2:#3A4A57; --muted:#5E6E7A; --faint:#8496A2;
+ --rule:#D8E0E5; --rule-soft:#E7ECEF;
+ --accent:#0D6670; --accent-2:#0A4E56; --accent-wash:#DFEDEE; --accent-line:#7FBCC2;
+ --crit:#9C3128; --crit-wash:#F6E6E4; --crit-line:#E3BFBA;
+ --warn:#7E5A0E; --warn-wash:#F7EFDD; --warn-line:#E2D0A5;
+ --ok:#26603F; --ok-wash:#E1EFE7; --ok-line:#BBD9C7;
+ --shadow:0 1px 2px rgba(19,28,37,.05),0 12px 32px -20px rgba(19,28,37,.4);
+ --ui:ui-sans-serif,"Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,Arial,sans-serif;
+ --mono:ui-monospace,"Cascadia Mono","Cascadia Code",Consolas,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+ --paper:#0C1319; --surface:#141D25; --surface-2:#1B262F;
+ --ink:#E7EDF1; --ink-2:#C2CED6; --muted:#8B9BA7; --faint:#6D7E8B;
+ --rule:#26333D; --rule-soft:#1E2A33;
+ --accent:#4CBAC4; --accent-2:#7FD3DA; --accent-wash:#0F2C31; --accent-line:#1E4E55;
+ --crit:#E58A81; --crit-wash:#2E1A18; --crit-line:#4A2A26;
+ --warn:#D9AC4E; --warn-wash:#2B2413; --warn-line:#463A1B;
+ --ok:#69BE8C; --ok-wash:#12261B; --ok-line:#24422F;
+ --shadow:0 1px 2px rgba(0,0,0,.4),0 14px 36px -22px rgba(0,0,0,.95);
+}}
+:root[data-theme="dark"]{
+ --paper:#0C1319; --surface:#141D25; --surface-2:#1B262F;
+ --ink:#E7EDF1; --ink-2:#C2CED6; --muted:#8B9BA7; --faint:#6D7E8B;
+ --rule:#26333D; --rule-soft:#1E2A33;
+ --accent:#4CBAC4; --accent-2:#7FD3DA; --accent-wash:#0F2C31; --accent-line:#1E4E55;
+ --crit:#E58A81; --crit-wash:#2E1A18; --crit-line:#4A2A26;
+ --warn:#D9AC4E; --warn-wash:#2B2413; --warn-line:#463A1B;
+ --ok:#69BE8C; --ok-wash:#12261B; --ok-line:#24422F;
+ --shadow:0 1px 2px rgba(0,0,0,.4),0 14px 36px -22px rgba(0,0,0,.95);
+}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--paper);color:var(--ink);
+ font-family:var(--ui);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;
+ display:flex;flex-direction:column;align-items:center;padding:2rem 1.1rem 4rem}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+
+.wrap{width:100%;max-width:660px}
+.top{display:flex;align-items:baseline;gap:.6rem;margin-bottom:1.3rem}
+.mark{font-family:var(--mono);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.top .s{font-size:.75rem;color:var(--faint)}
+.top button{margin-left:auto;background:none;border:1px solid var(--rule);border-radius:6px;
+ padding:.25rem .5rem;font-size:.78rem;color:var(--muted);cursor:pointer}
+.top button:hover{color:var(--accent);border-color:var(--accent-line)}
+
+#num{width:100%;padding:1rem 1.1rem;font-family:var(--mono);font-size:1.5rem;
+ border:1px solid var(--rule);border-radius:10px;background:var(--surface);color:var(--ink);
+ box-shadow:var(--shadow);text-align:center}
+#num::placeholder{color:var(--faint);font-family:var(--ui);font-size:1.05rem}
+#num:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-wash),var(--shadow)}
+.tip{text-align:center;font-size:.79rem;color:var(--faint);margin:.55rem 0 0}
+
+#result{margin-top:1.4rem}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:10px;box-shadow:var(--shadow);overflow:hidden}
+.head{padding:1.05rem 1.2rem;border-bottom:1px solid var(--rule)}
+.head.geo{background:var(--accent-wash)} .head.tf{background:var(--warn-wash)} .head.bad{background:var(--crit-wash)}
+.verdict{font-size:1.2rem;font-weight:650;letter-spacing:-.014em;line-height:1.25;display:block}
+.head.geo .verdict{color:var(--accent-2)} .head.tf .verdict{color:var(--warn)} .head.bad .verdict{color:var(--crit)}
+.sub{font-size:.86rem;color:var(--ink-2);margin-top:.3rem;display:block}
+.body{padding:1.1rem 1.2rem}
+.body > p{margin:0 0 1rem;color:var(--ink-2);font-size:.95rem}
+h3{font-size:.67rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin:1.4rem 0 .55rem;font-weight:700}
+h3:first-child{margin-top:0}
+ol,ul{margin:0;padding-left:1.2rem}
+li{margin:.45rem 0;font-size:.93rem;color:var(--ink-2);line-height:1.5}
+li::marker{color:var(--faint)}
+li b{color:var(--ink);font-weight:650}
+li .q{color:var(--ink);font-weight:600}
+li .r{display:block;font-size:.85rem;color:var(--muted);margin-top:.15rem}
+
+.dont{margin-top:1.2rem;padding:.8rem .95rem;border-radius:8px;background:var(--crit-wash);
+ border-left:3px solid var(--crit)}
+.dont .t{font-family:var(--mono);font-size:.63rem;letter-spacing:.12em;text-transform:uppercase;
+ color:var(--crit);font-weight:700;margin-bottom:.3rem}
+.dont p{margin:0;font-size:.9rem;color:var(--ink-2);line-height:1.5}
+.say{margin-top:.7rem;padding:.7rem .95rem;border-radius:8px;background:var(--surface-2);
+ border-left:3px solid var(--accent-line);font-size:.9rem;color:var(--ink-2);font-style:italic;line-height:1.55}
+
+.meta{display:flex;gap:1.5rem;flex-wrap:wrap;padding:.7rem 1.2rem;border-top:1px solid var(--rule-soft);background:var(--surface-2)}
+.meta dt{font-family:var(--mono);font-size:.59rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+.meta dd{margin:.1rem 0 0;color:var(--ink-2);font-weight:600;font-size:.82rem}
+
+.recent{margin-top:1.5rem}
+.recent h4{font-size:.64rem;letter-spacing:.13em;text-transform:uppercase;color:var(--faint);margin:0 0 .5rem;font-weight:700}
+.rlist{display:flex;flex-wrap:wrap;gap:.35rem}
+.rlist button{font-family:var(--mono);font-size:.8rem;padding:.3rem .6rem;border-radius:6px;
+ border:1px solid var(--rule);background:var(--surface);color:var(--ink-2);cursor:pointer}
+.rlist button:hover{border-color:var(--accent-line);color:var(--accent)}
+
+details{margin-top:1.5rem;border:1px solid var(--rule);border-radius:8px;background:var(--surface)}
+summary{cursor:pointer;padding:.72rem 1rem;font-size:.87rem;font-weight:600;list-style:none;color:var(--ink-2)}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"\25B8";float:right;font-family:var(--mono);color:var(--muted)}
+details[open] summary::after{content:"\25BE"}
+details .d{padding:0 1rem 1.1rem;font-size:.88rem;color:var(--ink-2);line-height:1.6}
+details .d p{margin:0 0 .85rem}
+details .d p:last-child{margin-bottom:0}
+details .d b{color:var(--ink)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+ <div class="top">
+ <span class="mark">Number Check</span>
+ <span class="s">works offline, nothing leaves this page</span>
+ <button id="theme" title="Light or dark">&#9680;</button>
+ </div>
+
+ <input id="num" type="tel" inputmode="tel" autocomplete="off" spellcheck="false"
+ placeholder="Type the customer's phone number" aria-label="Phone number">
+ <p class="tip">Any format works. The answer updates as you type.</p>
+
+ <div id="result"></div>
+
+ <div class="recent" id="recentWrap" hidden>
+ <h4>Checked this session</h4>
+ <div class="rlist" id="recent"></div>
+ </div>
+
+ <details>
+ <summary>Why can't this just tell me yes or no?</summary>
+ <div class="d">
+ <p>Because the answer does not live in the number. It lives with our phone provider.</p>
+ <p>Every phone number belongs to a small local calling zone, usually a town or part of a city. Our provider can accept numbers out of some zones and not others, depending on which local phone companies they have agreements with. That is why a number can be movable in one town and impossible in the town right next to it.</p>
+ <p><b>Nothing about the number itself tells you which zone it is in or whether we cover it.</b> Two numbers with the same area code can have completely different answers. The only way to know is to run the number against our provider's system.</p>
+ <p>That check is not connected to this page yet. Once it is, this page will give you a straight yes or no, and everything above will still apply.</p>
+ <p><b>Until then:</b> use this page to spot the numbers that are going to be a problem before you get that far, and to know what to ask the customer.</p>
+ </div>
+ </details>
+
+ <details>
+ <summary>Checking a whole practice at once</summary>
+ <div class="d">
+ <p>Use <b>Number Qualification Tool</b>, in this same folder. It takes the full list of numbers and tracks what each one is for, where it is published, and whether it is cleared to move.</p>
+ <p>Use this page for a quick answer while you are on a call. Use that one when you are working a deal.</p>
+ </div>
+ </details>
+
+</div>
+
+<script>
+(function(){
+"use strict";
+var TF={"800":1,"833":1,"844":1,"855":1,"866":1,"877":1,"888":1};
+var NPA={
+"201":"NJ","202":"DC","203":"CT","205":"AL","206":"WA","207":"ME","208":"ID","209":"CA","210":"TX","212":"NY",
+"213":"CA","214":"TX","215":"PA","216":"OH","217":"IL","218":"MN","219":"IN","220":"OH","223":"PA","224":"IL",
+"225":"LA","228":"MS","229":"GA","231":"MI","234":"OH","239":"FL","240":"MD","248":"MI","251":"AL","252":"NC",
+"253":"WA","254":"TX","256":"AL","260":"IN","262":"WI","267":"PA","269":"MI","270":"KY","272":"PA","276":"VA",
+"281":"TX","301":"MD","302":"DE","303":"CO","304":"WV","305":"FL","307":"WY","308":"NE","309":"IL","310":"CA",
+"312":"IL","313":"MI","314":"MO","315":"NY","316":"KS","317":"IN","318":"LA","319":"IA","320":"MN","321":"FL",
+"323":"CA","325":"TX","330":"OH","331":"IL","334":"AL","336":"NC","337":"LA","339":"MA","346":"TX","347":"NY",
+"351":"MA","352":"FL","360":"WA","361":"TX","364":"KY","380":"OH","385":"UT","386":"FL","401":"RI","402":"NE",
+"404":"GA","405":"OK","406":"MT","407":"FL","408":"CA","409":"TX","410":"MD","412":"PA","413":"MA","414":"WI",
+"415":"CA","417":"MO","419":"OH","423":"TN","424":"CA","425":"WA","430":"TX","432":"TX","434":"VA","435":"UT",
+"440":"OH","442":"CA","443":"MD","458":"OR","463":"IN","469":"TX","470":"GA","475":"CT","478":"GA","479":"AR",
+"480":"AZ","484":"PA","501":"AR","502":"KY","503":"OR","504":"LA","505":"NM","507":"MN","508":"MA","509":"WA",
+"510":"CA","512":"TX","513":"OH","515":"IA","516":"NY","517":"MI","518":"NY","520":"AZ","530":"CA","531":"NE",
+"534":"WI","540":"VA","541":"OR","551":"NJ","559":"CA","561":"FL","562":"CA","563":"IA","564":"WA","567":"OH",
+"570":"PA","571":"VA","573":"MO","574":"IN","575":"NM","580":"OK","585":"NY","586":"MI","601":"MS","602":"AZ",
+"603":"NH","605":"SD","606":"KY","607":"NY","608":"WI","609":"NJ","610":"PA","612":"MN","614":"OH","615":"TN",
+"616":"MI","617":"MA","618":"IL","619":"CA","620":"KS","623":"AZ","626":"CA","628":"CA","629":"TN","630":"IL",
+"631":"NY","636":"MO","641":"IA","646":"NY","650":"CA","651":"MN","657":"CA","660":"MO","661":"CA","662":"MS",
+"667":"MD","669":"CA","678":"GA","680":"NY","681":"WV","682":"TX","701":"ND","702":"NV","703":"VA","704":"NC",
+"706":"GA","707":"CA","708":"IL","712":"IA","713":"TX","714":"CA","715":"WI","716":"NY","717":"PA","718":"NY",
+"719":"CO","720":"CO","724":"PA","725":"NV","727":"FL","731":"TN","732":"NJ","734":"MI","737":"TX","740":"OH",
+"743":"NC","747":"CA","754":"FL","757":"VA","760":"CA","762":"GA","763":"MN","765":"IN","769":"MS","770":"GA",
+"772":"FL","773":"IL","774":"MA","775":"NV","779":"IL","781":"MA","785":"KS","786":"FL","801":"UT","802":"VT",
+"803":"SC","804":"VA","805":"CA","806":"TX","808":"HI","810":"MI","812":"IN","813":"FL","814":"PA","815":"IL",
+"816":"MO","817":"TX","818":"CA","820":"CA","828":"NC","830":"TX","831":"CA","832":"TX","843":"SC","845":"NY",
+"847":"IL","848":"NJ","850":"FL","854":"SC","856":"NJ","857":"MA","858":"CA","859":"KY","860":"CT","862":"NJ",
+"863":"FL","864":"SC","865":"TN","870":"AR","872":"IL","878":"PA","901":"TN","903":"TX","904":"FL","906":"MI",
+"907":"AK","908":"NJ","909":"CA","910":"NC","912":"GA","913":"KS","914":"NY","915":"TX","916":"CA","917":"NY",
+"918":"OK","919":"NC","920":"WI","925":"CA","928":"AZ","929":"NY","930":"IN","931":"TN","936":"TX","937":"OH",
+"938":"AL","940":"TX","941":"FL","947":"MI","949":"CA","951":"CA","952":"MN","954":"FL","956":"TX","959":"CT",
+"970":"CO","971":"OR","972":"TX","973":"NJ","978":"MA","979":"TX","980":"NC","984":"NC","985":"LA","989":"MI",
+"204":"Manitoba","226":"Ontario","236":"British Columbia","249":"Ontario","250":"British Columbia",
+"289":"Ontario","306":"Saskatchewan","343":"Ontario","365":"Ontario","367":"Quebec","368":"Alberta",
+"403":"Alberta","416":"Ontario","418":"Quebec","431":"Manitoba","437":"Ontario","438":"Quebec",
+"450":"Quebec","506":"New Brunswick","514":"Quebec","519":"Ontario","548":"Ontario","579":"Quebec",
+"581":"Quebec","587":"Alberta","604":"British Columbia","613":"Ontario","639":"Saskatchewan",
+"647":"Ontario","672":"British Columbia","705":"Ontario","709":"Newfoundland","742":"Ontario",
+"778":"British Columbia","780":"Alberta","782":"Nova Scotia","807":"Ontario","819":"Quebec",
+"825":"Alberta","867":"Northern Canada","873":"Quebec","902":"Nova Scotia","905":"Ontario"
+};
+var recent=[];
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function fmt(d){return "("+d.slice(0,3)+") "+d.slice(3,6)+"-"+d.slice(6)}
+
+function analyse(raw){
+ var d=(raw||"").replace(/\D/g,"");
+ if(!d) return null;
+ if(d.length===11&&d[0]==="1") d=d.slice(1);
+ if(d.length<10) return {state:"short"};
+ if(d.length>10) return {kind:"bad",verdict:"That is too many digits",
+ sub:"A phone number is ten digits, or eleven if it starts with a 1.",
+ why:"You typed "+d.length+" digits. Check for an extension on the end, or an extra character that got pasted in."};
+ var npa=d.slice(0,3), nxx=d.slice(3,6);
+ if(npa[0]==="0"||npa[0]==="1") return {kind:"bad",verdict:"That is not a real area code",
+ sub:"Area codes never start with a 0 or a 1.",why:"Check the number with the customer. It is either mistyped, or it is not a US or Canadian number."};
+ if(nxx[0]==="0"||nxx[0]==="1") return {kind:"bad",verdict:"That is not a real phone number",
+ sub:"The three digits after the area code never start with a 0 or a 1.",why:"Check the number with the customer."};
+ if(npa[1]==="1"&&npa[2]==="1") return {kind:"bad",verdict:"That is not a real area code",
+ sub:"Codes like 411 and 911 are service numbers, never area codes.",why:"Check the number with the customer."};
+ if(TF[npa]) return {kind:"tf",label:fmt(d),e164:"+1"+d,npa:npa,region:"Toll free",
+ verdict:"Toll free number, different process",
+ sub:"These usually move more easily than a regular number, but check who actually owns it."};
+ return {kind:"geo",label:fmt(d),e164:"+1"+d,npa:npa,region:NPA[npa]||null,
+ verdict:"Most likely yes, once we check coverage",
+ sub:"Regular business numbers can usually be moved. Two things decide it, and one of them you cannot see from the number."};
+}
+
+function geoBody(){
+ return ''+
+ '<p>Phone numbers belong to small local calling zones. Our phone provider can take numbers out of some zones and not others. <b>Nothing about the number tells you which zone it is in, or whether we cover it.</b> Two numbers with the same area code can have different answers, so this has to be checked against our provider before you promise anything.</p>'+
+ '<h3>Ask the customer these four things</h3><ul>'+
+ '<li><span class="q">Whose name is on the phone bill?</span><span class="r">If it is not the person you are talking to, they cannot approve the move. After a practice changes hands the bill is often still in the old owner\'s name.</span></li>'+
+ '<li><span class="q">Does a marketing company handle your advertising?</span><span class="r">If yes, at least one of their numbers probably belongs to that agency and not to the practice. Those usually cannot be moved, and the agency is losing the account, so they are rarely helpful about it.</span></li>'+
+ '<li><span class="q">Do you send text messages from this number today?</span><span class="r">Moving the calls can stop the texting with no warning and no error message. If they text patients, it has to be planned at the same time.</span></li>'+
+ '<li><span class="q">Is this line still working right now?</span><span class="r">If they already shut it off, the number is usually gone for good and cannot be brought back.</span></li>'+
+ '</ul>'+
+ '<h3>What to do next</h3><ol>'+
+ '<li>Run the number through our coverage check before you give any date.</li>'+
+ '<li>Get every number they actually use, not just the main line. Signage, website, Google listing, insurance directories, referral pads.</li>'+
+ '<li>Ask what else is plugged into a phone line. Fax, alarm panel, elevator phone, card machine. Those need their own answer.</li>'+
+ '</ol>'+
+ '<div class="dont"><div class="t">Do not promise yet</div><p>Do not give a cutover date, and do not say every number will move. Neither is known until the coverage check comes back and the customer confirms whose name is on the account.</p></div>'+
+ '<div class="say">"I can move your numbers over in most cases. Let me confirm coverage on these specific ones and come back to you with a date, rather than guess and get it wrong."</div>';
+}
+function tfBody(){
+ return ''+
+ '<p>An 800 number is not tied to a location, so the coverage question does not apply. It usually moves in a few business days. Three things can still stop it.</p>'+
+ '<h3>What can stop it</h3><ul>'+
+ '<li><b>They do not actually own it.</b> Some businesses rent their 800 number from an answering service or an old marketing company. If the practice is not the account holder, they cannot move it at all. This is the one that surprises people late.</li>'+
+ '<li><b>The line is not active.</b> It has to be in good standing and still working.</li>'+
+ '<li><b>They text from it.</b> Texting has to be re-approved after the move, and it stops working in between if nobody plans for it.</li>'+
+ '</ul>'+
+ '<h3>Ask the customer these two things</h3><ul>'+
+ '<li><span class="q">Who set this 800 number up, and who do you pay for it?</span><span class="r">If the answer is an answering service, a marketing company or "it came with something else", flag it before you promise anything.</span></li>'+
+ '<li><span class="q">Do you send or receive text messages on it?</span><span class="r">If yes, the texting needs to be handled at the same time or it will go dark.</span></li>'+
+ '</ul>'+
+ '<div class="dont"><div class="t">Do not promise yet</div><p>Do not commit until you know the practice is the actual account holder on the 800 number, not just the one using it.</p></div>'+
+ '<div class="say">"Your 800 number should be straightforward. I just need to confirm the account is in the practice\'s name, because sometimes these sit with an old answering service."</div>';
+}
+
+function render(a){
+ var box=document.getElementById("result");
+ if(!a||a.state==="short"){ box.innerHTML=""; return; }
+ var cls=a.kind==="geo"?"geo":(a.kind==="tf"?"tf":"bad");
+ var h='<div class="card"><div class="head '+cls+'">'+
+ '<span class="verdict">'+esc(a.verdict)+'</span>'+
+ '<span class="sub">'+esc(a.sub)+'</span></div><div class="body">';
+ h += a.kind==="bad" ? '<p>'+esc(a.why)+'</p>' : (a.kind==="geo"?geoBody():tfBody());
+ h+='</div>';
+ if(a.kind!=="bad"){
+ h+='<div class="meta">'+
+ '<div><dt>Number</dt><dd>'+esc(a.label)+'</dd></div>'+
+ '<div><dt>Area code</dt><dd>'+esc(a.npa)+'</dd></div>'+
+ '<div><dt>Where</dt><dd>'+esc(a.region||"Not recognised, check it")+'</dd></div></div>';
+ }
+ h+='</div>';
+ box.innerHTML=h;
+}
+function remember(a){
+ if(!a||a.kind==="bad"||!a.e164) return;
+ if(recent.some(function(r){return r.e164===a.e164})) return;
+ recent.unshift(a); recent=recent.slice(0,12);
+ document.getElementById("recentWrap").hidden=false;
+ document.getElementById("recent").innerHTML=recent.map(function(r){
+ return '<button data-n="'+esc(r.e164)+'">'+esc(r.label)+'</button>';
+ }).join("");
+}
+var input=document.getElementById("num"), t=null, last=null;
+input.addEventListener("input",function(){
+ clearTimeout(t); var a=analyse(input.value); render(a); last=a;
+ t=setTimeout(function(){remember(a)},900);
+});
+input.addEventListener("keydown",function(ev){ if(ev.key==="Enter") remember(last); });
+document.getElementById("recent").addEventListener("click",function(ev){
+ var b=ev.target.closest("[data-n]"); if(!b) return;
+ input.value=b.dataset.n; render(analyse(input.value)); input.focus();
+});
+document.getElementById("theme").addEventListener("click",function(){
+ var cur=document.documentElement.getAttribute("data-theme");
+ var dark=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;
+ document.documentElement.setAttribute("data-theme",cur?(cur==="dark"?"light":"dark"):(dark?"light":"dark"));
+});
+input.focus();
+})();
+</script>
+</body>
+</html>
