@@ -1,0 +1,89 @@
+/* ===========================================================================
+   motion.css — the moving layer.
+
+   Everything here is additive. Remove the two tags in the page head and body
+   and the site looks exactly as it did before, because nothing in style.css
+   depends on any of this.
+
+   Three effects, in order of how much they matter:
+
+     1. a drifting network canvas behind the hero
+     2. sections that rise into place as you reach them
+     3. background glows that breathe instead of sitting still
+
+   The whole file is switched off for anyone who has asked their system for
+   reduced motion. That is not a nicety: for some people this kind of movement
+   causes actual nausea.
+   ========================================================================= */
+
+/* --- 1. the hero canvas ------------------------------------------------- */
+/* Sits behind the hero text, above the static grid, below everything you
+   read. Pointer events off so it can never eat a click.                    */
+#mdk-net{
+  position:absolute; inset:0; width:100%; height:100%;
+  pointer-events:none; z-index:0; opacity:0;
+  transition:opacity 1.2s ease;
+}
+#mdk-net.on{opacity:1}
+
+/* --- 2. scroll reveals --------------------------------------------------- */
+/* The class is added by script, so a browser with JavaScript off never hides
+   anything. That ordering matters more than the effect does.               */
+.mdk-rise{
+  opacity:0; transform:translateY(26px);
+  transition:opacity .75s cubic-bezier(.22,.61,.36,1),
+             transform .75s cubic-bezier(.22,.61,.36,1);
+  will-change:opacity,transform;
+}
+.mdk-rise.mdk-in{opacity:1; transform:none}
+
+/* Children of a revealed block arrive one after another rather than all at
+   once. Six steps is enough; past that the wait reads as a slow page.      */
+.mdk-stagger > *{
+  opacity:0; transform:translateY(18px);
+  transition:opacity .6s cubic-bezier(.22,.61,.36,1),
+             transform .6s cubic-bezier(.22,.61,.36,1);
+}
+.mdk-stagger.mdk-in > *{opacity:1; transform:none}
+.mdk-stagger.mdk-in > *:nth-child(1){transition-delay:.05s}
+.mdk-stagger.mdk-in > *:nth-child(2){transition-delay:.11s}
+.mdk-stagger.mdk-in > *:nth-child(3){transition-delay:.17s}
+.mdk-stagger.mdk-in > *:nth-child(4){transition-delay:.23s}
+.mdk-stagger.mdk-in > *:nth-child(5){transition-delay:.29s}
+.mdk-stagger.mdk-in > *:nth-child(6){transition-delay:.35s}
+
+/* The hero should not wait for a scroll it has not had yet. */
+.mdk-first{transition-delay:.15s}
+
+/* --- 3. breathing glows -------------------------------------------------- */
+/* style.css parks these two blobs in the corners. Drifting them slowly makes
+   the whole page feel alive without anything visibly "animating".          */
+@keyframes mdk-drift-a{
+  0%,100%{transform:translate3d(0,0,0)      scale(1)}
+  50%    {transform:translate3d(60px,40px,0) scale(1.12)}
+}
+@keyframes mdk-drift-b{
+  0%,100%{transform:translate3d(0,0,0)        scale(1.06)}
+  50%    {transform:translate3d(-70px,-30px,0) scale(.94)}
+}
+.hg1{animation:mdk-drift-a 22s ease-in-out infinite}
+.hg2{animation:mdk-drift-b 27s ease-in-out infinite}
+
+/* --- 4. scroll progress -------------------------------------------------- */
+#mdk-prog{
+  position:fixed; top:0; left:0; height:2px; width:0;
+  background:linear-gradient(90deg,var(--green),var(--blue));
+  z-index:9996; pointer-events:none;
+  transition:width .1s linear;
+}
+
+/* --- 5. hero art, a little depth ---------------------------------------- */
+.heroart a{transition:transform .5s cubic-bezier(.22,.61,.36,1),box-shadow .3s}
+
+/* --- off switch ---------------------------------------------------------- */
+@media (prefers-reduced-motion:reduce){
+  #mdk-net,#mdk-prog{display:none}
+  .mdk-rise,.mdk-stagger > *{opacity:1!important;transform:none!important;transition:none!important}
+  .hg1,.hg2{animation:none}
+  .scrollhint{animation:none}
+}
