@@ -54,7 +54,7 @@ section{padding:120px 0}
 @media(max-width:700px){section{padding:76px 0}}
 
 /* hero */
-.hero{min-height:100vh;padding:150px 0 0;text-align:center;position:relative;overflow:hidden}
+.hero{min-height:100vh;padding:150px 0 90px;text-align:center;position:relative;overflow:visible}
 .hero .glow{position:absolute;left:50%;top:38%;width:1100px;height:700px;transform:translate(-50%,-50%);pointer-events:none;
   background:radial-gradient(closest-side,rgba(53,211,153,.16),rgba(111,182,255,.08) 55%,transparent 75%);filter:blur(40px)}
 .hero h1{max-width:1100px;margin:18px auto 0}
@@ -62,12 +62,15 @@ section{padding:120px 0}
 .hero .lead{margin:26px auto 0;text-align:center}
 .hero .ctas{display:flex;gap:12px;justify-content:center;margin-top:34px;flex-wrap:wrap}
 .hero .fine{font-size:12.5px;color:var(--dim);margin-top:16px}
-.stage{position:relative;max-width:1080px;margin:64px auto -40px;padding:0 20px;z-index:2}
-.stage .shot{border-radius:16px;overflow:hidden;border:1px solid var(--line2);box-shadow:0 60px 140px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.03) inset;
-  transform:perspective(1400px) rotateX(10deg) scale(.94);transform-origin:top center;transition:transform 1s cubic-bezier(.22,.61,.36,1)}
-.stage.in .shot{transform:perspective(1400px) rotateX(0) scale(1)}
-.stage .shot img{width:100%;aspect-ratio:16/9;object-fit:cover;object-position:top}
-.stage .tag{position:absolute;left:50%;bottom:-18px;z-index:3;transform:translateX(-50%);background:#fff;color:var(--light-ink);font-size:12px;font-weight:700;padding:8px 14px;border-radius:999px;box-shadow:0 10px 30px rgba(0,0,0,.4);white-space:nowrap}
+.stage{position:relative;max-width:1100px;margin:64px auto 0;padding:0 20px;z-index:2}
+.stage .shot{border-radius:14px;overflow:hidden;border:1px solid var(--line2);background:#0d1726;box-shadow:0 60px 140px rgba(0,0,0,.65);
+  transform:translateY(30px) scale(.97);opacity:0;transition:transform 1s cubic-bezier(.22,.61,.36,1),opacity 1s}
+.stage.in .shot{transform:none;opacity:1}
+.stage .shot .bar{display:flex;gap:6px;align-items:center;padding:10px 14px;background:#0d1726}
+.stage .shot .bar i{width:10px;height:10px;border-radius:50%;background:#22355a;display:block}.stage .shot .bar i:first-child{background:var(--green)}
+.stage .shot .bar span{margin-left:10px;font-size:12px;color:#8a97a6;font-family:ui-monospace,Consolas,monospace}
+.stage .shot img{width:100%;aspect-ratio:1512/793;object-fit:cover;object-position:top;display:block}
+.stage .tag{position:absolute;left:50%;bottom:-16px;z-index:3;transform:translateX(-50%);background:#fff;color:var(--light-ink);font-size:12px;font-weight:700;padding:8px 14px;border-radius:999px;box-shadow:0 10px 30px rgba(0,0,0,.4);white-space:nowrap}
 
 /* marquee of sites */
 .reel{padding:120px 0 90px;overflow:hidden}
@@ -180,7 +183,8 @@ footer .fine a{color:var(--dim)}
 .rv{opacity:0;transform:translateY(28px);transition:opacity .8s cubic-bezier(.22,.61,.36,1),transform .8s cubic-bezier(.22,.61,.36,1)}
 .rv.in{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}.stage .shot{transform:none}}
-@media(max-width:700px){.cnav nav a:not(.cta){display:none}.cnav{padding:0 18px}}
+@media(max-width:1100px){.cnav nav{gap:14px}.cnav nav a{font-size:13px}}
+@media(max-width:900px){.cnav nav a:not(.cta){display:none}.cnav{padding:0 18px}}
 
 /* landing hero: pitch + form */
 .hero.split2{text-align:left;padding:120px 0 80px;min-height:0}
