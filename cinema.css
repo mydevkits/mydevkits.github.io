@@ -195,3 +195,23 @@ footer .fine a{color:var(--dim)}
 .faq details[open] summary:after{content:"\2212"}
 .faq p{margin:10px 0 0;color:var(--muted);font-size:15px;line-height:1.65;max-width:720px}
 .hero .narrow{max-width:1100px}
+
+/* explorable samples */
+.card{text-decoration:none;position:relative;display:block;transition:transform .2s,box-shadow .2s}
+.card:hover{transform:translateY(-6px);box-shadow:0 30px 70px rgba(18,38,63,.22)}
+.card .open,.stage .open{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) translateY(6px);background:#fff;color:var(--light-ink);font-weight:700;font-size:14px;padding:12px 18px;border-radius:999px;box-shadow:0 14px 40px rgba(0,0,0,.35);opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;white-space:nowrap}
+.card:hover .open,.stage .shot:hover .open{opacity:1;transform:translate(-50%,-50%)}
+.stage .shot{display:block;position:relative;cursor:pointer}
+.card figcaption{display:block}
+
+/* three-year comparison, louder */
+.cmp .pay{font-size:15px;color:var(--body);margin-top:8px}
+.cmp .tot{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+.cmp .tl{font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:700;font-family:ui-monospace,Consolas,monospace}
+.cmp .tn{font-size:clamp(44px,6vw,76px);font-weight:800;letter-spacing:-.04em;color:var(--ink);line-height:1;margin:8px 0 12px}
+.cmp .tn span{font-size:.45em;color:var(--muted);letter-spacing:-.02em}
+.cmp .us .tn{color:var(--green)}
+.cmp .bar{height:10px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
+.cmp .bar i{display:block;height:100%;border-radius:999px;background:var(--muted);width:0;transition:width 1.2s cubic-bezier(.22,.61,.36,1)}
+.cmp .us .bar i{background:var(--green)}
+.cmp.in .bar i{width:var(--w)}
